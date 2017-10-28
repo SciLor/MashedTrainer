@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Player : BaseMemory {
@@ -15,6 +16,8 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int BASE_ADDRESS = 0x8B06E0;
         private const int BASE_ADDRESS_EXTENDER = 0x928;
         private const int BASE_POINTS_ADDRESS = 0x8D8B40;
+        
+        private const int PLAYER_ALIVE = 0x04; //0/1
 
         private const int PLAYER_POSITION_X = BASE_ADDRESS_EXTENDER + 0x30;
         private const int PLAYER_POSITION_Y = BASE_ADDRESS_EXTENDER + 0x38;
@@ -36,6 +39,22 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         private int addressBase;
+        public bool IsActive {
+            get {
+                if (Game.PlayerCount > (int)Id)
+                    return true;
+                return false;
+            }
+        }
+        public bool IsAlive {
+            get {
+                return ReadBoolean(addressBase + PLAYER_ALIVE);
+            }
+            set {
+                Write(addressBase + PLAYER_ALIVE, value);
+            }
+        }
+
         public float PosX {
             get {
                 return ReadFloat(addressBase + PLAYER_POSITION_X);
@@ -60,12 +79,14 @@ namespace SciLors_Mashed_Trainer.Types {
                 Write(addressBase + PLAYER_POSITION_Z, value);
             }
         }
-        
+
         public PlayerId Id { get; set; }
-        public Player(IntPtr hProcess, PlayerId id) : base(hProcess) {
+        public Game Game { get; set; }
+        public Player(Game game, PlayerId id) : base(game.hProcess) {
+            Game = game;
             Id = id;
-            addressPoints = BASE_POINTS_ADDRESS + PLAYER_POINTS_DISTANCE * (int)Id;
             addressBase = BASE_ADDRESS + PLAYER_BASE_DISTANCE * (int)Id;
+            addressPoints = BASE_POINTS_ADDRESS + PLAYER_POINTS_DISTANCE * (int)Id;
         }
     }
 }

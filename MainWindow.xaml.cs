@@ -14,35 +14,41 @@ using System.Windows.Shapes;
 using SciLors_Mashed_Trainer.Types;
 using System.Windows.Threading;
 using System.Diagnostics;
+using SciLors_Mashed_Trainer.Controls;
 
 namespace SciLors_Mashed_Trainer {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        Grid playersGrid;
         DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+
+        Game game;
+        Player[] players = new Player[4];
+        UcPlayerInfo[] playerInfos = new UcPlayerInfo[4];
 
         public MainWindow() {
             InitializeComponent();
+            initializePlayerGrid();
+
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
             timer.Start();
 
-            //Control baseGroup = (Control)FindName("grpP1");
-            //baseGroup.Tag = 0;
-
         }
-        public void ReadPlayer(Player player) {
-            GetControl<Label>(player, "lbl", "Points").Content = String.Format("{0} / 8", player.Points);
-            GetControl<Slider>(player, "sld", "Points").Value = player.Points;
+        public void initializePlayerGrid() {
+            playersGrid = (Grid)FindName("grdPlayers");
+            playersGrid.Children.Clear(); 
 
-            GetControl<TextBox>(player, "txt", "PositionX").Text = player.PosX + "";
-            GetControl<TextBox>(player, "txt", "PositionY").Text = player.PosY + "";
-            GetControl<TextBox>(player, "txt", "PositionZ").Text = player.PosZ + "";
+            for (int i=0; i<playerInfos.Length; i++) {
+                UcPlayerInfo playerInfo = new UcPlayerInfo();
+                playerInfo.Header = "Player " + (i+1);
+                playerInfo.SetValue(Grid.ColumnProperty, i);
 
-        }
-        public T GetControl<T>(Player player, string prefix, string suffix) {
-            return (T)FindName(prefix + "P" + ((int)player.Id + 1) + suffix);
+                playerInfos[i] = playerInfo;
+                playersGrid.Children.Add(playerInfo);
+            }
         }
 
         private IntPtr hMashed = IntPtr.Zero;
@@ -55,14 +61,32 @@ namespace SciLors_Mashed_Trainer {
                         BaseMemory.ProcessAccessType.PROCESS_VM_WRITE |
                         BaseMemory.ProcessAccessType.PROCESS_VM_OPERATION)
                         , 1, (uint)proc[0].Id);
+
+                    game = new Game(hMashed);
+                    foreach (Player.PlayerId playerId in Enum.GetValues(typeof(Player.PlayerId))) {
+                        int id = (int)playerId;
+                        players[id] = new Player(game, playerId);
+                        playerInfos[id].Player = players[id];
+                    }
                 } else {
-                    Player p1 = new Player(hMashed, Player.PlayerId.ONE);
-                    ReadPlayer(p1);
+                    foreach (UcPlayerInfo playerInfo in playerInfos) {
+                        //Redraw?!
+                    }
+                    foreach (Player player in players) {
+                        player.RaisePropertyChanged();
+                    }
                 }
             } else if (hMashed != IntPtr.Zero) {
-                    BaseMemory.CloseHandle(hMashed);
-                    hMashed = IntPtr.Zero;
+                foreach (UcPlayerInfo playerInfo in playerInfos) {
+                    playerInfo.Player = null;
+                }
+                Array.Clear(players, 0, players.Length);
+                game = null;
+
+                BaseMemory.CloseHandle(hMashed);
+                hMashed = IntPtr.Zero;
             }
+            txtStatus.Text = "Mashed Process Pointer: " + hMashed.ToString();
         }
     }
 }
