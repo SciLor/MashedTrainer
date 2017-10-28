@@ -2,11 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:uc="clr-namespace:SciLors_Mashed_Trainer.Controls" 
-        Title="SciLor's Mashed Fully Loaded Trainer" Height="380" Width="858">
+        Title="SciLor's Mashed Fully Loaded Trainer" Height="500" Width="858">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition MinHeight="310"/>
             <RowDefinition />
-            <RowDefinition Height="23"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TabControl Name="tabMain">
             <TabItem Header="Players" Name="taiPlayers">
@@ -21,7 +22,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <StatusBar Height="23" Name="stsMain" VerticalAlignment="Bottom" Grid.Row="1" Margin="0,0,0,0">
+        <uc:UcGameInfo x:Name="ucGameInfo" Grid.Row="1"/>
+        <StatusBar Height="23" Name="stsMain" VerticalAlignment="Bottom" Grid.Row="2" Margin="0,0,0,0">
             <TextBlock HorizontalAlignment="Left" Name="txtStatus" Text="" VerticalAlignment="Top" />
         </StatusBar>
     </Grid>
