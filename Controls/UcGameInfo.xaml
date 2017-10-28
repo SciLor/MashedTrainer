@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="SciLors_Mashed_Trainer.Controls.UcGameInfo"
+             x:Name="GameInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="800">
+    <Grid>
+        <GroupBox Header="Game" Name="grpBase"
+                   IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Header="Destory Distance" Name="grpDistance" Grid.Column="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Max. Distance" Grid.Column="0" Grid.Row="0"></Label>
+                        <TextBox x:Name="txtMaxDistance" Height="23" Grid.Column="1" Grid.Row="0"
+                                 Text="{Binding Path=Game.MaximumDistance, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                        <Label Content="Warn. Distance" Grid.Column="0" Grid.Row="1"></Label>
+                        <TextBox x:Name="txtWarnDistance" Height="23" Grid.Column="1" Grid.Row="1"
+                                 Text="{Binding Path=Game.DistanceWarningThreshold, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+                        <Button x:Name="btnResetDistance" Content="Reset" Grid.Column="1" Grid.Row="2" Height="21" Click="btnResetDistance_Click"></Button>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

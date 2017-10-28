@@ -23,9 +23,9 @@
                 <GroupBox Header="Position" Height="121" Margin="6,134,6,0" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="62" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <Label Content="X" Height="28" Margin="6,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="19" />
                         <TextBox Height="23" Margin="6,9,6,0" Name="txtPositionX" VerticalAlignment="Top" Grid.Column="1"

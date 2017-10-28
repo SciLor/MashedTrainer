@@ -2,17 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace SciLors_Mashed_Trainer.Types {
-    public class Game : BaseMemory {
-        private const int PLAYER_COUNT = 0x8D8B30;
+    public class Game : BaseMemorySharp {
+        private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
+        private IntPtr DISTANCE_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
 
         public int PlayerCount {
             get {
-                return ReadInt(PLAYER_COUNT);
+                //return Memory.Read<int>(PLAYER_COUNT);
+                return Memory[PLAYER_COUNT].Read<int>();
             }
         }
 
-        public Game(IntPtr hProcess) : base(hProcess) { }
+        public float MaximumDistance
+        {
+            get { return 10; }
+        }
+        public float DistanceWarningThreshold
+        {
+            get { return Memory[DISTANCE_THRESHOLD].Read<float>(); }
+            set { Memory[DISTANCE_THRESHOLD].Write<float>(value); }
+        }
+
+        public bool IsActive
+        {
+            get { return true; }
+        }
+
+        public Game(Process process) : base(process) { }
     }
 }

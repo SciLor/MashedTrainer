@@ -50,43 +50,35 @@ namespace SciLors_Mashed_Trainer {
                 playersGrid.Children.Add(playerInfo);
             }
         }
-
-        private IntPtr hMashed = IntPtr.Zero;
+        
         private void timer_Tick(object sender, EventArgs e) {
             Process[] proc = Process.GetProcessesByName("MFL");
             if (proc.Length == 1) {
-                if (hMashed == IntPtr.Zero) {
-                    hMashed = BaseMemory.OpenProcess((uint)(
-                        BaseMemory.ProcessAccessType.PROCESS_VM_READ |
-                        BaseMemory.ProcessAccessType.PROCESS_VM_WRITE |
-                        BaseMemory.ProcessAccessType.PROCESS_VM_OPERATION)
-                        , 1, (uint)proc[0].Id);
-
-                    game = new Game(hMashed);
+                if (game == null) {
+                    game = new Game(proc[0]);
                     foreach (Player.PlayerId playerId in Enum.GetValues(typeof(Player.PlayerId))) {
                         int id = (int)playerId;
                         players[id] = new Player(game, playerId);
                         playerInfos[id].Player = players[id];
                     }
+                    ucGameInfo.Game = game;
                 } else {
-                    foreach (UcPlayerInfo playerInfo in playerInfos) {
-                        //Redraw?!
-                    }
                     foreach (Player player in players) {
                         player.RaisePropertyChanged();
                     }
+                    game.RaisePropertyChanged();
+                    txtStatus.Text = "Mashed Process Pointer: " + game.Memory.Handle.DangerousGetHandle();
                 }
-            } else if (hMashed != IntPtr.Zero) {
+            } else if (game != null) {
                 foreach (UcPlayerInfo playerInfo in playerInfos) {
                     playerInfo.Player = null;
                 }
                 Array.Clear(players, 0, players.Length);
+                ucGameInfo.Game = null;
+                game.Memory.Handle.Close();
                 game = null;
-
-                BaseMemory.CloseHandle(hMashed);
-                hMashed = IntPtr.Zero;
+                txtStatus.Text = "Mashed Process Pointer: 0";
             }
-            txtStatus.Text = "Mashed Process Pointer: " + hMashed.ToString();
         }
     }
 }
