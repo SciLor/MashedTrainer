@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SciLors_Mashed_Trainer</RootNamespace>
-    <AssemblyName>SciLors Mashed Trainer</AssemblyName>
+    <AssemblyName>SciLorsMashedTrainer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -36,6 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fasm.NET">
+      <HintPath>Libs\MemorySharp\Fasm.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="MemorySharp">
+      <HintPath>Libs\MemorySharp\MemorySharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -55,8 +61,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\UcPlayerInfo.xaml.cs">
+      <DependentUpon>UcPlayerInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Types\BaseMemory.cs" />
+    <Compile Include="Types\BaseMemorySharp.cs" />
+    <Compile Include="Types\Game.cs" />
     <Compile Include="Types\Player.cs" />
+    <Page Include="Controls\UcPlayerInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +108,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Libs\MemorySharp\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

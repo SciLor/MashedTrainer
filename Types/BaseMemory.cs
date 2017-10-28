@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace SciLors_Mashed_Trainer.Types {
-    public abstract class BaseMemory {
+    public abstract class BaseMemory : INotifyPropertyChanged {
         
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(UInt32 dwDesiredAccess, Int32 bInheritHandle, UInt32 dwProcessId);
         [DllImport("kernel32.dll")]
         public static extern Int32 CloseHandle(IntPtr hObject);
+
         [Flags]
         public enum ProcessAccessType {
             PROCESS_TERMINATE = (0x0001),
@@ -25,6 +27,33 @@ namespace SciLors_Mashed_Trainer.Types {
             PROCESS_SET_INFORMATION = (0x0200),
             PROCESS_QUERY_INFORMATION = (0x0400)
         }
+
+        [Flags]
+        public enum AllocationType {
+            Commit = 0x1000,
+            Reserve = 0x2000,
+            Decommit = 0x4000,
+            Release = 0x8000,
+            Reset = 0x80000,
+            Physical = 0x400000,
+            TopDown = 0x100000,
+            WriteWatch = 0x200000,
+            LargePages = 0x20000000
+        }
+        [Flags]
+        public enum MemoryProtection {
+            Execute = 0x10,
+            ExecuteRead = 0x20,
+            ExecuteReadWrite = 0x40,
+            ExecuteWriteCopy = 0x80,
+            NoAccess = 0x01,
+            ReadOnly = 0x02,
+            ReadWrite = 0x04,
+            WriteCopy = 0x08,
+            GuardModifierflag = 0x100,
+            NoCacheModifierflag = 0x200,
+            WriteCombineModifierflag = 0x400
+        }
         
         //SeDebugPrivilege
 
@@ -34,7 +63,17 @@ namespace SciLors_Mashed_Trainer.Types {
         [DllImport("kernel32.dll")]
         private static extern Int32 WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out IntPtr lpNumberOfBytesWritten);
 
-        private IntPtr hProcess;
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress, int dwSize, uint flNewProtect, out uint lpflOldProtect);
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+
+        [DllImport("kernel32.dll")]
+        private static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint dwFreeType);
+
+        public IntPtr hProcess;
+        public BaseMemory(BaseMemory child) : this(child.hProcess) { }
         public BaseMemory(IntPtr hProcess) {
             this.hProcess = hProcess;
         }
@@ -46,7 +85,13 @@ namespace SciLors_Mashed_Trainer.Types {
             IntPtr bytesWritten = IntPtr.Zero;
             return WriteProcessMemory(hProcess, new IntPtr(address), buffer, (uint)buffer.Length, out bytesWritten);
         }
-
+        
+        protected bool ReadBoolean(int address) {
+            byte buffer = ReadByte(address);
+            if (buffer == 1)
+                return true;
+            return false;
+        }
         protected byte ReadByte(int address) {
             byte[] buffer = new byte[1];
             ReadMemory(address, buffer);
@@ -83,6 +128,13 @@ namespace SciLors_Mashed_Trainer.Types {
             //Dirty!
             Write(address, BitConverter.GetBytes((dynamic)value));
         }*/
+        protected void Write(int address, bool value) {
+            if (value) {
+                Write(address, (byte)0x01);
+            } else {
+                Write(address, (byte)0x00);
+            }
+        }
         protected void Write(int address, byte value) {
             Write(address, BitConverter.GetBytes(value));
         }
@@ -105,5 +157,11 @@ namespace SciLors_Mashed_Trainer.Types {
             WriteMemory(address, buffer);
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged() {
+            foreach (var prop in GetType().GetProperties()) {
+                PropertyChanged(this, new PropertyChangedEventArgs(prop.Name));
+            }
+        }
     }
 }
