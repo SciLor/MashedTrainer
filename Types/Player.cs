@@ -15,7 +15,8 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private IntPtr BASE_ADDRESS = new IntPtr(0x8B06E0 - PROCESS_BASE);
         private IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40 - PROCESS_BASE);
-        
+        private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
+
         private const int PLAYER_ALIVE = 0x04; //0/1
 
         private const int BASE_ADDRESS_EXTENDER = 0x928;
@@ -27,6 +28,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_BASE_DISTANCE = 0xD04;
         private const int PLAYER_WEAPON_DISTANCE = 0xB4;
         private const int PLAYER_POINTS_DISTANCE = 0x4;
+        private const int PLAYER_DISTANCE_DISTANCE = 0x4;
 
         private int playerPointsOffset;
         public int Points {
@@ -77,6 +79,13 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private int playerDistanceOffset;
+        public float Distance {
+            get {
+                return Memory[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
+            }
+        }
+
         public PlayerId Id { get; set; }
         public Game Game { get; set; }
         public Player(Game game, PlayerId id) : base(game.Memory) {
@@ -84,6 +93,7 @@ namespace SciLors_Mashed_Trainer.Types {
             Id = id;
             playerBaseOffset = PLAYER_BASE_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
+            playerDistanceOffset = PLAYER_DISTANCE_DISTANCE * (int)Id;
         }
     }
 }
