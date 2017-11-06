@@ -5,11 +5,15 @@
         Title="SciLor's Mashed Fully Loaded Trainer" Height="500" Width="858">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
             <RowDefinition MinHeight="310"/>
             <RowDefinition />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TabControl Name="tabMain">
+        <Menu Grid.Row="0">
+            <MenuItem Header="File"></MenuItem>
+        </Menu>
+        <TabControl Name="tabMain" Grid.Row="1">
             <TabItem Header="Players" Name="taiPlayers">
                 <Grid Name="grdPlayers">
                     <Grid.ColumnDefinitions>
@@ -22,7 +26,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <uc:UcGameInfo x:Name="ucGameInfo" Grid.Row="1"/>
+        <uc:UcGameInfo x:Name="ucGameInfo" Grid.Row="2"/>
         <StatusBar Height="23" Name="stsMain" VerticalAlignment="Bottom" Grid.Row="2" Margin="0,0,0,0">
             <TextBlock HorizontalAlignment="Left" Name="txtStatus" Text="" VerticalAlignment="Top" />
         </StatusBar>

@@ -74,6 +74,7 @@
     <Compile Include="Types\BaseMemorySharp.cs" />
     <Compile Include="Types\Game.cs" />
     <Compile Include="Types\Player.cs" />
+    <Compile Include="Types\Weapon.cs" />
     <Page Include="Controls\UcGameInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +115,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <Content Include="Asm\ChangeWeapon.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -122,6 +126,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Libs\MemorySharp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Asm\ChangeWeapon.asm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Asm\Test.asm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

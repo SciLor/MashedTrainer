@@ -15,6 +15,7 @@ using SciLors_Mashed_Trainer.Types;
 using System.Windows.Threading;
 using System.Diagnostics;
 using SciLors_Mashed_Trainer.Controls;
+using Binarysharp.Assemblers.Fasm;
 
 namespace SciLors_Mashed_Trainer {
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using static SciLors_Mashed_Trainer.Types.Weapon;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Player : BaseMemorySharp {
@@ -94,6 +95,10 @@ namespace SciLors_Mashed_Trainer.Types {
             playerBaseOffset = PLAYER_BASE_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
             playerDistanceOffset = PLAYER_DISTANCE_DISTANCE * (int)Id;
+        }
+
+        public void EquipWeapon(WeaponId weaponId) {
+            Game.EquipWeapon(Id, weaponId);
         }
     }
 }
