@@ -10,6 +10,21 @@
             More info: https://github.com/ZenLulz/Fasm.NET
             </summary>
         </member>
+        <member name="M:Binarysharp.MemoryManagement.Assembly.Assembler.Fasm32Assembler.Assemble(System.String)">
+            <summary>
+            Assemble the specified assembly code.
+            </summary>
+            <param name="asm">The assembly code.</param>
+            <returns>An array of bytes containing the assembly code.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Assembly.Assembler.Fasm32Assembler.Assemble(System.String,System.IntPtr)">
+            <summary>
+            Assemble the specified assembly code at a base address.
+            </summary>
+            <param name="asm">The assembly code.</param>
+            <param name="baseAddress">The address where the code is rebased.</param>
+            <returns>An array of bytes containing the assembly code.</returns>
+        </member>
         <member name="T:Binarysharp.MemoryManagement.Assembly.Assembler.IAssembler">
             <summary>
             Interface defining an assembler.
@@ -30,35 +45,19 @@
             <param name="baseAddress">The address where the code is rebased.</param>
             <returns>An array of bytes containing the assembly code.</returns>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Assembly.Assembler.Fasm32Assembler.Assemble(System.String)">
-            <summary>
-            Assemble the specified assembly code.
-            </summary>
-            <param name="asm">The assembly code.</param>
-            <returns>An array of bytes containing the assembly code.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Assembly.Assembler.Fasm32Assembler.Assemble(System.String,System.IntPtr)">
-            <summary>
-            Assemble the specified assembly code at a base address.
-            </summary>
-            <param name="asm">The assembly code.</param>
-            <param name="baseAddress">The address where the code is rebased.</param>
-            <returns>An array of bytes containing the assembly code.</returns>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.Assembly.AssemblyFactory">
             <summary>
             Class providing tools for manipulating assembly code.
             </summary>
         </member>
-        <member name="T:Binarysharp.MemoryManagement.Internals.IFactory">
-            <summary>
-            Define a factory for the library.
-            </summary>
-            <remarks>At the moment, the factories are just disposable.</remarks>
-        </member>
         <member name="F:Binarysharp.MemoryManagement.Assembly.AssemblyFactory.MemorySharp">
             <summary>
             The reference of the <see cref="F:Binarysharp.MemoryManagement.Assembly.AssemblyFactory.MemorySharp"/> object.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyFactory.Assembler">
+            <summary>
+            The assembler used by the factory.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Assembly.AssemblyFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
@@ -331,11 +330,6 @@
             <param name="asm">An array containing the mnemonics to inject.</param>
             <returns>The return value is an asynchronous operation that return the exit code of the thread created to execute the assembly code.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyFactory.Assembler">
-            <summary>
-            The assembler used by the factory.
-            </summary>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction">
             <summary>
             Class representing a transaction where the user can insert mnemonics.
@@ -355,6 +349,16 @@
         <member name="F:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.ExitCode">
             <summary>
             The exit code of the thread created to execute the assembly code.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.Address">
+            <summary>
+            The address where to assembly code is assembled.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.IsAutoExecuted">
+            <summary>
+            Gets the value indicating whether the assembly code is executed once the object is disposed.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr,System.Boolean)">
@@ -408,16 +412,6 @@
             <param name="asm">A composite format string.</param>
             <param name="args">An object array that contains zero or more objects to format.</param>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.Address">
-            <summary>
-            The address where to assembly code is assembled.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.AssemblyTransaction.IsAutoExecuted">
-            <summary>
-            Gets the value indicating whether the assembly code is executed once the object is disposed.
-            </summary>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.CallingConventionSelector">
             <summary>
             Static class providing calling convention instances.
@@ -435,38 +429,12 @@
             Define the C Declaration Calling Convention.
             </summary>
         </member>
-        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention">
-            <summary>
-            Interface defining a calling convention.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatParameters(System.IntPtr[])">
-            <summary>
-            Formats the given parameters to call a function.
-            </summary>
-            <param name="parameters">An array of parameters.</param>
-            <returns>The mnemonics to pass the parameters.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatCalling(System.IntPtr)">
-            <summary>
-            Formats the call of a given function.
-            </summary>
-            <param name="function">The function to call.</param>
-            <returns>The mnemonics to call the function.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatCleaning(System.Int32)">
-            <summary>
-            Formats the cleaning of a given number of parameters.
-            </summary>
-            <param name="nbParameters">The number of parameters to clean.</param>
-            <returns>The mnemonics to clean a given number of parameters.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.Name">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.CdeclCallingConvention.Name">
             <summary>
             The name of the calling convention.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.Cleanup">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.CdeclCallingConvention.Cleanup">
             <summary>
             Defines which function performs the clean-up task.
             </summary>
@@ -492,19 +460,19 @@
             <param name="nbParameters">The number of parameters to clean.</param>
             <returns>The mnemonics to clean a given number of parameters.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.CdeclCallingConvention.Name">
+        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention">
+            <summary>
+            Define the 'This' Calling Convention.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention.Name">
             <summary>
             The name of the calling convention.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.CdeclCallingConvention.Cleanup">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention.Cleanup">
             <summary>
             Defines which function performs the clean-up task.
-            </summary>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention">
-            <summary>
-            Define the 'This' Calling Convention.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention.FormatParameters(System.IntPtr[])">
@@ -528,19 +496,19 @@
             <param name="nbParameters">The number of parameters to clean.</param>
             <returns>The mnemonics to clean a given number of parameters.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention.Name">
+        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention">
+            <summary>
+            Define the Fast Calling Convention (aka __msfastcall).
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention.Name">
             <summary>
             The name of the calling convention.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ThiscallCallingConvention.Cleanup">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention.Cleanup">
             <summary>
             Defines which function performs the clean-up task.
-            </summary>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention">
-            <summary>
-            Define the Fast Calling Convention (aka __msfastcall).
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention.FormatParameters(System.IntPtr[])">
@@ -564,19 +532,19 @@
             <param name="nbParameters">The number of parameters to clean.</param>
             <returns>The mnemonics to clean a given number of parameters.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention.Name">
+        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention">
+            <summary>
+            Define the Standard Calling Convention.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention.Name">
             <summary>
             The name of the calling convention.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.FastcallCallingConvention.Cleanup">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention.Cleanup">
             <summary>
             Defines which function performs the clean-up task.
-            </summary>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention">
-            <summary>
-            Define the Standard Calling Convention.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention.FormatParameters(System.IntPtr[])">
@@ -600,15 +568,41 @@
             <param name="nbParameters">The number of parameters to clean.</param>
             <returns>The mnemonics to clean a given number of parameters.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention.Name">
+        <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention">
+            <summary>
+            Interface defining a calling convention.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.Name">
             <summary>
             The name of the calling convention.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.StdcallCallingConvention.Cleanup">
+        <member name="P:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.Cleanup">
             <summary>
             Defines which function performs the clean-up task.
             </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatParameters(System.IntPtr[])">
+            <summary>
+            Formats the given parameters to call a function.
+            </summary>
+            <param name="parameters">An array of parameters.</param>
+            <returns>The mnemonics to pass the parameters.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatCalling(System.IntPtr)">
+            <summary>
+            Formats the call of a given function.
+            </summary>
+            <param name="function">The function to call.</param>
+            <returns>The mnemonics to call the function.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Assembly.CallingConvention.ICallingConvention.FormatCleaning(System.Int32)">
+            <summary>
+            Formats the cleaning of a given number of parameters.
+            </summary>
+            <param name="nbParameters">The number of parameters to clean.</param>
+            <returns>The mnemonics to clean a given number of parameters.</returns>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Assembly.CallingConvention.CallingConventions">
             <summary>
@@ -673,6 +667,16 @@
             Static helper class providing tools for finding applications.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Helpers.ApplicationFinder.TopLevelWindows">
+            <summary>
+            Gets all top-level windows on the screen.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Helpers.ApplicationFinder.Windows">
+            <summary>
+            Gets all the windows on the screen.
+            </summary>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Helpers.ApplicationFinder.FromProcessId(System.Int32)">
             <summary>
             Returns a new <see cref="T:System.Diagnostics.Process"/> component, given the identifier of a process.
@@ -714,16 +718,6 @@
             </summary>
             <param name="windowTitle">A part a window title string.</param>
             <returns>A collection of type <see cref="T:System.Diagnostics.Process"/> that represents the process resources running the specified application or file.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Helpers.ApplicationFinder.TopLevelWindows">
-            <summary>
-            Gets all top-level windows on the screen.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Helpers.ApplicationFinder.Windows">
-            <summary>
-            Gets all the windows on the screen.
-            </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Helpers.HandleManipulator">
             <summary>
@@ -899,6 +893,21 @@
             Defines an element able to be activated in the remote process.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.IApplicableElement.IsEnabled">
+            <summary>
+            States if the element is enabled.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Disable">
+            <summary>
+            Disables the element.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Enable">
+            <summary>
+            Enables the element.
+            </summary>
+        </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.IDisposableState">
             <summary>
             Defines an IDisposable interface with a known state.
@@ -914,20 +923,11 @@
             Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Disable">
+        <member name="T:Binarysharp.MemoryManagement.Internals.IFactory">
             <summary>
-            Disables the element.
+            Define a factory for the library.
             </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.IApplicableElement.Enable">
-            <summary>
-            Enables the element.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Internals.IApplicableElement.IsEnabled">
-            <summary>
-            States if the element is enabled.
-            </summary>
+            <remarks>At the moment, the factories are just disposable.</remarks>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.IMarshalledValue">
             <summary>
@@ -964,6 +964,11 @@
             The collection of the elements (writable).
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.Manager`1.Items">
+            <summary>
+            The collection of the elements.
+            </summary>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Internals.Manager`1.DisableAll">
             <summary>
             Disables all items in the manager.
@@ -991,44 +996,11 @@
             Removes all the elements in the manager.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Internals.Manager`1.Items">
-            <summary>
-            The collection of the elements.
-            </summary>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.MarshalType`1">
             <summary>
             Static class providing tools for extracting information related to types.
             </summary>
-            <typeparam name="T">Type to analyse.</typeparam>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.#cctor">
-            <summary>
-            Initializes static information related to the specified type.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.ObjectToByteArray(`0)">
-            <summary>
-            Marshals a managed object to an array of bytes.
-            </summary>
-            <param name="obj">The object to marshal.</param>
-            <returns>A array of bytes corresponding to the managed object.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.ByteArrayToObject(System.Byte[])">
-            <summary>
-            Marshals an array of byte to a managed object.
-            </summary>
-            <param name="byteArray">The array of bytes corresponding to a managed object.</param>
-            <returns>A managed object.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.PtrToObject(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
-            <summary>
-            Converts a pointer to a given type. This function converts the value of the pointer or the pointed value,
-            according if the data type is primitive or reference.
-            </summary>
-            <param name="memorySharp">The concerned process.</param>
-            <param name="pointer">The pointer to convert.</param>
-            <returns>The return value is the pointer converted to the given data type.</returns>
+            <typeparam name="T">Type to analyze.</typeparam>
         </member>
         <member name="P:Binarysharp.MemoryManagement.Internals.MarshalType`1.CanBeStoredInRegisters">
             <summary>
@@ -1054,6 +1026,35 @@
             <summary>
             The typecode of the type.
             </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.#cctor">
+            <summary>
+            Initializes static information related to the specified type.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.ObjectToByteArray(`0)">
+            <summary>
+            Marshals a managed object to an array of bytes.
+            </summary>
+            <param name="obj">The object to marshal.</param>
+            <returns>A array of bytes corresponding to the managed object.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.ByteArrayToObject(System.Byte[],System.Int32)">
+            <summary>
+            Marshals an array of byte to a managed object.
+            </summary>
+            <param name="byteArray">The array of bytes corresponding to a managed object.</param>
+            <param name="index">[Optional] Where to start the conversion of bytes to the managed object.</param>
+            <returns>A managed object.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Internals.MarshalType`1.PtrToObject(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
+            <summary>
+            Converts a pointer to a given type. This function converts the value of the pointer or the pointed value,
+            according if the data type is primitive or reference.
+            </summary>
+            <param name="memorySharp">The concerned process.</param>
+            <param name="pointer">The pointer to convert.</param>
+            <returns>The return value is the pointer converted to the given data type.</returns>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Internals.MarshalValue">
             <summary>
@@ -1084,6 +1085,21 @@
             The reference of the <see cref="F:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.MemorySharp"/> object.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Allocated">
+            <summary>
+            The memory allocated where the value is fully written if needed. It can be unused.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Reference">
+            <summary>
+            The reference of the value. It can be directly the value or a pointer.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Value">
+            <summary>
+            The initial value.
+            </summary>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.#ctor(Binarysharp.MemoryManagement.MemorySharp,`0)">
             <summary>
             Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Internals.MarshalledValue`1"/> class.
@@ -1106,29 +1122,89 @@
             Marshals the value into the remote process.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Allocated">
-            <summary>
-            The memory allocated where the value is fully written if needed. It can be unused.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Reference">
-            <summary>
-            The reference of the value. It can be directly the value or a pointer.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Internals.MarshalledValue`1.Value">
-            <summary>
-            The initial value.
-            </summary>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.MemorySharp">
             <summary>
             Class for memory editing a remote process.
             </summary>
         </member>
+        <member name="E:Binarysharp.MemoryManagement.MemorySharp.OnDispose">
+            <summary>
+            Raises when the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object is disposed.
+            </summary>
+        </member>
         <member name="F:Binarysharp.MemoryManagement.MemorySharp.Factories">
             <summary>
             The factories embedded inside the library.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Assembly">
+            <summary>
+            Factory for generating assembly code.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.IsDebugged">
+            <summary>
+            Gets whether the process is being debugged.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.IsRunning">
+            <summary>
+            State if the process is running.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Handle">
+            <summary>
+            The remote process handle opened with all rights.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Memory">
+            <summary>
+            Factory for manipulating memory space.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Modules">
+            <summary>
+            Factory for manipulating modules and libraries.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Native">
+            <summary>
+            Provide access to the opened process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Peb">
+            <summary>
+            The Process Environment Block of the process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Pid">
+            <summary>
+            Gets the unique identifier for the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Item(System.String)">
+            <summary>
+            Gets the specified module in the remote process.
+            </summary>
+            <param name="moduleName">The name of module (not case sensitive).</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Item(System.IntPtr,System.Boolean)">
+            <summary>
+            Gets a pointer to the specified address in the remote process.
+            </summary>
+            <param name="address">The address pointed.</param>
+            <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> class.</returns>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Threads">
+            <summary>
+            Factory for manipulating threads.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Windows">
+            <summary>
+            Factory for manipulating windows.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.MemorySharp.#ctor(System.Diagnostics.Process)">
@@ -1345,84 +1421,306 @@
             <param name="text">The text to write.</param>
             <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
         </member>
-        <member name="E:Binarysharp.MemoryManagement.MemorySharp.OnDispose">
-            <summary>
-            Raises when the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object is disposed.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Assembly">
-            <summary>
-            Factory for generating assembly code.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.IsDebugged">
-            <summary>
-            Gets whether the process is being debugged.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.IsRunning">
-            <summary>
-            State if the process is running.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Handle">
-            <summary>
-            The remote process handle opened with all rights.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Memory">
-            <summary>
-            Factory for manipulating memory space.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Modules">
-            <summary>
-            Factory for manipulating modules and libraries.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Native">
-            <summary>
-            Provide access to the opened process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Peb">
-            <summary>
-            The Process Environment Block of the process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Pid">
-            <summary>
-            Gets the unique identifier for the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Item(System.String)">
-            <summary>
-            Gets the specified module in the remote process.
-            </summary>
-            <param name="moduleName">The name of module (not case sensitive).</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Item(System.IntPtr,System.Boolean)">
-            <summary>
-            Gets a pointer to the specified address in the remote process.
-            </summary>
-            <param name="address">The address pointed.</param>
-            <param name="isRelative">[Optional] State if the address is relative to the main module.</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> class.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Threads">
-            <summary>
-            Factory for manipulating threads.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.MemorySharp.Windows">
-            <summary>
-            Factory for manipulating windows.
-            </summary>
-        </member>
         <member name="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation">
             <summary>
             Class representing an allocated memory in a remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteAllocation.IsDisposed">
+            <summary>
+            Gets a value indicating whether the element is disposed.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteAllocation.MustBeDisposed">
+            <summary>
+            Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> class.
+            </summary>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="size">The size of the allocated memory.</param>
+            <param name="protection">The protection of the allocated memory.</param>
+            <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.Finalize">
+            <summary>
+            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.Dispose">
+            <summary>
+            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> object.
+            </summary>
+            <remarks>Don't use the IDisposable pattern because the class is sealed.</remarks>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryCore">
+            <summary>
+            Static core class providing tools for memory editing.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Allocate(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,Binarysharp.MemoryManagement.Native.MemoryAllocationFlags)">
+            <summary>
+            Reserves a region of memory within the virtual address space of a specified process.
+            </summary>
+            <param name="processHandle">The handle to a process.</param>
+            <param name="size">The size of the region of memory to allocate, in bytes.</param>
+            <param name="protectionFlags">The memory protection for the region of pages to be allocated.</param>
+            <param name="allocationFlags">The type of memory allocation.</param>
+            <returns>The base address of the allocated region.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.CloseHandle(System.IntPtr)">
+            <summary>
+            Closes an open object handle.
+            </summary>
+            <param name="handle">A valid handle to an open object.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Free(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr)">
+            <summary>
+            Releases a region of memory within the virtual address space of a specified process.
+            </summary>
+            <param name="processHandle">A handle to a process.</param>
+            <param name="address">A pointer to the starting address of the region of memory to be freed.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.NtQueryInformationProcess(Binarysharp.MemoryManagement.Native.SafeMemoryHandle)">
+            <summary>
+            etrieves information about the specified process.
+            </summary>
+            <param name="processHandle">A handle to the process to query.</param>
+            <returns>A <see cref="T:Binarysharp.MemoryManagement.Native.ProcessBasicInformation"/> structure containg process information.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.OpenProcess(Binarysharp.MemoryManagement.Native.ProcessAccessFlags,System.Int32)">
+            <summary>
+            Opens an existing local process object.
+            </summary>
+            <param name="accessFlags">The access level to the process object.</param>
+            <param name="processId">The identifier of the local process to be opened.</param>
+            <returns>An open handle to the specified process.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.ReadBytes(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Int32)">
+            <summary>
+            Reads an array of bytes in the memory form the target process.
+            </summary>
+            <param name="processHandle">A handle to the process with memory that is being read.</param>
+            <param name="address">A pointer to the base address in the specified process from which to read.</param>
+            <param name="size">The number of bytes to be read from the specified process.</param>
+            <returns>The collection of read bytes.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.ChangeProtection(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags)">
+            <summary>
+            Changes the protection on a region of committed pages in the virtual address space of a specified process.
+            </summary>
+            <param name="processHandle">A handle to the process whose memory protection is to be changed.</param>
+            <param name="address">A pointer to the base address of the region of pages whose access protection attributes are to be changed.</param>
+            <param name="size">The size of the region whose access protection attributes are changed, in bytes.</param>
+            <param name="protection">The memory protection option.</param>
+            <returns>The old protection of the region in a <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structure.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Query(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr)">
+            <summary>
+            Retrieves information about a range of pages within the virtual address space of a specified process.
+            </summary>
+            <param name="processHandle">A handle to the process whose memory information is queried.</param>
+            <param name="baseAddress">A pointer to the base address of the region of pages to be queried.</param>
+            <returns>A <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structures in which information about the specified page range is returned.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Query(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.IntPtr)">
+            <summary>
+            Retrieves information about a range of pages within the virtual address space of a specified process.
+            </summary>
+            <param name="processHandle">A handle to the process whose memory information is queried.</param>
+            <param name="addressFrom">A pointer to the starting address of the region of pages to be queried.</param>
+            <param name="addressTo">A pointer to the ending address of the region of pages to be queried.</param>
+            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structures.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.WriteBytes(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Byte[])">
+            <summary>
+            Writes data to an area of memory in a specified process.
+            </summary>
+            <param name="processHandle">A handle to the process memory to be modified.</param>
+            <param name="address">A pointer to the base address in the specified process to which data is written.</param>
+            <param name="byteArray">A buffer that contains data to be written in the address space of the specified process.</param>
+            <returns>The number of bytes written.</returns>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory">
+            <summary>
+            Class representing a block of memory allocated in the local process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Address">
+            <summary>
+            The address where the data is allocated.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Size">
+            <summary>
+            The size of the allocated memory.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory"/> class, allocating a block of memory in the local process.
+            </summary>
+            <param name="size">The size to allocate.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Finalize">
+            <summary>
+            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Dispose">
+            <summary>
+            Releases the memory held by the <see cref="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory"/> object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Read``1">
+            <summary>
+            Reads data from the unmanaged block of memory.
+            </summary>
+            <typeparam name="T">The type of data to return.</typeparam>
+            <returns>The return value is the block of memory casted in the specified type.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Read">
+            <summary>
+            Reads an array of bytes from the unmanaged block of memory.
+            </summary>
+            <returns>The return value is the block of memory.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Write(System.Byte[],System.Int32)">
+            <summary>
+            Writes an array of bytes to the unmanaged block of memory.
+            </summary>
+            <param name="byteArray">The array of bytes to write.</param>
+            <param name="index">The start position to copy bytes from.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Write``1(``0)">
+            <summary>
+            Write data to the unmanaged block of memory.
+            </summary>
+            <typeparam name="T">The type of data to write.</typeparam>
+            <param name="data">The data to write.</param>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryFactory">
+            <summary>
+            Class providing tools for manipulating memory space.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp">
+            <summary>
+            The reference of the <see cref="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp"/> object.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.InternalRemoteAllocations">
+            <summary>
+            The list containing all allocated memory.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryFactory.RemoteAllocations">
+            <summary>
+            A collection containing all allocated memory in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryFactory.Regions">
+            <summary>
+            Gets all blocks of memory allocated in the remote process.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryFactory"/> class.
+            </summary>
+            <param name="memorySharp">The reference of the <see cref="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp"/> object.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Finalize">
+            <summary>
+            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Allocate(System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
+            <summary>
+            Allocates a region of memory within the virtual address space of the remote process.
+            </summary>
+            <param name="size">The size of the memory to allocate.</param>
+            <param name="protection">The protection of the memory to allocate.</param>
+            <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
+            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> class.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Deallocate(Binarysharp.MemoryManagement.Memory.RemoteAllocation)">
+            <summary>
+            Deallocates a region of memory previously allocated within the virtual address space of the remote process.
+            </summary>
+            <param name="allocation">The allocated memory to release.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Dispose">
+            <summary>
+            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryFactory"/> object.
+            </summary>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryProtection">
+            <summary>
+            Class providing tools for manipulating memory protection.
+            </summary>
+        </member>
+        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryProtection._memorySharp">
+            <summary>
+            The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.BaseAddress">
+            <summary>
+            The base address of the altered memory.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.MustBeDisposed">
+            <summary>
+            States if the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> object nust be disposed when it is collected.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.NewProtection">
+            <summary>
+            Defines the new protection applied to the memory.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.OldProtection">
+            <summary>
+            References the inital protection of the memory.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.Size">
+            <summary>
+            The size of the altered memory.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> class.
+            </summary>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="baseAddress">The base address of the memory to change the protection.</param>
+            <param name="size">The size of the memory to change.</param>
+            <param name="protection">The new protection to apply.</param>
+            <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.Finalize">
+            <summary>
+            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.Dispose">
+            <summary>
+            Restores the initial protection of the memory.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.ToString">
+            <summary>
+            Returns a string that represents the current object.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Memory.RemoteRegion">
@@ -1430,9 +1728,74 @@
             Represents a contiguous block of memory in the remote process.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteRegion.Information">
+            <summary>
+            Contains information about the memory.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteRegion.IsValid">
+            <summary>
+            Gets if the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteRegion"/> is valid.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteRegion"/> class.
+            </summary>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="baseAddress">The base address of the memory region.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.ChangeProtection(Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
+            <summary>
+            Changes the protection of the n next bytes in remote process.
+            </summary>
+            <param name="protection">The new protection to apply.</param>
+            <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
+            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> class.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Equals(System.Object)">
+            <summary>
+            Determines whether the specified object is equal to the current object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Equals(Binarysharp.MemoryManagement.Memory.RemoteRegion)">
+            <summary>
+            Returns a value indicating whether this instance is equal to a specified object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Release">
+            <summary>
+            Releases the memory used by the region.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.ToString">
+            <summary>
+            Returns a string that represents the current object.
+            </summary>
+        </member>
         <member name="T:Binarysharp.MemoryManagement.Memory.RemotePointer">
             <summary>
             Class representing a pointer in the memory of the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.BaseAddress">
+            <summary>
+            The address of the pointer in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.IsValid">
+            <summary>
+            Gets if the <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> is valid.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.MemorySharp">
+            <summary>
+            The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Memory.RemotePointer.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
@@ -1727,370 +2090,199 @@
             </summary>
             <param name="text">The text to write.</param>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.BaseAddress">
+        <member name="T:Binarysharp.MemoryManagement.Modules.InjectedModule">
             <summary>
-            The address of the pointer in the remote process.
+            Class representing an injected module in a remote process.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.IsValid">
-            <summary>
-            Gets if the <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> is valid.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemotePointer.MemorySharp">
-            <summary>
-            The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteRegion"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="baseAddress">The base address of the memory region.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.ChangeProtection(Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
-            <summary>
-            Changes the protection of the n next bytes in remote process.
-            </summary>
-            <param name="protection">The new protection to apply.</param>
-            <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
-            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> class.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Equals(System.Object)">
-            <summary>
-            Determines whether the specified object is equal to the current object.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Equals(Binarysharp.MemoryManagement.Memory.RemoteRegion)">
-            <summary>
-            Returns a value indicating whether this instance is equal to a specified object.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.GetHashCode">
-            <summary>
-            Serves as a hash function for a particular type. 
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.Release">
-            <summary>
-            Releases the memory used by the region.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteRegion.ToString">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteRegion.Information">
-            <summary>
-            Contains information about the memory.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteRegion.IsValid">
-            <summary>
-            Gets if the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteRegion"/> is valid.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="size">The size of the allocated memory.</param>
-            <param name="protection">The protection of the allocated memory.</param>
-            <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.Finalize">
-            <summary>
-            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.RemoteAllocation.Dispose">
-            <summary>
-            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> object.
-            </summary>
-            <remarks>Don't use the IDisposable pattern because the class is sealed.</remarks>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteAllocation.IsDisposed">
+        <member name="P:Binarysharp.MemoryManagement.Modules.InjectedModule.IsDisposed">
             <summary>
             Gets a value indicating whether the element is disposed.
             </summary>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.RemoteAllocation.MustBeDisposed">
+        <member name="P:Binarysharp.MemoryManagement.Modules.InjectedModule.MustBeDisposed">
             <summary>
             Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
             </summary>
         </member>
-        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryCore">
+        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Diagnostics.ProcessModule,System.Boolean)">
             <summary>
-            Static core class providing tools for memory editing.
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/> class.
             </summary>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="module">The native <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the injected module.</param>
+            <param name="mustBeDisposed">The module will be ejected when the finalizer collects the object.</param>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Allocate(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,Binarysharp.MemoryManagement.Native.MemoryAllocationFlags)">
-            <summary>
-            Reserves a region of memory within the virtual address space of a specified process.
-            </summary>
-            <param name="processHandle">The handle to a process.</param>
-            <param name="size">The size of the region of memory to allocate, in bytes.</param>
-            <param name="protectionFlags">The memory protection for the region of pages to be allocated.</param>
-            <param name="allocationFlags">The type of memory allocation.</param>
-            <returns>The base address of the allocated region.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.CloseHandle(System.IntPtr)">
-            <summary>
-            Closes an open object handle.
-            </summary>
-            <param name="handle">A valid handle to an open object.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Free(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr)">
-            <summary>
-            Releases a region of memory within the virtual address space of a specified process.
-            </summary>
-            <param name="processHandle">A handle to a process.</param>
-            <param name="address">A pointer to the starting address of the region of memory to be freed.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.NtQueryInformationProcess(Binarysharp.MemoryManagement.Native.SafeMemoryHandle)">
-            <summary>
-            etrieves information about the specified process.
-            </summary>
-            <param name="processHandle">A handle to the process to query.</param>
-            <returns>A <see cref="T:Binarysharp.MemoryManagement.Native.ProcessBasicInformation"/> structure containg process information.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.OpenProcess(Binarysharp.MemoryManagement.Native.ProcessAccessFlags,System.Int32)">
-            <summary>
-            Opens an existing local process object.
-            </summary>
-            <param name="accessFlags">The access level to the process object.</param>
-            <param name="processId">The identifier of the local process to be opened.</param>
-            <returns>An open handle to the specified process.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.ReadBytes(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Int32)">
-            <summary>
-            Reads an array of bytes in the memory form the target process.
-            </summary>
-            <param name="processHandle">A handle to the process with memory that is being read.</param>
-            <param name="address">A pointer to the base address in the specified process from which to read.</param>
-            <param name="size">The number of bytes to be read from the specified process.</param>
-            <returns>The collection of read bytes.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.ChangeProtection(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags)">
-            <summary>
-            Changes the protection on a region of committed pages in the virtual address space of a specified process.
-            </summary>
-            <param name="processHandle">A handle to the process whose memory protection is to be changed.</param>
-            <param name="address">A pointer to the base address of the region of pages whose access protection attributes are to be changed.</param>
-            <param name="size">The size of the region whose access protection attributes are changed, in bytes.</param>
-            <param name="protection">The memory protection option.</param>
-            <returns>The old protection of the region in a <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structure.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Query(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr)">
-            <summary>
-            Retrieves information about a range of pages within the virtual address space of a specified process.
-            </summary>
-            <param name="processHandle">A handle to the process whose memory information is queried.</param>
-            <param name="baseAddress">A pointer to the base address of the region of pages to be queried.</param>
-            <returns>A <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structures in which information about the specified page range is returned.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.Query(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.IntPtr)">
-            <summary>
-            Retrieves information about a range of pages within the virtual address space of a specified process.
-            </summary>
-            <param name="processHandle">A handle to the process whose memory information is queried.</param>
-            <param name="addressFrom">A pointer to the starting address of the region of pages to be queried.</param>
-            <param name="addressTo">A pointer to the ending address of the region of pages to be queried.</param>
-            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Native.MemoryBasicInformation"/> structures.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryCore.WriteBytes(Binarysharp.MemoryManagement.Native.SafeMemoryHandle,System.IntPtr,System.Byte[])">
-            <summary>
-            Writes data to an area of memory in a specified process.
-            </summary>
-            <param name="processHandle">A handle to the process memory to be modified.</param>
-            <param name="address">A pointer to the base address in the specified process to which data is written.</param>
-            <param name="byteArray">A buffer that contains data to be written in the address space of the specified process.</param>
-            <returns>The number of bytes written.</returns>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory">
-            <summary>
-            Class representing a block of memory allocated in the local process.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.#ctor(System.Int32)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory"/> class, allocating a block of memory in the local process.
-            </summary>
-            <param name="size">The size to allocate.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Finalize">
+        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.Finalize">
             <summary>
             Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Dispose">
+        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.Dispose">
             <summary>
-            Releases the memory held by the <see cref="T:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory"/> object.
+            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/> object.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Read``1">
+        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.InternalInject(Binarysharp.MemoryManagement.MemorySharp,System.String)">
             <summary>
-            Reads data from the unmanaged block of memory.
+            Injects the specified module into the address space of the remote process.
             </summary>
-            <typeparam name="T">The type of data to return.</typeparam>
-            <returns>The return value is the block of memory casted in the specified type.</returns>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
+            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/>class.</returns>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Read">
+        <member name="T:Binarysharp.MemoryManagement.Modules.ModuleCore">
             <summary>
-            Reads an array of bytes from the unmanaged block of memory.
-            </summary>
-            <returns>The return value is the block of memory.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.ToString">
-            <summary>
-            Returns a string that represents the current object.
+            Static core class providing tools for manipulating modules and libraries.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Write(System.Byte[])">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.GetProcAddress(System.String,System.String)">
             <summary>
-            Writes an array of bytes to the unmanaged block of memory.
+            Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
             </summary>
-            <param name="byteArray">The array of bytes to write.</param>
+            <param name="moduleName">The module name (not case-sensitive).</param>
+            <param name="functionName">The function or variable name, or the function's ordinal value.</param>
+            <returns>The address of the exported function.</returns>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Write``1(``0)">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.GetProcAddress(System.Diagnostics.ProcessModule,System.String)">
             <summary>
-            Write data to the unmanaged block of memory.
+            Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
             </summary>
-            <typeparam name="T">The type of data to write.</typeparam>
-            <param name="data">The data to write.</param>
+            <param name="module">The <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the module.</param>
+            <param name="functionName">The function or variable name, or the function's ordinal value.</param>
+            <returns>If the function succeeds, the return value is the address of the exported function.</returns>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Address">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.FreeLibrary(System.String)">
             <summary>
-            The address where the data is allocated.
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
             </summary>
+            <param name="libraryName">The name of the library to free (not case-sensitive).</param>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.LocalUnmanagedMemory.Size">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.FreeLibrary(System.Diagnostics.ProcessModule)">
             <summary>
-            The size of the allocated memory.
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
             </summary>
+            <param name="module">The <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the library to free.</param>
         </member>
-        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryFactory">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.LoadLibrary(System.String)">
             <summary>
-            Class providing tools for manipulating memory space.
+            Loads the specified module into the address space of the calling process.
             </summary>
+            <param name="libraryPath">The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
+            <returns>A <see cref="T:System.Diagnostics.ProcessModule"/> corresponding to the loaded library.</returns>
         </member>
-        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp">
+        <member name="T:Binarysharp.MemoryManagement.Modules.ModuleFactory">
             <summary>
-            The reference of the <see cref="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp"/> object.
-            </summary>
-        </member>
-        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.InternalRemoteAllocations">
-            <summary>
-            The list containing all allocated memory.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryFactory"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="F:Binarysharp.MemoryManagement.Memory.MemoryFactory.MemorySharp"/> object.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Finalize">
-            <summary>
-            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            Class providing tools for manipulating modules and libraries.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Allocate(System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
-            <summary>
-            Allocates a region of memory within the virtual address space of the remote process.
-            </summary>
-            <param name="size">The size of the memory to allocate.</param>
-            <param name="protection">The protection of the memory to allocate.</param>
-            <param name="mustBeDisposed">The allocated memory will be released when the finalizer collects the object.</param>
-            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.RemoteAllocation"/> class.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Deallocate(Binarysharp.MemoryManagement.Memory.RemoteAllocation)">
-            <summary>
-            Deallocates a region of memory previously allocated within the virtual address space of the remote process.
-            </summary>
-            <param name="allocation">The allocated memory to release.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryFactory.Dispose">
-            <summary>
-            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryFactory"/> object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryFactory.RemoteAllocations">
-            <summary>
-            A collection containing all allocated memory in the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryFactory.Regions">
-            <summary>
-            Gets all blocks of memory allocated in the remote process.
-            </summary>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Memory.MemoryProtection">
-            <summary>
-            Class providing tools for manipulating memory protection.
-            </summary>
-        </member>
-        <member name="F:Binarysharp.MemoryManagement.Memory.MemoryProtection._memorySharp">
+        <member name="F:Binarysharp.MemoryManagement.Modules.ModuleFactory.MemorySharp">
             <summary>
             The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr,System.Int32,Binarysharp.MemoryManagement.Native.MemoryProtectionFlags,System.Boolean)">
+        <member name="F:Binarysharp.MemoryManagement.Modules.ModuleFactory.InternalInjectedModules">
             <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> class.
+            The list containing all injected modules (writable).
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.InjectedModules">
+            <summary>
+            A collection containing all injected modules.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.MainModule">
+            <summary>
+            Gets the main module for the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.RemoteModules">
+            <summary>
+            Gets the modules that have been loaded in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.NativeModules">
+            <summary>
+            Gets the native modules that have been loaded in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.Item(System.IntPtr)">
+            <summary>
+            Gets a pointer from the remote process.
+            </summary>
+            <param name="address">The address of the pointer.</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> class.</returns>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.Item(System.String)">
+            <summary>
+            Gets the specified module in the remote process.
+            </summary>
+            <param name="moduleName">The name of module (not case sensitive).</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.ModuleFactory"/> class.
             </summary>
             <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="baseAddress">The base address of the memory to change the protection.</param>
-            <param name="size">The size of the memory to change.</param>
-            <param name="protection">The new protection to apply.</param>
-            <param name="mustBeDisposed">The resource will be automatically disposed when the finalizer collects the object.</param>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.Finalize">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Finalize">
             <summary>
             Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.Dispose">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Dispose">
             <summary>
-            Restores the initial protection of the memory.
+            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Modules.ModuleFactory"/> object.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Memory.MemoryProtection.ToString">
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Eject(Binarysharp.MemoryManagement.Modules.RemoteModule)">
+            <summary>
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
+            </summary>
+            <param name="module">The module to eject.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Eject(System.String)">
+            <summary>
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
+            </summary>
+            <param name="moduleName">The name of module to eject.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.FetchModule(System.String)">
+            <summary>
+            Fetches a module from the remote process.
+            </summary>
+            <param name="moduleName">A module name (not case sensitive). If the file name extension is omitted, the default library extension .dll is appended.</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.FetchModule(System.Diagnostics.ProcessModule)">
+            <summary>
+            Fetches a module from the remote process.
+            </summary>
+            <param name="module">A module in the remote process.</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Inject(System.String,System.Boolean)">
+            <summary>
+            Injects the specified module into the address space of the remote process.
+            </summary>
+            <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
+            <param name="mustBeDisposed">The module will be ejected when the finalizer collects the object.</param>
+            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/>class.</returns>
+        </member>
+        <member name="T:Binarysharp.MemoryManagement.Modules.RemoteFunction">
+            <summary>
+            Class representing a function in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Modules.RemoteFunction.Name">
+            <summary>
+            The name of the function.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteFunction.ToString">
             <summary>
             Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.BaseAddress">
-            <summary>
-            The base address of the altered memory.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.MustBeDisposed">
-            <summary>
-            States if the <see cref="T:Binarysharp.MemoryManagement.Memory.MemoryProtection"/> object nust be disposed when it is collected.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.NewProtection">
-            <summary>
-            Defines the new protection applied to the memory.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.OldProtection">
-            <summary>
-            References the inital protection of the memory.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Memory.MemoryProtection.Size">
-            <summary>
-            The size of the altered memory.
-            </summary>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Modules.InjectedModule">
-            <summary>
-            Class representing an injected module in a remote process.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Modules.RemoteModule">
@@ -2101,40 +2293,6 @@
         <member name="F:Binarysharp.MemoryManagement.Modules.RemoteModule.CachedFunctions">
             <summary>
             The dictionary containing all cached functions of the remote module.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Diagnostics.ProcessModule)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="module">The native <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to this module.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.Eject">
-            <summary>
-            Ejects the loaded dynamic-link library (DLL) module.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.FindFunction(System.String)">
-            <summary>
-            Finds the specified function in the remote module.
-            </summary>
-            <param name="functionName">The name of the function (case sensitive).</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteFunction"/> class.</returns>
-            <remarks>
-            Interesting article on how DLL loading works: http://msdn.microsoft.com/en-us/magazine/bb985014.aspx
-            </remarks>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.InternalEject(Binarysharp.MemoryManagement.MemorySharp,Binarysharp.MemoryManagement.Modules.RemoteModule)">
-            <summary>
-            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="module">The module to eject.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.ToString">
-            <summary>
-            Returns a string that represents the current object.
             </summary>
         </member>
         <member name="P:Binarysharp.MemoryManagement.Modules.RemoteModule.IsMainModule">
@@ -2174,40 +2332,38 @@
             <param name="functionName">The name of the function.</param>
             <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteFunction"/> class.</returns>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Diagnostics.ProcessModule,System.Boolean)">
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Diagnostics.ProcessModule)">
             <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/> class.
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.
             </summary>
             <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="module">The native <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the injected module.</param>
-            <param name="mustBeDisposed">The module will be ejected when the finalizer collects the object.</param>
+            <param name="module">The native <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to this module.</param>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.Finalize">
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.Eject">
             <summary>
-            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            Ejects the loaded dynamic-link library (DLL) module.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.Dispose">
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.FindFunction(System.String)">
             <summary>
-            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/> object.
+            Finds the specified function in the remote module.
             </summary>
+            <param name="functionName">The name of the function (case sensitive).</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteFunction"/> class.</returns>
+            <remarks>
+            Interesting article on how DLL loading works: http://msdn.microsoft.com/en-us/magazine/bb985014.aspx
+            </remarks>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.InjectedModule.InternalInject(Binarysharp.MemoryManagement.MemorySharp,System.String)">
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.InternalEject(Binarysharp.MemoryManagement.MemorySharp,Binarysharp.MemoryManagement.Modules.RemoteModule)">
             <summary>
-            Injects the specified module into the address space of the remote process.
+            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
             </summary>
             <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
-            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/>class.</returns>
+            <param name="module">The module to eject.</param>
         </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.InjectedModule.IsDisposed">
+        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteModule.ToString">
             <summary>
-            Gets a value indicating whether the element is disposed.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.InjectedModule.MustBeDisposed">
-            <summary>
-            Gets a value indicating whether the element must be disposed when the Garbage Collector collects the object.
+            Returns a string that represents the current object.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Native.ManagedPeb">
@@ -2233,20 +2389,6 @@
             <summary>
             Class representing the Thread Environment Block of a remote thread.
             </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Native.ManagedTeb.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Native.ManagedTeb"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-            <param name="address">The location of the teb.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Native.ManagedTeb.FindTeb(Binarysharp.MemoryManagement.Native.SafeMemoryHandle)">
-            <summary>
-            Finds the Thread Environment Block address of a specified thread.
-            </summary>
-            <param name="threadHandle">A handle of the thread.</param>
-            <returns>A <see cref="T:System.IntPtr"/> pointer of the TEB.</returns>
         </member>
         <member name="P:Binarysharp.MemoryManagement.Native.ManagedTeb.CurrentSehFrame">
             <summary>
@@ -2479,159 +2621,19 @@
             The thread error mode (RtlSetThreadErrorMode).
             </summary>
         </member>
-        <member name="T:Binarysharp.MemoryManagement.Modules.ModuleCore">
+        <member name="M:Binarysharp.MemoryManagement.Native.ManagedTeb.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
             <summary>
-            Static core class providing tools for manipulating modules and libraries.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.GetProcAddress(System.String,System.String)">
-            <summary>
-            Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
-            </summary>
-            <param name="moduleName">The module name (not case-sensitive).</param>
-            <param name="functionName">The function or variable name, or the function's ordinal value.</param>
-            <returns>The address of the exported function.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.GetProcAddress(System.Diagnostics.ProcessModule,System.String)">
-            <summary>
-            Retrieves the address of an exported function or variable from the specified dynamic-link library (DLL).
-            </summary>
-            <param name="module">The <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the module.</param>
-            <param name="functionName">The function or variable name, or the function's ordinal value.</param>
-            <returns>If the function succeeds, the return value is the address of the exported function.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.FreeLibrary(System.String)">
-            <summary>
-            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
-            </summary>
-            <param name="libraryName">The name of the library to free (not case-sensitive).</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.FreeLibrary(System.Diagnostics.ProcessModule)">
-            <summary>
-            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
-            </summary>
-            <param name="module">The <see cref="T:System.Diagnostics.ProcessModule"/> object corresponding to the library to free.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleCore.LoadLibrary(System.String)">
-            <summary>
-            Loads the specified module into the address space of the calling process.
-            </summary>
-            <param name="libraryPath">The name of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
-            <returns>A <see cref="T:System.Diagnostics.ProcessModule"/> corresponding to the loaded library.</returns>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Modules.ModuleFactory">
-            <summary>
-            Class providing tools for manipulating modules and libraries.
-            </summary>
-        </member>
-        <member name="F:Binarysharp.MemoryManagement.Modules.ModuleFactory.MemorySharp">
-            <summary>
-            The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
-            </summary>
-        </member>
-        <member name="F:Binarysharp.MemoryManagement.Modules.ModuleFactory.InternalInjectedModules">
-            <summary>
-            The list containing all injected modules (writable).
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.ModuleFactory"/> class.
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Native.ManagedTeb"/> class.
             </summary>
             <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+            <param name="address">The location of the teb.</param>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Finalize">
+        <member name="M:Binarysharp.MemoryManagement.Native.ManagedTeb.FindTeb(Binarysharp.MemoryManagement.Native.SafeMemoryHandle)">
             <summary>
-            Frees resources and perform other cleanup operations before it is reclaimed by garbage collection.
+            Finds the Thread Environment Block address of a specified thread.
             </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Dispose">
-            <summary>
-            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Modules.ModuleFactory"/> object.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Eject(Binarysharp.MemoryManagement.Modules.RemoteModule)">
-            <summary>
-            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
-            </summary>
-            <param name="module">The module to eject.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Eject(System.String)">
-            <summary>
-            Frees the loaded dynamic-link library (DLL) module and, if necessary, decrements its reference count.
-            </summary>
-            <param name="moduleName">The name of module to eject.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.FetchModule(System.String)">
-            <summary>
-            Fetches a module from the remote process.
-            </summary>
-            <param name="moduleName">A module name (not case sensitive). If the file name extension is omitted, the default library extension .dll is appended.</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.FetchModule(System.Diagnostics.ProcessModule)">
-            <summary>
-            Fetches a module from the remote process.
-            </summary>
-            <param name="module">A module in the remote process.</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.ModuleFactory.Inject(System.String,System.Boolean)">
-            <summary>
-            Injects the specified module into the address space of the remote process.
-            </summary>
-            <param name="path">The path of the module. This can be either a library module (a .dll file) or an executable module (an .exe file).</param>
-            <param name="mustBeDisposed">The module will be ejected when the finalizer collects the object.</param>
-            <returns>A new instance of the <see cref="T:Binarysharp.MemoryManagement.Modules.InjectedModule"/>class.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.InjectedModules">
-            <summary>
-            A collection containing all injected modules.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.MainModule">
-            <summary>
-            Gets the main module for the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.RemoteModules">
-            <summary>
-            Gets the modules that have been loaded in the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.NativeModules">
-            <summary>
-            Gets the native modules that have been loaded in the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.Item(System.IntPtr)">
-            <summary>
-            Gets a pointer from the remote process.
-            </summary>
-            <param name="address">The address of the pointer.</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Memory.RemotePointer"/> class.</returns>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.ModuleFactory.Item(System.String)">
-            <summary>
-            Gets the specified module in the remote process.
-            </summary>
-            <param name="moduleName">The name of module (not case sensitive).</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Modules.RemoteModule"/> class.</returns>
-        </member>
-        <member name="T:Binarysharp.MemoryManagement.Modules.RemoteFunction">
-            <summary>
-            Class representing a function in the remote process.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Modules.RemoteFunction.ToString">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Modules.RemoteFunction.Name">
-            <summary>
-            The name of the function.
-            </summary>
+            <param name="threadHandle">A handle of the thread.</param>
+            <returns>A <see cref="T:System.IntPtr"/> pointer of the TEB.</returns>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Native.FlashWindowFlags">
             <summary>
@@ -6082,11 +6084,6 @@
             The y-coordinate of the lower-right corner of the rectangle.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Native.Rectangle.ToString">
-            <summary>
-            Returns a string that represents the current object.
-            </summary>
-        </member>
         <member name="P:Binarysharp.MemoryManagement.Native.Rectangle.Height">
             <summary>
             Gets or sets the height of the element.
@@ -6095,6 +6092,11 @@
         <member name="P:Binarysharp.MemoryManagement.Native.Rectangle.Width">
             <summary>
             Gets or sets the width of the element.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Native.Rectangle.ToString">
+            <summary>
+            Returns a string that represents the current object.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Native.WindowPlacement">
@@ -6172,6 +6174,11 @@
             Class containing a frozen thread. If an instance of this class is disposed, its associated thread is resumed.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.FrozenThread.Thread">
+            <summary>
+            The frozen thread.
+            </summary>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Threading.FrozenThread.#ctor(Binarysharp.MemoryManagement.Threading.RemoteThread)">
             <summary>
             Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Threading.FrozenThread"/> class.
@@ -6186,11 +6193,6 @@
         <member name="M:Binarysharp.MemoryManagement.Threading.FrozenThread.ToString">
             <summary>
             Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.FrozenThread.Thread">
-            <summary>
-            The frozen thread.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Threading.RemoteThread">
@@ -6211,6 +6213,52 @@
         <member name="F:Binarysharp.MemoryManagement.Threading.RemoteThread._parameterCleaner">
             <summary>
             The task involved in cleaning the parameter memory when the <see cref="T:Binarysharp.MemoryManagement.Threading.RemoteThread"/> object is collected.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Context">
+            <summary>
+            Gets or sets the full context of the thread.
+            If the thread is not already suspended, performs a <see cref="M:Binarysharp.MemoryManagement.Threading.RemoteThread.Suspend"/> and <see cref="M:Binarysharp.MemoryManagement.Threading.RemoteThread.Resume"/> call on the thread.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Handle">
+            <summary>
+            The remote thread handle opened with all rights.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Id">
+            <summary>
+            Gets the unique identifier of the thread.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsAlive">
+            <summary>
+            Gets if the thread is alive.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsMainThread">
+            <summary>
+            Gets if the thread is the main one in the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsSuspended">
+            <summary>
+            Gets if the thread is suspended.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsTerminated">
+            <summary>
+            Gets if the thread is terminated.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Native">
+            <summary>
+            The native <see cref="T:System.Diagnostics.ProcessThread"/> object corresponding to this thread.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Teb">
+            <summary>
+            The Thread Environment Block of the thread.
             </summary>
         </member>
         <member name="M:Binarysharp.MemoryManagement.Threading.RemoteThread.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.Diagnostics.ProcessThread)">
@@ -6302,52 +6350,6 @@
         <member name="M:Binarysharp.MemoryManagement.Threading.RemoteThread.ToString">
             <summary>
             Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Context">
-            <summary>
-            Gets or sets the full context of the thread.
-            If the thread is not already suspended, performs a <see cref="M:Binarysharp.MemoryManagement.Threading.RemoteThread.Suspend"/> and <see cref="M:Binarysharp.MemoryManagement.Threading.RemoteThread.Resume"/> call on the thread.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Handle">
-            <summary>
-            The remote thread handle opened with all rights.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Id">
-            <summary>
-            Gets the unique identifier of the thread.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsAlive">
-            <summary>
-            Gets if the thread is alive.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsMainThread">
-            <summary>
-            Gets if the thread is the main one in the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsSuspended">
-            <summary>
-            Gets if the thread is suspended.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.IsTerminated">
-            <summary>
-            Gets if the thread is terminated.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Native">
-            <summary>
-            The native <see cref="T:System.Diagnostics.ProcessThread"/> object corresponding to this thread.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.RemoteThread.Teb">
-            <summary>
-            The Thread Environment Block of the thread.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Threading.ThreadCore">
@@ -6456,6 +6458,28 @@
             The reference of the <see cref="F:Binarysharp.MemoryManagement.Threading.ThreadFactory.MemorySharp"/> object.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.MainThread">
+            <summary>
+            Gets the main thread of the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.NativeThreads">
+            <summary>
+            Gets the native threads from the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.RemoteThreads">
+            <summary>
+            Gets the threads from the remote process.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.Item(System.Int32)">
+            <summary>
+            Gets the thread corresponding to an id.
+            </summary>
+            <param name="threadId">The unique identifier of the thread to get.</param>
+            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Threading.RemoteThread"/> class.</returns>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Threading.ThreadFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
             <summary>
             Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Threading.ThreadFactory"/> class.
@@ -6527,28 +6551,6 @@
             <summary>
             Suspends all threads.
             </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.MainThread">
-            <summary>
-            Gets the main thread of the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.NativeThreads">
-            <summary>
-            Gets the native threads from the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.RemoteThreads">
-            <summary>
-            Gets the threads from the remote process.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Threading.ThreadFactory.Item(System.Int32)">
-            <summary>
-            Gets the thread corresponding to an id.
-            </summary>
-            <param name="threadId">The unique identifier of the thread to get.</param>
-            <returns>A new instance of a <see cref="T:Binarysharp.MemoryManagement.Threading.RemoteThread"/> class.</returns>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Windows.Keyboard.BaseKeyboard">
             <summary>
@@ -6858,6 +6860,90 @@
             The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
             </summary>
         </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Children">
+            <summary>
+            Gets all the child windows of this window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.ChildrenHandles">
+            <summary>
+            Gets all the child window handles of this window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.ClassName">
+            <summary>
+            Gets the class name of the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Handle">
+            <summary>
+            The handle of the window.
+            </summary>
+            <remarks>
+            The type here is not <see cref="T:Binarysharp.MemoryManagement.Native.SafeMemoryHandle"/> because a window cannot be closed by calling <see cref="M:Binarysharp.MemoryManagement.Native.NativeMethods.CloseHandle(System.IntPtr)"/>.
+            For more information, see: http://stackoverflow.com/questions/8507307/why-cant-i-close-the-window-handle-in-my-code.
+            </remarks>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Height">
+            <summary>
+            Gets or sets the height of the element.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.IsActivated">
+            <summary>
+            Gets if the window is currently activated.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.IsMainWindow">
+            <summary>
+            Gets if this is the main window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Keyboard">
+            <summary>
+            Tools for managing a virtual keyboard in the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Mouse">
+            <summary>
+            Tools for managing a virtual mouse in the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Placement">
+            <summary>
+            Gets or sets the placement of the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.State">
+            <summary>
+            Gets or sets the specified window's show state.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Title">
+            <summary>
+            Gets or sets the title of the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Thread">
+            <summary>
+            Gets the thread of the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Width">
+            <summary>
+            Gets or sets the width of the element.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.X">
+            <summary>
+            Gets or sets the x-coordinate of the window.
+            </summary>
+        </member>
+        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Y">
+            <summary>
+            Gets or sets the y-coordinate of the window.
+            </summary>
+        </member>
         <member name="M:Binarysharp.MemoryManagement.Windows.RemoteWindow.#ctor(Binarysharp.MemoryManagement.MemorySharp,System.IntPtr)">
             <summary>
             Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/> class.
@@ -6942,90 +7028,6 @@
         <member name="M:Binarysharp.MemoryManagement.Windows.RemoteWindow.ToString">
             <summary>
             Returns a string that represents the current object.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Children">
-            <summary>
-            Gets all the child windows of this window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.ChildrenHandles">
-            <summary>
-            Gets all the child window handles of this window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.ClassName">
-            <summary>
-            Gets the class name of the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Handle">
-            <summary>
-            The handle of the window.
-            </summary>
-            <remarks>
-            The type here is not <see cref="T:Binarysharp.MemoryManagement.Native.SafeMemoryHandle"/> because a window cannot be closed by calling <see cref="M:Binarysharp.MemoryManagement.Native.NativeMethods.CloseHandle(System.IntPtr)"/>.
-            For more information, see: http://stackoverflow.com/questions/8507307/why-cant-i-close-the-window-handle-in-my-code.
-            </remarks>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Height">
-            <summary>
-            Gets or sets the height of the element.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.IsActivated">
-            <summary>
-            Gets if the window is currently activated.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.IsMainWindow">
-            <summary>
-            Gets if this is the main window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Keyboard">
-            <summary>
-            Tools for managing a virtual keyboard in the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Mouse">
-            <summary>
-            Tools for managing a virtual mouse in the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Placement">
-            <summary>
-            Gets or sets the placement of the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.State">
-            <summary>
-            Gets or sets the specified window's show state.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Title">
-            <summary>
-            Gets or sets the title of the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Thread">
-            <summary>
-            Gets the thread of the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Width">
-            <summary>
-            Gets or sets the width of the element.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.X">
-            <summary>
-            Gets or sets the x-coordinate of the window.
-            </summary>
-        </member>
-        <member name="P:Binarysharp.MemoryManagement.Windows.RemoteWindow.Y">
-            <summary>
-            Gets or sets the y-coordinate of the window.
             </summary>
         </member>
         <member name="T:Binarysharp.MemoryManagement.Windows.WindowCore">
@@ -7271,38 +7273,6 @@
             The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.
             </summary>
         </member>
-        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Windows.WindowFactory"/> class.
-            </summary>
-            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.Dispose">
-            <summary>
-            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Windows.WindowFactory"/> object.
-            </summary>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByClassName(System.String)">
-            <summary>
-            Gets all the windows that have the specified class name.
-            </summary>
-            <param name="className">The class name string.</param>
-            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByTitle(System.String)">
-            <summary>
-            Gets all the windows that have the same specified title.
-            </summary>
-            <param name="windowTitle">The window title string.</param>
-            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
-        </member>
-        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByTitleContains(System.String)">
-            <summary>
-            Gets all the windows that contain the specified title.
-            </summary>
-            <param name="windowTitle">A part a window title string.</param>
-            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
-        </member>
         <member name="P:Binarysharp.MemoryManagement.Windows.WindowFactory.ChildWindows">
             <summary>
             Gets all the child windows that belong to the application.
@@ -7339,6 +7309,38 @@
             <summary>
             Gets all the window handles that belong to the application.
             </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.#ctor(Binarysharp.MemoryManagement.MemorySharp)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Binarysharp.MemoryManagement.Windows.WindowFactory"/> class.
+            </summary>
+            <param name="memorySharp">The reference of the <see cref="T:Binarysharp.MemoryManagement.MemorySharp"/> object.</param>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.Dispose">
+            <summary>
+            Releases all resources used by the <see cref="T:Binarysharp.MemoryManagement.Windows.WindowFactory"/> object.
+            </summary>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByClassName(System.String)">
+            <summary>
+            Gets all the windows that have the specified class name.
+            </summary>
+            <param name="className">The class name string.</param>
+            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByTitle(System.String)">
+            <summary>
+            Gets all the windows that have the same specified title.
+            </summary>
+            <param name="windowTitle">The window title string.</param>
+            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
+        </member>
+        <member name="M:Binarysharp.MemoryManagement.Windows.WindowFactory.GetWindowsByTitleContains(System.String)">
+            <summary>
+            Gets all the windows that contain the specified title.
+            </summary>
+            <param name="windowTitle">A part a window title string.</param>
+            <returns>A collection of <see cref="T:Binarysharp.MemoryManagement.Windows.RemoteWindow"/>.</returns>
         </member>
     </members>
 </doc>
