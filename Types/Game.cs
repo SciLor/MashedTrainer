@@ -9,7 +9,8 @@ using Binarysharp.MemoryManagement.Memory;
 using Binarysharp.MemoryManagement.Native;
 using Binarysharp.MemoryManagement.Assembly.CallingConvention;
 using static SciLors_Mashed_Trainer.Types.Player;
-using static SciLors_Mashed_Trainer.Types.Weapon;
+using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
+using SciLors_Mashed_Trainer.Types.Weapons;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Game : BaseMemorySharp {
@@ -40,8 +41,11 @@ namespace SciLors_Mashed_Trainer.Types {
             get { return true; }
         }
 
+        public WeaponHelper WeaponHelper;
+
         public Game(Process process) : base(process) {
-            readAndInjectAsmFunctions();            
+            readAndInjectAsmFunctions();
+            this.WeaponHelper = new WeaponHelper(this);
         }
         
         private void readAndInjectAsmFunctions() {
@@ -53,5 +57,6 @@ namespace SciLors_Mashed_Trainer.Types {
         public void EquipWeapon(PlayerId playerId, WeaponId weaponId) {
             funcChangeWeapon.Execute(CallingConventions.Stdcall, playerId, weaponId);
         }
+
     }
 }

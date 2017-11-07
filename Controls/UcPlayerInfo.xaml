@@ -4,8 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="270" d:DesignWidth="200">
+             mc:Ignorable="d" d:DesignWidth="200" Height="320">
     <Grid>
         <GroupBox Header="{Binding Path=Header, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="grpBase" Margin="0,0,0,0"
                   IsEnabled="{Binding Path=Player.IsActive, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
@@ -42,6 +41,32 @@
                                  Text="{Binding Path=Player.PosZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" Name="chkPositionZ" VerticalAlignment="Top" Width="64" Grid.Column="2" />
                     </Grid>
+                </GroupBox>
+                <GroupBox Header="Position" Height="121" Margin="6,134,6,0" VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Content="X" Height="28" Margin="6,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="19" />
+                        <TextBox Height="23" Margin="6,9,6,0" x:Name="txtPositionX1" VerticalAlignment="Top" Grid.Column="1"
+                            Text="{Binding Path=Player.PosX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" x:Name="chkPositionX1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" />
+
+                        <Label Content="Y" Height="28" HorizontalAlignment="Left" Margin="6,35,0,0" VerticalAlignment="Top" Width="19" />
+                        <TextBox Height="23" Margin="6,39,6,0" x:Name="txtPositionY1" VerticalAlignment="Top" Grid.Column="1"
+                            Text="{Binding Path=Player.PosY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" x:Name="chkPositionY1" VerticalAlignment="Top" Width="64" Grid.Column="2" />
+
+                        <Label Content="Z" Height="28" HorizontalAlignment="Left" Margin="6,64,0,0" VerticalAlignment="Top" Width="19" />
+                        <TextBox Height="23" Margin="6,68,6,0" x:Name="txtPositionZ1" VerticalAlignment="Top" Grid.Column="1"
+                            Text="{Binding Path=Player.PosZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" x:Name="chkPositionZ1" VerticalAlignment="Top" Width="64" Grid.Column="2" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Weapon" Height="46" Margin="6,260,6,0" VerticalAlignment="Top">
+                    <Label Content="{Binding Path=Player.Weapon, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='None'}" />
                 </GroupBox>
             </Grid>
         </GroupBox>

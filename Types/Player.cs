@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
-using static SciLors_Mashed_Trainer.Types.Weapon;
+using SciLors_Mashed_Trainer.Types.Weapons;
+using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Player : BaseMemorySharp {
@@ -15,6 +16,7 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         private IntPtr BASE_ADDRESS = new IntPtr(0x8B06E0 - PROCESS_BASE);
+        private IntPtr BASE_WEAPON_ADDRESS = new IntPtr(0x8BEDCC - PROCESS_BASE);
         private IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40 - PROCESS_BASE);
         private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
 
@@ -42,6 +44,18 @@ namespace SciLors_Mashed_Trainer.Types {
                 if (Game.PlayerCount > (int)Id)
                     return true;
                 return false;
+            }
+        }
+
+        private int playerWeaponOffset;
+        public Weapon Weapon {
+            get {
+                return Game.WeaponHelper.GetWeapon(this);
+            }
+         }
+        public IntPtr WeaponPointer {
+            get {
+                return new IntPtr(Memory[BASE_WEAPON_ADDRESS].Read<int>(playerWeaponOffset));
             }
         }
 
@@ -93,6 +107,7 @@ namespace SciLors_Mashed_Trainer.Types {
             Game = game;
             Id = id;
             playerBaseOffset = PLAYER_BASE_DISTANCE * (int)Id;
+            playerWeaponOffset = PLAYER_WEAPON_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
             playerDistanceOffset = PLAYER_DISTANCE_DISTANCE * (int)Id;
         }
