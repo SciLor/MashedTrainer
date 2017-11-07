@@ -74,7 +74,18 @@
     <Compile Include="Types\BaseMemorySharp.cs" />
     <Compile Include="Types\Game.cs" />
     <Compile Include="Types\Player.cs" />
-    <Compile Include="Types\Weapon.cs" />
+    <Compile Include="Types\Weapons\NoWeapon.cs" />
+    <Compile Include="Types\Weapons\FlameThrower.cs" />
+    <Compile Include="Types\Weapons\Oil.cs" />
+    <Compile Include="Types\Weapons\Mine.cs" />
+    <Compile Include="Types\Weapons\Flashbang.cs" />
+    <Compile Include="Types\Weapons\Shotgun.cs" />
+    <Compile Include="Types\Weapons\Rocket.cs" />
+    <Compile Include="Types\Weapons\Drum.cs" />
+    <Compile Include="Types\Weapons\MaschineGun.cs" />
+    <Compile Include="Types\Weapons\Mortar.cs" />
+    <Compile Include="Types\Weapons\Weapon.cs" />
+    <Compile Include="Types\Weapons\WeaponHelper.cs" />
     <Page Include="Controls\UcGameInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -129,9 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Asm\ChangeWeapon.asm">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Asm\Test.asm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
