@@ -71,6 +71,12 @@ namespace SciLors_Mashed_Trainer {
                     txtStatus.Text = "Mashed Process Pointer: " + game.Memory.Handle.DangerousGetHandle();
                 }
             } else if (game != null) {
+                cleanUp();
+            }
+        }
+
+        private void cleanUp() {
+            if (game != null) {
                 foreach (UcPlayerInfo playerInfo in playerInfos) {
                     playerInfo.Player = null;
                 }
@@ -80,6 +86,11 @@ namespace SciLors_Mashed_Trainer {
                 game = null;
                 txtStatus.Text = "Mashed Process Pointer: 0";
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+            timer.Stop();
+            cleanUp();
         }
     }
 }
