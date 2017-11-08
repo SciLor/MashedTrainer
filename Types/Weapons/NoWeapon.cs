@@ -8,7 +8,11 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
     public class NoWeapon : Weapon {
 
         public NoWeapon(Game game) : base(game) { }
-        
+
+        public override WeaponId GetActiveWeaponId() {
+            return Weapon.WeaponId.None;
+        }
+
         public override string ToString() { return "None"; }
     }
 }

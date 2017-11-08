@@ -115,5 +115,9 @@ namespace SciLors_Mashed_Trainer.Types {
         public void EquipWeapon(WeaponId weaponId) {
             Game.EquipWeapon(Id, weaponId);
         }
+
+        public void DropWeapon() {
+            Game.DropWeapon(Id);
+        }
     }
 }

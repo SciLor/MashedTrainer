@@ -121,12 +121,29 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Asm\DropWeapon.asm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Img\Hazard.bmp" />
+    <Resource Include="Img\Shine.bmp" />
+    <Resource Include="Img\RPG.png" />
+    <Resource Include="Img\SelfDestruct.png" />
+    <Resource Include="Img\Shotgun.png" />
+    <Resource Include="Img\mine.png" />
+    <Resource Include="Img\Missile.png" />
+    <Resource Include="Img\Mortar.png" />
+    <Resource Include="Img\FlameThrower.png" />
+    <Resource Include="Img\gattlingun.png" />
+    <Resource Include="Img\DepthCharge.png" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
     <Content Include="Asm\ChangeWeapon.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Asm\DropWeapon.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Properties\Settings.settings">
