@@ -13,6 +13,10 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
             return Weapons.Weapon.CalculateValidPointers(new IntPtr(0x6A9588), 0x68);
         }
 
+        public override WeaponId GetActiveWeaponId() {
+            return Weapon.WeaponId.Flamethrower;
+        }
+
         public override string ToString() { return "Flame Thrower"; }
     }
 }

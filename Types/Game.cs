@@ -18,6 +18,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr DISTANCE_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
 
         private RemoteAllocation funcChangeWeapon;
+        private RemoteAllocation funcDropWeapon;
 
         public int PlayerCount {
             get {
@@ -49,13 +50,21 @@ namespace SciLors_Mashed_Trainer.Types {
         }
         
         private void readAndInjectAsmFunctions() {
-            byte[] asmChangeWeapon = File.ReadAllBytes("Asm\\ChangeWeapon.bin");
-            funcChangeWeapon = Memory.Memory.Allocate(asmChangeWeapon.Length, MemoryProtectionFlags.ExecuteReadWrite);
-            funcChangeWeapon.Write<byte>(asmChangeWeapon);
+            byte[] asmBytes = File.ReadAllBytes("Asm\\ChangeWeapon.bin");
+            funcChangeWeapon = Memory.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcChangeWeapon.Write<byte>(asmBytes);
+
+            asmBytes = File.ReadAllBytes("Asm\\DropWeapon.bin");
+            funcDropWeapon = Memory.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcDropWeapon.Write<byte>(asmBytes);
         }
 
         public void EquipWeapon(PlayerId playerId, WeaponId weaponId) {
-            funcChangeWeapon.Execute(CallingConventions.Stdcall, playerId, weaponId);
+            DropWeapon(playerId);
+            funcChangeWeapon.Execute(CallingConventions.Stdcall, (int)playerId, (int)weaponId);
+        }
+        public void DropWeapon(PlayerId playerId) {
+            funcDropWeapon.Execute(CallingConventions.Stdcall, (int)playerId);
         }
 
     }
