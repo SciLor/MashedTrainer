@@ -18,9 +18,14 @@
 
                 <GroupBox Header="Basic" Height="122" Margin="6,6,6,0" VerticalAlignment="Top">
                     <Grid>
-                        <Label Height="24" Margin="6,0" Name="lblPoints" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="152" Content="0 / 8" />
-                        <Slider Height="34" Margin="6,15,6,0" Name="sldPoints" VerticalAlignment="Top" SmallChange="1" Minimum="0" Maximum="8" TickPlacement="Both"
-                                 Value="{Binding Path=Player.Points, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="sldPoints_ValueChanged" />
+                        <TextBlock Height="15" Margin="6,0"  VerticalAlignment="Top" Width="152" TextAlignment="Center">
+                          <Run Text="{Binding Path=Player.Points, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=0}"/>
+                          <Run Text="/"/>
+                          <Run Text="{Binding Path=Player.Game.MaximumPoints, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=8}"/>
+                        </TextBlock>
+                        <Slider Height="34" Margin="6,15,6,0" Name="sldPoints" VerticalAlignment="Top" SmallChange="1" Minimum="0" TickPlacement="Both"
+                                 Value="{Binding Path=Player.Points, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                 Maximum="{Binding Path=Player.Game.MaximumPoints, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=8}" />
                         <CheckBox Content="Freeze points" Height="16" Margin="6,49,0,0" Name="chkPoints" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Checked="chkPoints_Checked" IsChecked="{Binding Path=Player.Settings.FreezePointsSettings.IsFreeze, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Content="Alive" Height="16" HorizontalContentAlignment="Left" Margin="112,49,0,0" Name="chkAlive" VerticalAlignment="Top" HorizontalAlignment="Left"
                                   IsChecked="{Binding Path=Player.IsAlive, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

@@ -16,9 +16,13 @@ namespace SciLors_Mashed_Trainer.Types {
             FOUR = 3
         }
 
+        public const int CHANGE_POINTS_INITIAL_VALUE = -1000; // FFFFFC18
+
         private IntPtr BASE_ADDRESS = new IntPtr(0x8B06E0 - PROCESS_BASE);
         private IntPtr BASE_WEAPON_ADDRESS = new IntPtr(0x8BEDCC - PROCESS_BASE);
         private IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40 - PROCESS_BASE);
+        private IntPtr BASE_POINTS_CHANGE_ADDRESS = new IntPtr(0x8D8B80 - PROCESS_BASE);
+        private IntPtr BASE_POINT_CHANGE_VISUAL_ADDRESS = new IntPtr(0x8D8B60 - PROCESS_BASE);
         private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
 
         private const int PLAYER_ALIVE = 0x004; //0/1
@@ -29,6 +33,9 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_POSITION_X = BASE_ADDRESS_EXTENDER + 0x30;
         private const int PLAYER_POSITION_Y = BASE_ADDRESS_EXTENDER + 0x38;
         private const int PLAYER_POSITION_Z = BASE_ADDRESS_EXTENDER + 0x34;
+
+        private const int PLAYER_POINTS_CHANGE_OFFSET = 0x40;
+        private const int PLAYER_POINTS_CHANGE_VISUAL_OFFSET = 0x20;
 
         //Distances between each players options
         private const int PLAYER_BASE_DISTANCE = 0xD04;
@@ -119,6 +126,15 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private int pointsChange;
+        public int PointsChange {
+            get { return pointsChange; }
+            set {
+                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET, value);
+                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_VISUAL_OFFSET, value);
+            }
+        }
+
         public PlayerId Id { get; set; }
         public Game Game { get; set; }
         public Player(Game game, PlayerId id) : base(game.Process) {
@@ -134,6 +150,7 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public void Update() {
             points = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset);
+            pointsChange = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET);
 
             weaponPointer = new IntPtr(Process[BASE_WEAPON_ADDRESS].Read<int>(playerWeaponOffset));
             isAlive = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_ALIVE);

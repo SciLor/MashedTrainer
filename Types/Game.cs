@@ -18,6 +18,7 @@ namespace SciLors_Mashed_Trainer.Types {
     public class Game : BaseMemorySharp, IDisposable {
         private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
         private IntPtr DISTANCE_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
+        private IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4 - PROCESS_BASE); //0x659338 //Readonly
 
         private RemoteAllocation funcChangeWeapon;
         private RemoteAllocation funcDropWeapon;
@@ -38,7 +39,7 @@ namespace SciLors_Mashed_Trainer.Types {
         public float MaximumDistance {
             get { return 10; }
         }
-        public float distanceWarningThreshold;
+        private float distanceWarningThreshold;
         public float DistanceWarningThreshold {
             get { return distanceWarningThreshold; }
             set {
@@ -47,12 +48,15 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
-        public bool isActive;
+        private bool isActive;
         public bool IsActive {
             get { return isActive; }
         }
 
-
+        private int maximumPoints;
+        public int MaximumPoints {
+            get { return maximumPoints; }
+        }
 
         public WeaponHelper WeaponHelper;
 
@@ -82,6 +86,11 @@ namespace SciLors_Mashed_Trainer.Types {
                                 float distance = playerDead.Position.GetDistance(playerAlive.Position);
                                 if (distance < dos.MinimalReviceDistance) {
                                     playerDead.IsAlive = true;
+                                    int currentPointsChange = playerDead.PointsChange;
+                                    if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
+                                        playerDead.Points -= playerDead.PointsChange;
+                                        playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
+                                    }
                                 }
                             }
                         }
@@ -111,6 +120,7 @@ namespace SciLors_Mashed_Trainer.Types {
             playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
             distanceWarningThreshold = Process[DISTANCE_THRESHOLD].Read<float>();
             isActive = true;
+            maximumPoints = Process[MAXIMUM_POINTS].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
 
             foreach (Player player in Players) {
                 player.Update();

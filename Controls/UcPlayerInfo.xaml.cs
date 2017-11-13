@@ -66,16 +66,12 @@ namespace SciLors_Mashed_Trainer.Controls {
                     grpBase.Background = null;
                     imgWarning.Opacity = 0.01;
                 }
-            }
+            } 
         }
 
         private void SetWeaponButtons() {
             uwsWeaponSelector.SetCheckedAll(false);
             uwsWeaponSelector.SetChecked(Player.Weapon.GetActiveWeaponId(), true);
-        }
-
-        private void sldPoints_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            lblPoints.Content = sldPoints.Value + " / 8";
         }
 
         private void btnWeaponDrop_Click(object sender, RoutedEventArgs e) {
