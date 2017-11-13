@@ -88,6 +88,13 @@ namespace SciLors_Mashed_Trainer.Types {
                                     playerDead.IsAlive = true;
                                     int currentPointsChange = playerDead.PointsChange;
                                     if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
+                                        foreach (Player playerDeadOther in Players) {
+                                            if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
+                                                && playerDeadOther != playerDead
+                                                && playerDeadOther.PointsChange > playerDead.PointsChange) {
+                                                playerDeadOther.PointsChange -= 1;
+                                            }
+                                        }
                                         playerDead.Points -= playerDead.PointsChange;
                                         playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
                                     }
