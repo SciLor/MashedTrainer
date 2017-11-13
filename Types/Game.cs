@@ -92,7 +92,8 @@ namespace SciLors_Mashed_Trainer.Types {
                                             if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
                                                 && playerDeadOther != playerDead
                                                 && playerDeadOther.PointsChange > playerDead.PointsChange) {
-                                                playerDeadOther.PointsChange -= 1;
+                                                if (playerDeadOther.PointsChange < 0)
+                                                    playerDeadOther.PointsChange -= 1;
                                             }
                                         }
                                         playerDead.Points -= playerDead.PointsChange;
