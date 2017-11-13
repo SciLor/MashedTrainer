@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="800">
+             d:DesignHeight="250" d:DesignWidth="800">
     <Grid>
         <GroupBox Header="Game" Name="grpBase"
                    IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
@@ -17,7 +17,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Header="Destory Distance" Name="grpDistance" Grid.Column="1">
+                <GroupBox Header="Destory distance" Name="grpDistance" Grid.Column="0" Margin="0,0,0,127">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -29,18 +29,117 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Content="Max. Distance" Grid.Column="0" Grid.Row="0"></Label>
-                        <TextBox x:Name="txtMaxDistance" Height="23" Grid.Column="1" Grid.Row="0"
+                        <TextBox x:Name="txtMaxDistance" Grid.Column="1" Grid.Row="0"
                                  Text="{Binding Path=Game.MaximumDistance, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                         <Label Content="Warn. Distance" Grid.Column="0" Grid.Row="1"></Label>
-                        <TextBox x:Name="txtWarnDistance" Height="23" Grid.Column="1" Grid.Row="1"
+                        <TextBox x:Name="txtWarnDistance" Grid.Column="1" Grid.Row="1"
                                  Text="{Binding Path=Game.DistanceWarningThreshold, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                         <Button x:Name="btnResetDistance" Content="Reset" Grid.Column="1" Grid.Row="2" Height="21" Click="btnResetDistance_Click"></Button>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="grpRevive" Margin="0,106,0,40">
+                    <GroupBox.Header>
+                        <CheckBox x:Name="chkReviveEnabled" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Drive over revive</CheckBox>
+                    </GroupBox.Header>
+                    <Grid IsEnabled="{Binding ElementName=chkReviveEnabled, Path=IsChecked}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Min. Distance" Grid.Column="0" Grid.Row="0"></Label>
+                        <TextBox Name="txtRespawnDistance" Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" Text="{Binding Path=Game.Settings.DriveOverReviveSettings.MinimalReviceDistance, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Content="Settings" Grid.Column="0" Grid.Row="1"></Label>
+                        <CheckBox Name="chkReviveSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="grpWeaponDrop" Grid.Column="1">
+                    <GroupBox.Header>
+                        <CheckBox x:Name="chkWeaponDropEnabled">Random weapon equip</CheckBox>
+                    </GroupBox.Header>
+                    <Grid IsEnabled="{Binding ElementName=chkWeaponDropEnabled, Path=IsChecked}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Min. Time (s)" Grid.Column="0" Grid.Row="0"></Label>
+                        <Label Content="Max. Time (s)" Grid.Column="0" Grid.Row="1"></Label>
+                        <TextBox Name="txtWeaponEquipMin" Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" />
+                        <TextBox Name="txtWeaponEquipMax" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" />
+                        <Label Content="Weapons" Grid.Column="0" Grid.Row="2"></Label>
+                        <local:UcWeaponSelector Grid.Column="2" Grid.Row="2"/>
+                        <Label Content="Settings" Grid.Column="0" Grid.Row="3"></Label>
+                        <CheckBox Name="chkWeaponDropSame" Content="Same for all" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center"/>
+                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="4" VerticalContentAlignment="Center"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Name="grpWeaponBox" Grid.Column="2">
+                    <GroupBox.Header>
+                        <CheckBox x:Name="chkWeaponBoxEnabled">Change weaponboxes</CheckBox>
+                    </GroupBox.Header>
+                    <Grid IsEnabled="{Binding ElementName=chkWeaponBoxEnabled, Path=IsChecked}" Margin="0,-1,0,1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Content="Weapons" Grid.Column="0" Grid.Row="0"></Label>
+                        <local:UcWeaponSelector Grid.Column="2" Grid.Row="0"/>
+                        <Label Content="Settings" Grid.Column="0" Grid.Row="1"></Label>
+                        <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center"/>
                     </Grid>
                 </GroupBox>
             </Grid>
         </GroupBox>
 
     </Grid>
+    <UserControl.Resources>
+        <Style x:Key="NoStyleToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Grid x:Name="Chrome" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                <Setter Property="Opacity" TargetName="Chrome" Value="0.25"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="Foreground" Value="#ADADAD"/>
+                                <Setter Property="Opacity" TargetName="Chrome" Value="1.0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 </UserControl>

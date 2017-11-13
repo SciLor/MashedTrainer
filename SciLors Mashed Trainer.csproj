@@ -70,10 +70,19 @@
     <Compile Include="Controls\UcPlayerInfo.xaml.cs">
       <DependentUpon>UcPlayerInfo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UcWeaponSelector.xaml.cs">
+      <DependentUpon>UcWeaponSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Types\BaseMemory.cs" />
     <Compile Include="Types\BaseMemorySharp.cs" />
     <Compile Include="Types\Game.cs" />
     <Compile Include="Types\Player.cs" />
+    <Compile Include="Types\Position.cs" />
+    <Compile Include="Types\Settings\Game\DriveOverReviveSettings.cs" />
+    <Compile Include="Types\Settings\Game\GameSettings.cs" />
+    <Compile Include="Types\Settings\Player\FreezePointsSettings.cs" />
+    <Compile Include="Types\Settings\Player\FreezePositionSettings.cs" />
+    <Compile Include="Types\Settings\Player\PlayerSettings.cs" />
     <Compile Include="Types\Weapons\NoWeapon.cs" />
     <Compile Include="Types\Weapons\FlameThrower.cs" />
     <Compile Include="Types\Weapons\Oil.cs" />
@@ -91,6 +100,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\UcPlayerInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UcWeaponSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -124,6 +137,8 @@
     <Content Include="Asm\DropWeapon.asm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Img\UI\Kid-icon.png" />
+    <Resource Include="Img\UI\Robot-icon.png" />
     <Resource Include="Img\Hazard.bmp" />
     <Resource Include="Img\Shine.bmp" />
     <Resource Include="Img\RPG.png" />

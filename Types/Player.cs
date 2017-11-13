@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using SciLors_Mashed_Trainer.Types.Weapons;
 using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
+using SciLors_Mashed_Trainer.Types.Settings.Player;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Player : BaseMemorySharp {
@@ -20,7 +21,9 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40 - PROCESS_BASE);
         private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
 
-        private const int PLAYER_ALIVE = 0x04; //0/1
+        private const int PLAYER_ALIVE = 0x004; //0/1
+        private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
+        private const int PLAYER_BOT = 0xD04; //0/1
 
         private const int BASE_ADDRESS_EXTENDER = 0x928;
         private const int PLAYER_POSITION_X = BASE_ADDRESS_EXTENDER + 0x30;
@@ -33,10 +36,16 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_POINTS_DISTANCE = 0x4;
         private const int PLAYER_DISTANCE_DISTANCE = 0x4;
 
+        public PlayerSettings Settings { get; set; }
+
         private int playerPointsOffset;
+        private int points;
         public int Points {
-            get { return Memory[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset); }
-            set { Memory[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset, value); }
+            get { return points; }
+            set {
+                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset, value);
+                points = value;
+            }
         }
 
         public bool IsActive {
@@ -52,64 +61,91 @@ namespace SciLors_Mashed_Trainer.Types {
             get {
                 return Game.WeaponHelper.GetWeapon(this);
             }
-         }
+        }
+        private IntPtr weaponPointer = IntPtr.Zero;
         public IntPtr WeaponPointer {
             get {
-                return new IntPtr(Memory[BASE_WEAPON_ADDRESS].Read<int>(playerWeaponOffset));
+                return weaponPointer;
             }
         }
 
         private int playerBaseOffset;
+        private bool isAlive;
         public bool IsAlive {
             get {
-                return Memory[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_ALIVE);
+                return isAlive;
             }
             set {
-                Memory[BASE_ADDRESS].Write<bool>(playerBaseOffset + PLAYER_ALIVE, value);
+                Process[BASE_ADDRESS].Write<bool>(playerBaseOffset + PLAYER_ALIVE, value);
+                isAlive = value;
+                IsControlsDisabled = !value;
+            }
+        }
+        private bool isControlsDisabled;
+        public bool IsControlsDisabled {
+            get {
+                return isControlsDisabled;
+            }
+            set {
+                Process[BASE_ADDRESS].Write<bool>(playerBaseOffset + PLAYER_CONTROLS_DISABLED, value);
+                isControlsDisabled = value;
             }
         }
 
-        public float PosX {
+        private bool isBot;
+        public bool IsBot {
             get {
-                return Memory[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_X);
-            }
-            set {
-                Memory[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_X, value);
+                return isBot;
             }
         }
-        public float PosY {
-            get {
-                return Memory[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Y);
-            }
+
+        private Position position = new Position();
+        public Position Position {
+            get { return position; }
             set {
-                Memory[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Y, value);
-            }
-        }
-        public float PosZ {
-            get {
-                return Memory[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Z);
-            }
-            set {
-                Memory[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Z, value);
+                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_X, value.X);
+                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Y, value.Y);
+                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Z, value.Z);
+
+                position = value;
             }
         }
 
         private int playerDistanceOffset;
+        private float distance;
         public float Distance {
             get {
-                return Memory[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
+                return distance;
             }
         }
 
         public PlayerId Id { get; set; }
         public Game Game { get; set; }
-        public Player(Game game, PlayerId id) : base(game.Memory) {
+        public Player(Game game, PlayerId id) : base(game.Process) {
             Game = game;
+            game.Players.Add(this);
             Id = id;
+            Settings = new PlayerSettings();
             playerBaseOffset = PLAYER_BASE_DISTANCE * (int)Id;
             playerWeaponOffset = PLAYER_WEAPON_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
             playerDistanceOffset = PLAYER_DISTANCE_DISTANCE * (int)Id;
+        }
+
+        public void Update() {
+            points = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset);
+
+            weaponPointer = new IntPtr(Process[BASE_WEAPON_ADDRESS].Read<int>(playerWeaponOffset));
+            isAlive = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_ALIVE);
+            isControlsDisabled = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_CONTROLS_DISABLED);
+            isBot = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_BOT);
+
+            position.X = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_X);
+            position.Y = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Y);
+            position.Z = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Z);
+
+            distance = Process[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
+            RaisePropertyChanged();
         }
 
         public void EquipWeapon(WeaponId weaponId) {

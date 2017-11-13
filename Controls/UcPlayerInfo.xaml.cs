@@ -13,6 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SciLors_Mashed_Trainer.Types;
 using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
+using System.Globalization;
 
 namespace SciLors_Mashed_Trainer.Controls {
     /// <summary>
@@ -69,89 +70,45 @@ namespace SciLors_Mashed_Trainer.Controls {
         }
 
         private void SetWeaponButtons() {
-            btnMortar.Opacity = 0.25;
-            btnMachinegun.Opacity = 0.25;
-            btnDrum.Opacity = 0.25;
-            btnRocket.Opacity = 0.25;
-            btnMines.Opacity = 0.25;
-            btnFlamethrower.Opacity = 0.25;
-            btnShotgun.Opacity = 0.25;
-            btnFlashbang.Opacity = 0.25;
-            btnOil.Opacity = 0.25;
-
-            switch (Player.Weapon.GetActiveWeaponId()) {
-                case WeaponId.Mortar:
-                    btnMortar.Opacity = 1;
-                    break;
-                case WeaponId.Maschinegun:
-                    btnMachinegun.Opacity = 1;
-                    break;
-                case WeaponId.Drum:
-                    btnDrum.Opacity = 1;
-                    break;
-                case WeaponId.Rocket:
-                    btnRocket.Opacity = 1;
-                    break;
-                case WeaponId.Mines:
-                    btnMines.Opacity = 1;
-                    break;
-                case WeaponId.Flamethrower:
-                    btnFlamethrower.Opacity = 1;
-                    break;
-                case WeaponId.Shotgun:
-                    btnShotgun.Opacity = 1;
-                    break;
-                case WeaponId.Flashbang:
-                    btnFlashbang.Opacity = 1;
-                    break;
-                case WeaponId.Oil:
-                    btnOil.Opacity = 1;
-                    break;
-            }
+            uwsWeaponSelector.SetCheckedAll(false);
+            uwsWeaponSelector.SetChecked(Player.Weapon.GetActiveWeaponId(), true);
         }
 
         private void sldPoints_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             lblPoints.Content = sldPoints.Value + " / 8";
         }
 
-        private void btnMortar_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Mortar);
-        }
-
-        private void btnMachinegun_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Maschinegun);
-        }
-
-        private void btnDrum_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Drum);
-        }
-
-        private void btnRocket_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Rocket);
-        }
-
-        private void btnMines_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Mines);
-        }
-
-        private void btnFlamethrower_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Flamethrower);
-        }
-
-        private void btnShotgun_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Shotgun);
-        }
-
-        private void btnFlashbang_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Flashbang);
-        }
-
-        private void btnOil_Click(object sender, RoutedEventArgs e) {
-            Player.EquipWeapon(WeaponId.Oil);
-        }
-
         private void btnWeaponDrop_Click(object sender, RoutedEventArgs e) {
             Player.DropWeapon();
+        }
+
+        private void uwsWeaponSelector_WeaponClick(WeaponId weaponId) {
+            uwsWeaponSelector.SetCheckedAll(false);
+            uwsWeaponSelector.SetChecked(weaponId, true);
+            Player.EquipWeapon(weaponId);
+        }
+
+        private void txtPosition_LostFocus(object sender, RoutedEventArgs e) {
+        }
+
+        private void txtPosition_GotFocus(object sender, RoutedEventArgs e) {
+
+        }
+
+        private void chkPositionX_Checked(object sender, RoutedEventArgs e) {
+            Player.Settings.FreezePositionSettings.Position.X = Player.Position.X;
+        }
+
+        private void chkPositionY_Checked(object sender, RoutedEventArgs e) {
+            Player.Settings.FreezePositionSettings.Position.Y = Player.Position.Y;
+        }
+
+        private void chkPositionZ_Checked(object sender, RoutedEventArgs e) {
+            Player.Settings.FreezePositionSettings.Position.Z = Player.Position.Z;
+        }
+
+        private void chkPoints_Checked(object sender, RoutedEventArgs e) {
+            Player.Settings.FreezePointsSettings.Points = Player.Points;
         }
     }
 }

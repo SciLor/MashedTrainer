@@ -34,7 +34,7 @@ namespace SciLors_Mashed_Trainer {
             initializePlayerGrid();
 
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             timer.Start();
 
         }
@@ -64,11 +64,8 @@ namespace SciLors_Mashed_Trainer {
                     }
                     ucGameInfo.Game = game;
                 } else {
-                    foreach (Player player in players) {
-                        player.RaisePropertyChanged();
-                    }
-                    game.RaisePropertyChanged();
-                    txtStatus.Text = "Mashed Process Pointer: " + game.Memory.Handle.DangerousGetHandle();
+                    game.Update();
+                    txtStatus.Text = "Mashed Process Pointer: " + game.Process.Handle.DangerousGetHandle();
                 }
             } else if (game != null) {
                 cleanUp();
@@ -82,7 +79,6 @@ namespace SciLors_Mashed_Trainer {
                 }
                 Array.Clear(players, 0, players.Length);
                 ucGameInfo.Game = null;
-                game.Memory.Handle.Close();
                 game = null;
                 txtStatus.Text = "Mashed Process Pointer: 0";
             }
