@@ -2,11 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:uc="clr-namespace:SciLors_Mashed_Trainer.Controls" 
-        Title="SciLor's Mashed Fully Loaded Trainer" Height="760" Width="858" Closing="Window_Closing">
+        Title="SciLor's Mashed Fully Loaded Trainer" Height="885" Width="858" Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
-            <RowDefinition MinHeight="530"/>
+            <RowDefinition MinHeight="555"/>
             <RowDefinition MinHeight="130"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>

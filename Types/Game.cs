@@ -11,54 +11,116 @@ using Binarysharp.MemoryManagement.Assembly.CallingConvention;
 using static SciLors_Mashed_Trainer.Types.Player;
 using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
 using SciLors_Mashed_Trainer.Types.Weapons;
+using SciLors_Mashed_Trainer.Types.Settings.Game;
+using SciLors_Mashed_Trainer.Types.Settings.Player;
 
 namespace SciLors_Mashed_Trainer.Types {
-    public class Game : BaseMemorySharp {
+    public class Game : BaseMemorySharp, IDisposable {
         private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
         private IntPtr DISTANCE_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
 
         private RemoteAllocation funcChangeWeapon;
         private RemoteAllocation funcDropWeapon;
 
+        public List<Player> Players = new List<Player>();
+
+        public GameSettings Settings {
+            get; set;
+        }
+
+        private int playerCount;
         public int PlayerCount {
             get {
-                //return Memory.Read<int>(PLAYER_COUNT);
-                return Memory[PLAYER_COUNT].Read<int>();
+                return playerCount;
             }
         }
 
-        public float MaximumDistance
-        {
+        public float MaximumDistance {
             get { return 10; }
         }
-        public float DistanceWarningThreshold
-        {
-            get { return Memory[DISTANCE_THRESHOLD].Read<float>(); }
-            set { Memory[DISTANCE_THRESHOLD].Write<float>(value); }
+        public float distanceWarningThreshold;
+        public float DistanceWarningThreshold {
+            get { return distanceWarningThreshold; }
+            set {
+                Process[DISTANCE_THRESHOLD].Write<float>(value);
+                distanceWarningThreshold = value;
+            }
         }
 
-        public bool IsActive
-        {
-            get { return true; }
+        public bool isActive;
+        public bool IsActive {
+            get { return isActive; }
         }
+
+
 
         public WeaponHelper WeaponHelper;
 
         public Game(Process process) : base(process) {
             readAndInjectAsmFunctions();
+            this.Settings = new GameSettings();
             this.WeaponHelper = new WeaponHelper(this);
         }
         
         private void readAndInjectAsmFunctions() {
             byte[] asmBytes = File.ReadAllBytes("Asm\\ChangeWeapon.bin");
-            funcChangeWeapon = Memory.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcChangeWeapon = Process.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
             funcChangeWeapon.Write<byte>(asmBytes);
 
             asmBytes = File.ReadAllBytes("Asm\\DropWeapon.bin");
-            funcDropWeapon = Memory.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcDropWeapon = Process.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
             funcDropWeapon.Write<byte>(asmBytes);
         }
 
+        private void ExecuteExtraFeatures() {
+            if (Settings.DriveOverReviveSettings.IsEnabled) {
+                DriveOverReviveSettings dos = Settings.DriveOverReviveSettings;
+                foreach (Player playerAlive in Players) {
+                    if (playerAlive.IsAlive) {
+                        foreach (Player playerDead in Players) {
+                            if (!playerDead.IsAlive && playerDead.IsActive) {
+                                float distance = playerDead.Position.GetDistance(playerAlive.Position);
+                                if (distance < dos.MinimalReviceDistance) {
+                                    playerDead.IsAlive = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (Player player in Players) {
+                FreezePositionSettings fps = player.Settings.FreezePositionSettings;
+                if (fps.IsFreezeX)
+                    player.Position.X = fps.Position.X;
+                if (fps.IsFreezeY)
+                    player.Position.Y = fps.Position.Y;
+                if (fps.IsFreezeZ)
+                    player.Position.Z = fps.Position.Z;
+                if (fps.HasFreeze)
+                    player.Position = player.Position; //Force Update
+
+                FreezePointsSettings fp = player.Settings.FreezePointsSettings;
+                if (fp.IsFreeze)
+                    player.Points = fp.Points;
+            }
+        
+        }
+
+        public void Update() {
+            playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
+            distanceWarningThreshold = Process[DISTANCE_THRESHOLD].Read<float>();
+            isActive = true;
+
+            foreach (Player player in Players) {
+                player.Update();
+            }
+
+            ExecuteExtraFeatures();
+
+            RaisePropertyChanged();
+        }
+ 
         public void EquipWeapon(PlayerId playerId, WeaponId weaponId) {
             DropWeapon(playerId);
             funcChangeWeapon.Execute(CallingConventions.Stdcall, (int)playerId, (int)weaponId);
@@ -67,5 +129,23 @@ namespace SciLors_Mashed_Trainer.Types {
             funcDropWeapon.Execute(CallingConventions.Stdcall, (int)playerId);
         }
 
+    #region IDisposable Support
+        private bool disposed = false; // To detect redundant calls
+
+        protected virtual void DoDispose() {
+            if (!disposed) {
+                Process.Dispose();
+                disposed = true;
+            }
+        }
+
+        public void Dispose() {
+            DoDispose();
+            GC.SuppressFinalize(this);
+        }
+        ~Game() {
+            DoDispose();
+        }
+        #endregion
     }
 }

@@ -3,27 +3,34 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="490">
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:SciLors_Mashed_Trainer.Controls"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="530">
     <Grid>
-        <GroupBox Header="{Binding Path=Header, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Player X'}" Name="grpBase" Margin="0,0,0,0"
+        <GroupBox Name="grpBase" Margin="0,0,0,0"
                   IsEnabled="{Binding Path=Player.IsActive, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal" Width="Auto">
+                    <Label x:Name="lblHeader" Content="{Binding Path=Header, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Player X'}"/>
+                </StackPanel>
+            </GroupBox.Header>
             <Grid>
+
                 <GroupBox Header="Basic" Height="122" Margin="6,6,6,0" VerticalAlignment="Top">
                     <Grid>
                         <Label Height="24" Margin="6,0" Name="lblPoints" VerticalAlignment="Top" HorizontalContentAlignment="Center" Width="152" Content="0 / 8" />
                         <Slider Height="34" Margin="6,15,6,0" Name="sldPoints" VerticalAlignment="Top" SmallChange="1" Minimum="0" Maximum="8" TickPlacement="Both"
                                  Value="{Binding Path=Player.Points, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ValueChanged="sldPoints_ValueChanged" />
-                        <CheckBox Content="Freeze Points" Height="16" Margin="6,49,0,0" Name="chkPoints" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Left" />
+                        <CheckBox Content="Freeze points" Height="16" Margin="6,49,0,0" Name="chkPoints" VerticalAlignment="Top" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Checked="chkPoints_Checked" IsChecked="{Binding Path=Player.Settings.FreezePointsSettings.IsFreeze, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Content="Alive" Height="16" HorizontalContentAlignment="Left" Margin="112,49,0,0" Name="chkAlive" VerticalAlignment="Top" HorizontalAlignment="Left"
                                   IsChecked="{Binding Path=Player.IsAlive, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Label Height="24" Margin="1,71,107,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" Content="Distance:" />
                         <Label Height="24" Margin="62,71,0,0" x:Name="lblDistance" VerticalAlignment="Top" HorizontalAlignment="Left" Width="72" 
                                Content="{Binding Path=Player.Distance, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=0}"/>
-                        <Image x:Name="imgWarning" HorizontalAlignment="Right" Height="24" Margin="0,71,6,0" VerticalAlignment="Top" Width="24" Source="/SciLorsMashedTrainer;component/Img/Hazard.bmp" Opacity="0.01"/>
+                        <Image x:Name="imgWarning" HorizontalAlignment="Right" Height="24" Margin="0,71,6,0" VerticalAlignment="Top" Width="24" Source="/SciLorsMashedTrainer;component/Img/Hazard.bmp" Opacity="0.5"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Position" Height="121" Margin="6,134,6,0" VerticalAlignment="Top">
+                <GroupBox Header="Position" Height="140" Margin="6,134,6,0" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -32,44 +39,22 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="X" Height="28" Margin="6,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="19" />
                         <TextBox Height="23" Margin="6,9,6,0" Name="txtPositionX" VerticalAlignment="Top" Grid.Column="1"
-                                 Text="{Binding Path=Player.PosX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" Name="chkPositionX" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" />
+                                 Text="{Binding Path=Player.Position.X, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
+                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" Name="chkPositionX" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionX_Checked" />
 
                         <Label Content="Y" Height="28" HorizontalAlignment="Left" Margin="6,35,0,0" VerticalAlignment="Top" Width="19" />
                         <TextBox Height="23" Margin="6,39,6,0" Name="txtPositionY" VerticalAlignment="Top" Grid.Column="1"
-                                 Text="{Binding Path=Player.PosY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" Name="chkPositionY" VerticalAlignment="Top" Width="64" Grid.Column="2" />
+                                 Text="{Binding Path=Player.Position.Y, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" Name="chkPositionY" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionY_Checked"/>
 
                         <Label Content="Z" Height="28" HorizontalAlignment="Left" Margin="6,64,0,0" VerticalAlignment="Top" Width="19" />
                         <TextBox Height="23" Margin="6,68,6,0" Name="txtPositionZ" VerticalAlignment="Top" Grid.Column="1"
-                                 Text="{Binding Path=Player.PosZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" Name="chkPositionZ" VerticalAlignment="Top" Width="64" Grid.Column="2" />
+                                 Text="{Binding Path=Player.Position.Z, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" Name="chkPositionZ" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionZ_Checked" RenderTransformOrigin="-0.453,2.5"/>
+                        <CheckBox Content="Disable Controls" Height="20" HorizontalAlignment="Left" Margin="10,98,0,0" x:Name="chkPositionZ_Copy" VerticalAlignment="Top" Width="144" IsChecked="{Binding Player.IsControlsDisabled, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="-0.453,2.5" Grid.ColumnSpan="3"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Position" Height="121" Margin="6,134,6,0" VerticalAlignment="Top">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"  />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Label Content="X" Height="28" Margin="6,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="19" />
-                        <TextBox Height="23" Margin="6,9,6,0" x:Name="txtPositionX1" VerticalAlignment="Top" Grid.Column="1"
-                            Text="{Binding Path=Player.PosX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" x:Name="chkPositionX1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" />
-
-                        <Label Content="Y" Height="28" HorizontalAlignment="Left" Margin="6,35,0,0" VerticalAlignment="Top" Width="19" />
-                        <TextBox Height="23" Margin="6,39,6,0" x:Name="txtPositionY1" VerticalAlignment="Top" Grid.Column="1"
-                            Text="{Binding Path=Player.PosY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" x:Name="chkPositionY1" VerticalAlignment="Top" Width="64" Grid.Column="2" />
-
-                        <Label Content="Z" Height="28" HorizontalAlignment="Left" Margin="6,64,0,0" VerticalAlignment="Top" Width="19" />
-                        <TextBox Height="23" Margin="6,68,6,0" x:Name="txtPositionZ1" VerticalAlignment="Top" Grid.Column="1"
-                            Text="{Binding Path=Player.PosZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" x:Name="chkPositionZ1" VerticalAlignment="Top" Width="64" Grid.Column="2" />
-                    </Grid>
-                </GroupBox>
-                <GroupBox Header="Weapon" Height="213" Margin="6,260,6,0" VerticalAlignment="Top">
+                <GroupBox Header="Weapon" Height="213" Margin="6,279,6,0" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="0.3333*"/>
@@ -79,40 +64,10 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Label x:Name="lblWeapon" Grid.ColumnSpan="2" Grid.Row="0" Content="{Binding Path=Player.Weapon, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='None'}" />
                         <Button Content="Drop" Name="btnWeaponDrop" Grid.Column="2" Margin="3" Click="btnWeaponDrop_Click"/>
-                        <Button Name="btnMortar" Grid.Row="1" Opacity="0.25" Grid.Column="0" Style="{DynamicResource NoStyleButton}" Click="btnMortar_Click">
-                            <Image Name="imgMortar" Source="/SciLorsMashedTrainer;component/Img/Mortar.png"/>
-                        </Button>
-                        <Button Name="btnMachinegun" Grid.Row="1" Opacity="0.25" Grid.Column="1" Style="{DynamicResource NoStyleButton}" Click="btnMachinegun_Click">
-                            <Image Name="imgMachinegun" Grid.Row="1" Grid.Column="1" Source="/SciLorsMashedTrainer;component/Img/gattlingun.png"/>
-                        </Button>
-                        <Button Name="btnDrum" Grid.Row="1" Opacity="0.25" Grid.Column="2" Style="{DynamicResource NoStyleButton}" Click="btnDrum_Click">
-                            <Image Name="imgDrum" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/DepthCharge.png"/>
-                        </Button>
-
-                        <Button Name="btnRocket" Grid.Row="2" Opacity="0.25" Grid.Column="0" Style="{DynamicResource NoStyleButton}" Click="btnRocket_Click">
-                            <Image Name="imgRocket" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/Missile.png"/>
-                        </Button>
-                        <Button Name="btnMines" Grid.Row="2" Opacity="0.25" Grid.Column="1" Style="{DynamicResource NoStyleButton}" Click="btnMines_Click">
-                            <Image Name="imgMines" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/mine.png"/>
-                        </Button>
-                        <Button Name="btnFlamethrower" Grid.Row="2" Opacity="0.25" Grid.Column="2" Style="{DynamicResource NoStyleButton}" Click="btnFlamethrower_Click">
-                            <Image Name="imgFlamethrower" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/FlameThrower.png"/>
-                        </Button>
-
-                        <Button Name="btnShotgun" Grid.Row="3" Opacity="0.25" Grid.Column="0" Style="{DynamicResource NoStyleButton}" Click="btnShotgun_Click">
-                            <Image Name="imgShotgun" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/Shotgun.png"/>
-                        </Button>
-                        <Button Name="btnFlashbang" Grid.Row="3" Opacity="0.25" Grid.Column="1" Style="{DynamicResource NoStyleButton}" Click="btnFlashbang_Click">
-                            <Image Name="imgFlashbang" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/Shine.bmp"/>
-                        </Button>
-                        <Button Name="btnOil" Grid.Row="3" Opacity="0.25" Grid.Column="2" Style="{DynamicResource NoStyleButton}" Click="btnOil_Click">
-                            <Image Name="imgOil" Stretch="Uniform" Source="/SciLorsMashedTrainer;component/Img/RPG.png"/>
-                        </Button>
+                        <controls:UcWeaponSelector x:Name="uwsWeaponSelector" Grid.ColumnSpan="3" Grid.Row="1" WeaponClick="uwsWeaponSelector_WeaponClick" />
                     </Grid>
                 </GroupBox>
             </Grid>
