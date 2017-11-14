@@ -63,6 +63,17 @@ namespace SciLors_Mashed_Trainer.Controls {
                 toggleButtons[weaponId].IsChecked = isChecked;
         }
 
+        public List<Weapon.WeaponId> GetEnabledWeapons() {
+            List<Weapon.WeaponId> weapons = new List<Weapon.WeaponId>();
+
+            foreach (var item in toggleButtons) {
+                if (item.Value.IsChecked == true)
+                    weapons.Add(item.Key);
+            }
+
+            return weapons;
+        }
+
         private void btnWeapon_Click(object sender, RoutedEventArgs e) {
             if (WeaponClick != null) {
                 WeaponClick((Weapon.WeaponId)((Control)sender).Tag);

@@ -77,34 +77,16 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         private void ExecuteExtraFeatures() {
-            if (Settings.DriveOverReviveSettings.IsEnabled) {
-                DriveOverRevive();
-            }
+            if (!IsActive)
+                return;
+
+            DriveOverRevive();
+            RandomWeaponEquip();
+            ChangeWeaponBoxes();
 
             foreach (Player player in Players) {
-                FreezePlayer(player);
                 FreezePoints(player);
-            }
-
-        }
-
-        private void FreezePoints(Player player) {
-            FreezePointsSettings fp = player.Settings.FreezePointsSettings;
-            if (fp.IsFreeze)
-                player.Points = fp.Points;
-        }
-
-        private void FreezePlayer(Player player) {
-            FreezePositionSettings fps = player.Settings.FreezePositionSettings;
-            if (fps.HasFreeze) {
-                if (fps.IsFreezeX)
-                    player.Position.X = fps.Position.X;
-                if (fps.IsFreezeY)
-                    player.Position.Y = fps.Position.Y;
-                if (fps.IsFreezeZ)
-                    player.Position.Z = fps.Position.Z;
-
-                player.Position = player.Position; //Force Update
+                FreezePlayer(player);
             }
         }
 
@@ -115,6 +97,9 @@ namespace SciLors_Mashed_Trainer.Types {
 
             foreach (Player playerAlive in Players.Where(pA => pA.IsAlive)) {
                 foreach (Player playerDead in Players.Where(pD => !pD.IsAlive && pD.IsActive)) {
+                    if (playerDead.IsBot && dos.IsSkipBots)
+                        continue;
+
                     float distance = playerDead.Position.GetDistance(playerAlive.Position);
                     if (distance > dos.MinimalReviceDistance)
                         continue;
@@ -135,6 +120,61 @@ namespace SciLors_Mashed_Trainer.Types {
                     }
 
                 }
+            }
+        }
+
+        private void RandomWeaponEquip() {
+            RandomWeaponSettings rws = Settings.RandomWeaponSettings;
+            if (!rws.IsEnabled)
+                return;
+
+            List<Weapon.WeaponId> weapons = rws.WeaponSelector.GetEnabledWeapons();
+
+            if (weapons.Count == 0)
+                return;
+
+            if (DateTime.Now.Subtract(rws.NextRandomWeaponTimeStamp).TotalMilliseconds > 0) {
+                Weapon.WeaponId nextWeapon = weapons[StaticRandom.Random.Next(weapons.Count)];
+                foreach (Player player in Players.Where(p => p.IsAlive)) {
+                    if (player.IsBot && rws.IsSkipBots)
+                        continue;
+
+                    if (!rws.IsSameWeaponForAll) 
+                        nextWeapon = weapons[StaticRandom.Random.Next(weapons.Count)];
+
+                    if (rws.IsDropPreviousWeapon || player.Weapon.GetActiveWeaponId() == WeaponId.None)
+                        player.EquipWeapon(nextWeapon);
+                }
+                rws.NextRandomWeaponTimeStamp = DateTime.Now.AddSeconds(StaticRandom.Random.Next(
+                    rws.MinimalTimeInS,
+                    rws.MaximalTimeInS
+                ));
+            }
+        }
+
+        private void ChangeWeaponBoxes() {
+            WeaponBoxesSettings wbs = Settings.WeaponBoxesSettings;
+            if (!wbs.IsEnabled)
+                return;
+        }
+
+        private void FreezePoints(Player player) {
+            FreezePointsSettings fp = player.Settings.FreezePointsSettings;
+            if (fp.IsFreeze)
+                player.Points = fp.Points;
+        }
+
+        private void FreezePlayer(Player player) {
+            FreezePositionSettings fps = player.Settings.FreezePositionSettings;
+            if (fps.HasFreeze) {
+                if (fps.IsFreezeX)
+                    player.Position.X = fps.Position.X;
+                if (fps.IsFreezeY)
+                    player.Position.Y = fps.Position.Y;
+                if (fps.IsFreezeZ)
+                    player.Position.Z = fps.Position.Z;
+
+                player.Position = player.Position; //Force Update
             }
         }
         

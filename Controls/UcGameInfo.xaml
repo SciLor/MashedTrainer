@@ -6,7 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="250" d:DesignWidth="800">
+             d:DesignHeight="26
+             0" d:DesignWidth="800">
     <Grid>
         <GroupBox Header="Game" Name="grpBase"
                    IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
@@ -62,7 +63,7 @@
                 </GroupBox>
                 <GroupBox Name="grpWeaponDrop" Grid.Column="1">
                     <GroupBox.Header>
-                        <CheckBox x:Name="chkWeaponDropEnabled">Random weapon equip</CheckBox>
+                        <CheckBox x:Name="chkWeaponDropEnabled" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Random weapon equip</CheckBox>
                     </GroupBox.Header>
                     <Grid IsEnabled="{Binding ElementName=chkWeaponDropEnabled, Path=IsChecked}">
                         <Grid.ColumnDefinitions>
@@ -74,23 +75,27 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label Content="Min. Time (s)" Grid.Column="0" Grid.Row="0"></Label>
                         <Label Content="Max. Time (s)" Grid.Column="0" Grid.Row="1"></Label>
-                        <TextBox Name="txtWeaponEquipMin" Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" />
-                        <TextBox Name="txtWeaponEquipMax" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" />
+                        <TextBox Name="txtWeaponEquipMin" Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" Text="{Binding Path=Game.Settings.RandomWeaponSettings.MinimalTimeInS, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox Name="txtWeaponEquipMax" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" Text="{Binding Path=Game.Settings.RandomWeaponSettings.MaximalTimeInS, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <Label Content="Weapons" Grid.Column="0" Grid.Row="2"></Label>
-                        <local:UcWeaponSelector Grid.Column="2" Grid.Row="2"/>
+                        <local:UcWeaponSelector x:Name="uwsRandomWeapon" Grid.Column="2" Grid.Row="2"/>
                         <Label Content="Settings" Grid.Column="0" Grid.Row="3"></Label>
-                        <CheckBox Name="chkWeaponDropSame" Content="Same for all" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center"/>
-                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="4" VerticalContentAlignment="Center"/>
+                        <CheckBox Name="chkWeaponDropSame" Content="Same for all" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSameWeaponForAll, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Name="chkWeaponDropDrop" Content="Drop Weapon" Grid.Column="2" Grid.Row="4" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsDropPreviousWeapon, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="5" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Name="grpWeaponBox" Grid.Column="2">
                     <GroupBox.Header>
-                        <CheckBox x:Name="chkWeaponBoxEnabled">Change weaponboxes</CheckBox>
+                        <CheckBox x:Name="chkWeaponBoxEnabled" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Change weaponboxes</CheckBox>
                     </GroupBox.Header>
                     <Grid IsEnabled="{Binding ElementName=chkWeaponBoxEnabled, Path=IsChecked}" Margin="0,-1,0,1">
                         <Grid.ColumnDefinitions>
@@ -104,9 +109,9 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Content="Weapons" Grid.Column="0" Grid.Row="0"></Label>
-                        <local:UcWeaponSelector Grid.Column="2" Grid.Row="0"/>
+                        <local:UcWeaponSelector x:Name="uwsWeaponboxes" Grid.Column="2" Grid.Row="0"/>
                         <Label Content="Settings" Grid.Column="0" Grid.Row="1"></Label>
-                        <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center"/>
+                        <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </GroupBox>
             </Grid>
