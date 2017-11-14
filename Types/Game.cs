@@ -116,22 +116,24 @@ namespace SciLors_Mashed_Trainer.Types {
             foreach (Player playerAlive in Players.Where(pA => pA.IsAlive)) {
                 foreach (Player playerDead in Players.Where(pD => !pD.IsAlive && pD.IsActive)) {
                     float distance = playerDead.Position.GetDistance(playerAlive.Position);
-                    if (distance < dos.MinimalReviceDistance) {
-                        playerDead.IsAlive = true;
-                        int currentPointsChange = playerDead.PointsChange;
-                        if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
-                            foreach (Player playerDeadOther in Players) {
-                                if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
-                                    && playerDeadOther != playerDead
-                                    && playerDeadOther.PointsChange > playerDead.PointsChange) {
-                                    if (playerDeadOther.PointsChange < 0)
-                                        playerDeadOther.PointsChange -= 1;
-                                }
+                    if (distance > dos.MinimalReviceDistance)
+                        continue;
+
+                    playerDead.IsAlive = true;
+                    int currentPointsChange = playerDead.PointsChange;
+                    if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
+                        foreach (Player playerDeadOther in Players) {
+                            if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
+                                && playerDeadOther != playerDead
+                                && playerDeadOther.PointsChange > playerDead.PointsChange) {
+                                if (playerDeadOther.PointsChange < 0)
+                                    playerDeadOther.PointsChange -= 1;
                             }
-                            playerDead.Points -= playerDead.PointsChange;
-                            playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
                         }
+                        playerDead.Points -= playerDead.PointsChange;
+                        playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
                     }
+
                 }
             }
         }
