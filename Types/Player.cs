@@ -27,7 +27,7 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private const int PLAYER_ALIVE = 0x004; //0/1
         private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
-        private const int PLAYER_BOT = 0xD04; //0/1
+        private const int PLAYER_BOT = 0xD00; //0/1
 
         private const int BASE_ADDRESS_EXTENDER = 0x928;
         private const int PLAYER_POSITION_X = BASE_ADDRESS_EXTENDER + 0x30;
