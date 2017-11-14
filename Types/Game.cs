@@ -78,51 +78,64 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private void ExecuteExtraFeatures() {
             if (Settings.DriveOverReviveSettings.IsEnabled) {
-                DriveOverReviveSettings dos = Settings.DriveOverReviveSettings;
-                foreach (Player playerAlive in Players) {
-                    if (playerAlive.IsAlive) {
-                        foreach (Player playerDead in Players) {
-                            if (!playerDead.IsAlive && playerDead.IsActive) {
-                                float distance = playerDead.Position.GetDistance(playerAlive.Position);
-                                if (distance < dos.MinimalReviceDistance) {
-                                    playerDead.IsAlive = true;
-                                    int currentPointsChange = playerDead.PointsChange;
-                                    if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
-                                        foreach (Player playerDeadOther in Players) {
-                                            if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
-                                                && playerDeadOther != playerDead
-                                                && playerDeadOther.PointsChange > playerDead.PointsChange) {
-                                                if (playerDeadOther.PointsChange < 0)
-                                                    playerDeadOther.PointsChange -= 1;
-                                            }
-                                        }
-                                        playerDead.Points -= playerDead.PointsChange;
-                                        playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                DriveOverRevive();
             }
 
             foreach (Player player in Players) {
-                FreezePositionSettings fps = player.Settings.FreezePositionSettings;
+                FreezePlayer(player);
+                FreezePoints(player);
+            }
+
+        }
+
+        private void FreezePoints(Player player) {
+            FreezePointsSettings fp = player.Settings.FreezePointsSettings;
+            if (fp.IsFreeze)
+                player.Points = fp.Points;
+        }
+
+        private void FreezePlayer(Player player) {
+            FreezePositionSettings fps = player.Settings.FreezePositionSettings;
+            if (fps.HasFreeze) {
                 if (fps.IsFreezeX)
                     player.Position.X = fps.Position.X;
                 if (fps.IsFreezeY)
                     player.Position.Y = fps.Position.Y;
                 if (fps.IsFreezeZ)
                     player.Position.Z = fps.Position.Z;
-                if (fps.HasFreeze)
-                    player.Position = player.Position; //Force Update
 
-                FreezePointsSettings fp = player.Settings.FreezePointsSettings;
-                if (fp.IsFreeze)
-                    player.Points = fp.Points;
+                player.Position = player.Position; //Force Update
             }
-        
         }
+
+        private void DriveOverRevive() {
+            DriveOverReviveSettings dos = Settings.DriveOverReviveSettings;
+            if (!dos.IsEnabled)
+                return;
+
+            foreach (Player playerAlive in Players.Where(pA => pA.IsAlive)) {
+                foreach (Player playerDead in Players.Where(pD => !pD.IsAlive && pD.IsActive)) {
+                    float distance = playerDead.Position.GetDistance(playerAlive.Position);
+                    if (distance < dos.MinimalReviceDistance) {
+                        playerDead.IsAlive = true;
+                        int currentPointsChange = playerDead.PointsChange;
+                        if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
+                            foreach (Player playerDeadOther in Players) {
+                                if (!playerDeadOther.IsAlive && playerDeadOther.IsActive
+                                    && playerDeadOther != playerDead
+                                    && playerDeadOther.PointsChange > playerDead.PointsChange) {
+                                    if (playerDeadOther.PointsChange < 0)
+                                        playerDeadOther.PointsChange -= 1;
+                                }
+                            }
+                            playerDead.Points -= playerDead.PointsChange;
+                            playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
+                        }
+                    }
+                }
+            }
+        }
+        
 
         public void Update() {
             playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
