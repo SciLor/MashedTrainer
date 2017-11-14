@@ -80,9 +80,12 @@
     <Compile Include="Types\Position.cs" />
     <Compile Include="Types\Settings\Game\DriveOverReviveSettings.cs" />
     <Compile Include="Types\Settings\Game\GameSettings.cs" />
+    <Compile Include="Types\Settings\Game\RandomWeaponSettings.cs" />
+    <Compile Include="Types\Settings\Game\WeaponBoxesSettings.cs" />
     <Compile Include="Types\Settings\Player\FreezePointsSettings.cs" />
     <Compile Include="Types\Settings\Player\FreezePositionSettings.cs" />
     <Compile Include="Types\Settings\Player\PlayerSettings.cs" />
+    <Compile Include="Types\StaticRandom.cs" />
     <Compile Include="Types\Weapons\NoWeapon.cs" />
     <Compile Include="Types\Weapons\FlameThrower.cs" />
     <Compile Include="Types\Weapons\Oil.cs" />

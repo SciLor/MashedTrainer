@@ -23,7 +23,13 @@ namespace SciLors_Mashed_Trainer.Controls {
     DependencyProperty.Register("Game", typeof(Game), typeof(UcGameInfo), new PropertyMetadata(null));
         public Game Game {
             get { return (Game)GetValue(GameProperty); }
-            set { SetValue(GameProperty, value); }
+            set {
+                SetValue(GameProperty, value);
+                if (value != null) {
+                    value.Settings.RandomWeaponSettings.WeaponSelector = uwsRandomWeapon;
+                    value.Settings.WeaponBoxesSettings.WeaponSelector = uwsWeaponboxes;
+                }
+            }
         }
 
         public UcGameInfo() {
