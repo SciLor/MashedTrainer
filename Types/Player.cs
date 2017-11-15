@@ -24,6 +24,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr BASE_POINTS_CHANGE_ADDRESS = new IntPtr(0x8D8B80 - PROCESS_BASE);
         private IntPtr BASE_POINT_CHANGE_VISUAL_ADDRESS = new IntPtr(0x8D8B60 - PROCESS_BASE);
         private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
+        private IntPtr BASE_DAMAGE_ADDRESS = new IntPtr(0x65A9E8 - PROCESS_BASE);
 
         private const int PLAYER_ALIVE = 0x004; //0/1
         private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
@@ -42,6 +43,14 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_WEAPON_DISTANCE = 0xB4;
         private const int PLAYER_POINTS_DISTANCE = 0x4;
         private const int PLAYER_DISTANCE_DISTANCE = 0x4;
+        private const int PLAYER_DAMAGE_DISTANCE = 0x28;
+
+        private const int DAMAGE_FRONT_DAMAGE_OFFSET = 0x00;
+        private const int DAMAGE_BACK_DAMAGE_OFFSET = 0x04;
+        private const int DAMAGE_HOOD_OFFSET = 0x08;
+        private const int DAMAGE_TRUNK_OFFSET = 0x0C;
+        private const int DAMAGE_GLASS_HOOD_OFFSET = 0x10;
+        private const int DAMAGE_GLASS_TRUNK_OFFSET = 0x14;
 
         public PlayerSettings Settings { get; set; }
 
