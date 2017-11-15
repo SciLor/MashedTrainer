@@ -145,9 +145,10 @@ namespace SciLors_Mashed_Trainer.Types {
                     if (rws.IsDropPreviousWeapon || player.Weapon.GetActiveWeaponId() == WeaponId.None)
                         player.EquipWeapon(nextWeapon);
                 }
+
                 rws.NextRandomWeaponTimeStamp = DateTime.Now.AddSeconds(StaticRandom.Random.Next(
-                    rws.MinimalTimeInS,
-                    rws.MaximalTimeInS
+                    Math.Min(rws.MinimalTimeInS, rws.MaximalTimeInS),
+                    Math.Max(rws.MinimalTimeInS, rws.MaximalTimeInS)
                 ));
             }
         }
