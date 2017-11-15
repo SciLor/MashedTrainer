@@ -9,11 +9,13 @@ namespace SciLors_Mashed_Trainer.Types.Settings.Game {
 
         public bool IsEnabled { get; set; }
         public float MinimalReviceDistance { get; set; }
+        public bool IsRepair { get; set; }
         public bool IsSkipBots { get; set; }
 
         public DriveOverReviveSettings() {
             IsEnabled = false;
             MinimalReviceDistance = 2.0f;
+            IsRepair = true;
             IsSkipBots = true;
         }
     }

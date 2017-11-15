@@ -105,6 +105,9 @@ namespace SciLors_Mashed_Trainer.Types {
                         continue;
 
                     playerDead.IsAlive = true;
+                    if (dos.IsRepair)
+                        playerDead.Repair();
+
                     int currentPointsChange = playerDead.PointsChange;
                     if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
                         foreach (Player playerDeadOther in Players) {
