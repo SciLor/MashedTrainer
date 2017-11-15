@@ -25,6 +25,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr BASE_POINT_CHANGE_VISUAL_ADDRESS = new IntPtr(0x8D8B60 - PROCESS_BASE);
         private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
         private IntPtr BASE_DAMAGE_ADDRESS = new IntPtr(0x65A9E8 - PROCESS_BASE);
+        private IntPtr BASE_PLAYER_COLOR = new IntPtr(0x69D028 - PROCESS_BASE); //Only Human!
 
         private const int PLAYER_ALIVE = 0x004; //0/1
         private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
@@ -44,6 +45,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_POINTS_DISTANCE = 0x4;
         private const int PLAYER_DISTANCE_DISTANCE = 0x4;
         private const int PLAYER_DAMAGE_DISTANCE = 0x28;
+        private const int PLAYER_COLOR_DISTANCE = 0xC;
 
         private const int DAMAGE_FRONT_DAMAGE_OFFSET = 0x00;
         private const int DAMAGE_BACK_DAMAGE_OFFSET = 0x04;
@@ -115,6 +117,57 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private int playerDamageOffset;
+        private float damageFront;
+        public float DamageFront {
+            get { return damageFront; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<float>(playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET, value);
+            }
+        }
+        private float damageBack;
+        public float DamageBack {
+            get { return damageBack; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<float>(playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET, value);
+            }
+        }
+        private bool isDamagedHood;
+        public bool IsDamagedHood {
+            get { return isDamagedHood; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_HOOD_OFFSET, value);
+            }
+        }
+        private bool isDamagedTrunk;
+        public bool IsDamagedTrunk {
+            get { return isDamagedTrunk; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_TRUNK_OFFSET, value);
+            }
+        }
+        private bool isDamagedGlassHood;
+        public bool IsDamagedGlassHood {
+            get { return isDamagedGlassHood; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET, value);
+            }
+        }
+        private bool isDamagedGlassTrunk;
+        public bool IsDamagedGlassTrunk {
+            get { return isDamagedGlassTrunk; }
+            set {
+                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET, value);
+            }
+        }
+        public bool IsDamagedGlass {
+            get { return IsDamagedGlassHood || IsDamagedGlassTrunk; }
+            set {
+                IsDamagedGlassHood = value;
+                IsDamagedGlassTrunk = value;
+            }
+        }
+
         private Position position = new Position();
         public Position Position {
             get { return position; }
@@ -155,6 +208,7 @@ namespace SciLors_Mashed_Trainer.Types {
             playerWeaponOffset = PLAYER_WEAPON_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
             playerDistanceOffset = PLAYER_DISTANCE_DISTANCE * (int)Id;
+            playerDamageOffset = PLAYER_DAMAGE_DISTANCE * (int)Id;
         }
 
         public void Update() {
@@ -171,6 +225,14 @@ namespace SciLors_Mashed_Trainer.Types {
             position.Z = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Z);
 
             distance = Process[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
+
+            damageFront = Process[BASE_DAMAGE_ADDRESS].Read<float>(playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET);
+            damageBack = Process[BASE_DAMAGE_ADDRESS].Read<float>(playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET);
+            isDamagedHood = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_HOOD_OFFSET);
+            isDamagedTrunk = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_TRUNK_OFFSET);
+            isDamagedGlassHood = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET);
+            isDamagedGlassTrunk = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET);
+
             RaisePropertyChanged();
         }
 
@@ -180,6 +242,21 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public void DropWeapon() {
             Game.DropWeapon(Id);
+        }
+
+        private void RepairFront() {
+            DamageFront = 0.0f;
+            IsDamagedHood = false;
+            IsDamagedGlassHood = false;
+        }
+        private void RepairBack() {
+            DamageBack = 0.0f;
+            IsDamagedTrunk = false;
+            IsDamagedGlassTrunk = false;
+        }
+        public void Repair() {
+            RepairFront();
+            RepairBack();
         }
     }
 }
