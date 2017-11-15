@@ -54,11 +54,13 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Content="Min. Distance" Grid.Column="0" Grid.Row="0"></Label>
                         <TextBox Name="txtRespawnDistance" Grid.Column="2" Grid.Row="0" VerticalContentAlignment="Center" Text="{Binding Path=Game.Settings.DriveOverReviveSettings.MinimalReviceDistance, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <Label Content="Settings" Grid.Column="0" Grid.Row="1"></Label>
-                        <CheckBox Name="chkReviveSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <CheckBox Name="chkReviveRepair" Content="Repair Car" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsRepair, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <CheckBox Name="chkReviveSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Name="grpWeaponDrop" Grid.Column="1">
