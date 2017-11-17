@@ -106,5 +106,17 @@ namespace SciLors_Mashed_Trainer.Controls {
         private void chkPoints_Checked(object sender, RoutedEventArgs e) {
             Player.Settings.FreezePointsSettings.Points = Player.Points;
         }
+
+        private void sldDamageFront_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            lblDamageFront.Content = Math.Round(sldDamageFront.Value) + "%";
+        }
+
+        private void sldDamageBack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            lblDamageBack.Content = Math.Round(sldDamageBack.Value) + "%";
+        }
+
+        private void btnDamageRepair_Click(object sender, RoutedEventArgs e) {
+            Player.Repair();
+        }
     }
 }

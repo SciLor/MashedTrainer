@@ -6,8 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="26
-             0" d:DesignWidth="800">
+             d:DesignHeight="280" d:DesignWidth="1330">
     <Grid>
         <GroupBox Header="Game" Name="grpBase"
                    IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
@@ -17,8 +16,10 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Header="Destory distance" Name="grpDistance" Grid.Column="0" Margin="0,0,0,127">
+                <GroupBox Header="Destory distance" Name="grpDistance" Grid.Column="0" Height="98" VerticalAlignment="Top">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -40,7 +41,7 @@
                         <Button x:Name="btnResetDistance" Content="Reset" Grid.Column="1" Grid.Row="2" Height="21" Click="btnResetDistance_Click"></Button>
                     </Grid>
                 </GroupBox>
-                <GroupBox Name="grpRevive" Margin="0,106,0,40">
+                <GroupBox Name="grpRevive" Margin="0,101,0,0" Height="92" VerticalAlignment="Top">
                     <GroupBox.Header>
                         <CheckBox x:Name="chkReviveEnabled" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Drive over revive</CheckBox>
                     </GroupBox.Header>
@@ -63,7 +64,7 @@
                         <CheckBox Name="chkReviveSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Name="grpWeaponDrop" Grid.Column="1">
+                <GroupBox Name="grpWeaponDrop" Grid.Column="1" Height="258" VerticalAlignment="Top">
                     <GroupBox.Header>
                         <CheckBox x:Name="chkWeaponDropEnabled" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Random weapon equip</CheckBox>
                     </GroupBox.Header>
@@ -92,10 +93,10 @@
                         <Label Content="Settings" Grid.Column="0" Grid.Row="3"></Label>
                         <CheckBox Name="chkWeaponDropSame" Content="Same for all" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSameWeaponForAll, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Name="chkWeaponDropDrop" Content="Drop Weapon" Grid.Column="2" Grid.Row="4" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsDropPreviousWeapon, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="5" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="5" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0" Grid.RowSpan="3" />
                     </Grid>
                 </GroupBox>
-                <GroupBox Name="grpWeaponBox" Grid.Column="2">
+                <GroupBox Name="grpWeaponBox" Grid.Column="2" Height="193" VerticalAlignment="Top">
                     <GroupBox.Header>
                         <CheckBox x:Name="chkWeaponBoxEnabled" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Change weaponboxes</CheckBox>
                     </GroupBox.Header>
