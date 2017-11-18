@@ -79,6 +79,8 @@ namespace SciLors_Mashed_Trainer {
                 }
                 Array.Clear(players, 0, players.Length);
                 ucGameInfo.Game = null;
+
+                game.Dispose(); //DO Dispose manually, otherwise nullpointer
                 game = null;
                 txtStatus.Text = "Mashed Process Pointer: 0";
             }

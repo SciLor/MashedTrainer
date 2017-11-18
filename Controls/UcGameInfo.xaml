@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="280" d:DesignWidth="1330">
+             d:DesignHeight="300" d:DesignWidth="1330">
     <Grid>
         <GroupBox Header="Game" Name="grpBase"
                    IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
@@ -41,7 +41,7 @@
                         <Button x:Name="btnResetDistance" Content="Reset" Grid.Column="1" Grid.Row="2" Height="21" Click="btnResetDistance_Click"></Button>
                     </Grid>
                 </GroupBox>
-                <GroupBox Name="grpRevive" Margin="0,101,0,0" Height="92" VerticalAlignment="Top">
+                <GroupBox Name="grpRevive" Margin="0,183,0,0" Height="95" VerticalAlignment="Top">
                     <GroupBox.Header>
                         <CheckBox x:Name="chkReviveEnabled" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Drive over revive</CheckBox>
                     </GroupBox.Header>
@@ -64,7 +64,7 @@
                         <CheckBox Name="chkReviveSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="2" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Name="grpWeaponDrop" Grid.Column="1" Height="258" VerticalAlignment="Top">
+                <GroupBox Name="grpWeaponDrop" Grid.Column="1" Height="278" VerticalAlignment="Top">
                     <GroupBox.Header>
                         <CheckBox x:Name="chkWeaponDropEnabled" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Random weapon equip</CheckBox>
                     </GroupBox.Header>
@@ -93,7 +93,7 @@
                         <Label Content="Settings" Grid.Column="0" Grid.Row="3"></Label>
                         <CheckBox Name="chkWeaponDropSame" Content="Same for all" Grid.Column="2" Grid.Row="3" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSameWeaponForAll, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Name="chkWeaponDropDrop" Content="Drop Weapon" Grid.Column="2" Grid.Row="4" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsDropPreviousWeapon, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="5" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0" Grid.RowSpan="3" />
+                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="5" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,3,0,0" Grid.RowSpan="3" Height="25" VerticalAlignment="Top" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Name="grpWeaponBox" Grid.Column="2" Height="193" VerticalAlignment="Top">
@@ -115,6 +115,12 @@
                         <local:UcWeaponSelector x:Name="uwsWeaponboxes" Grid.Column="2" Grid.Row="0"/>
                         <Label Content="Settings" Grid.Column="0" Grid.Row="1"></Label>
                         <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Maximum Damage" x:Name="grpDamage" Margin="0,98,0,0" Height="80" VerticalAlignment="Top">
+                    <Grid>
+                        <Label Name="lblMaxDamage" Content="50%" Height="31" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                        <Slider Value="{Binding Path=Game.MaximumDamage, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="sldMaxDamage" Margin="0,22,-2,0" VerticalAlignment="Top" Maximum="100" SmallChange="1" TickFrequency="5" TickPlacement="Both" ValueChanged="sldMaxDamage_ValueChanged"/>
                     </Grid>
                 </GroupBox>
             </Grid>
