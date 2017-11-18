@@ -38,6 +38,7 @@ namespace SciLors_Mashed_Trainer.Controls {
 
         private void btnResetDistance_Click(object sender, RoutedEventArgs e) {
             Game.DistanceWarningThreshold = 7;
+            Game.MaximumDistance = 10;
             Game.RaisePropertyChanged();
         }
 

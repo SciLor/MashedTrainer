@@ -68,9 +68,11 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public bool IsActive {
             get {
-                if (Game.PlayerCount > (int)Id)
-                    return true;
-                return false;
+                if (!Game.IsActive)
+                    return false;
+                if (Game.PlayerCount <= (int)Id)
+                    return false;
+                return true;
             }
         }
 
@@ -212,6 +214,8 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         public void Update() {
+            if (Game.IsRunning)
+                return;
             points = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset);
             pointsChange = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET);
 

@@ -24,6 +24,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr MAXIMUM_DAMAGE_TRESHOLD;
         private IntPtr MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL = new IntPtr(0x5DE290 - PROCESS_BASE);
         private IntPtr MAXIMUM_DAMAGE_RESET_VALUE = new IntPtr(0x423FFA - PROCESS_BASE); //Change value in asm mov
+        private IntPtr GAME_ACTIVE = new IntPtr(0x6AE110 - PROCESS_BASE); //also zero on pause
 
         //Pointers to change target address in code;
         private IntPtr MAXIMUM_DISTANCE_POINTER = new IntPtr(0x41340D - PROCESS_BASE);
@@ -35,6 +36,10 @@ namespace SciLors_Mashed_Trainer.Types {
         private RemoteAllocation memMaxDamage;
 
         public List<Player> Players = new List<Player>();
+
+        public bool IsRunning {
+            get { return Process.IsRunning; }
+        }
 
         public GameSettings Settings {
             get; set;
@@ -219,13 +224,17 @@ namespace SciLors_Mashed_Trainer.Types {
         
 
         public void Update() {
+            if (!IsRunning)
+                return;
+
             playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
             maximumDistance = memMaxDistance.Read<float>();
             distanceWarningThreshold = Process[DISTANCE_WARNING_THRESHOLD].Read<float>();
-            isActive = true;
             maximumPoints = Process[MAXIMUM_POINTS].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
             
             maximumDamage = Process[MAXIMUM_DAMAGE_RESET_VALUE].Read<float>();
+
+            isActive = Process[GAME_ACTIVE].Read<bool>();
 
             foreach (Player player in Players) {
                 player.Update();
@@ -248,11 +257,12 @@ namespace SciLors_Mashed_Trainer.Types {
 
         protected virtual void DoDispose() {
             if (!disposed) {
-                //Revert changed pointers in code
-                Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE_ORIGINAL.ToInt32() + PROCESS_BASE);
-                Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL.ToInt32() + PROCESS_BASE);
-
-                Process.Dispose();
+                if (IsRunning) {
+                    //Revert changed pointers in code
+                    Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE_ORIGINAL.ToInt32() + PROCESS_BASE);
+                    Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL.ToInt32() + PROCESS_BASE);
+                    Process.Dispose();
+                }
                 disposed = true;
             }
         }
