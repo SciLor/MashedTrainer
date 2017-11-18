@@ -11,7 +11,16 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
-            <MenuItem Header="File"></MenuItem>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+            <MenuItem Header="File">
+                <!--Separator /-->
+                <MenuItem Name="mniExit" Header="Exit" Click="mniExit_Click" />
+            </MenuItem>
+            <MenuItem Header="Donate" HorizontalAlignment="Right" Click="MenuItem_Click"/>
         </Menu>
         <TabControl Name="tabMain" Grid.Row="1">
             <TabItem Header="Players" Name="taiPlayers">

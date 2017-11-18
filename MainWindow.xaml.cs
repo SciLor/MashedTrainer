@@ -90,5 +90,14 @@ namespace SciLors_Mashed_Trainer {
             timer.Stop();
             cleanUp();
         }
+
+        private void mniExit_Click(object sender, RoutedEventArgs e) {
+            Close();
+            Application.Current.Shutdown();
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+            Process.Start("http://www.scilor.com/donate.html");
+        }
     }
 }
