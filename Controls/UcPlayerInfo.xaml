@@ -45,17 +45,17 @@
                         <Label Content="X" Height="28" Margin="6,6,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="19" />
                         <TextBox Height="23" Margin="6,9,6,0" Name="txtPositionX" VerticalAlignment="Top" Grid.Column="1"
                                  Text="{Binding Path=Player.Position.X, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
-                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" Name="chkPositionX" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionX_Checked" />
+                        <CheckBox Content="Freeze" Height="20" Margin="0,12,0,0" Name="chkPositionX" VerticalAlignment="Top" HorizontalAlignment="Left" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.IsFreezeX, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionX_Checked" />
 
                         <Label Content="Y" Height="28" HorizontalAlignment="Left" Margin="6,35,0,0" VerticalAlignment="Top" Width="19" />
                         <TextBox Height="23" Margin="6,39,6,0" Name="txtPositionY" VerticalAlignment="Top" Grid.Column="1"
                                  Text="{Binding Path=Player.Position.Y, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" Name="chkPositionY" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionY_Checked"/>
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,41,0,0" Name="chkPositionY" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.IsFreezeY, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionY_Checked"/>
 
                         <Label Content="Z" Height="28" HorizontalAlignment="Left" Margin="6,64,0,0" VerticalAlignment="Top" Width="19" />
                         <TextBox Height="23" Margin="6,68,6,0" Name="txtPositionZ" VerticalAlignment="Top" Grid.Column="1"
                                  Text="{Binding Path=Player.Position.Z, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" GotFocus="txtPosition_GotFocus" LostFocus="txtPosition_LostFocus" />
-                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" Name="chkPositionZ" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.FreezeZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionZ_Checked" RenderTransformOrigin="-0.453,2.5"/>
+                        <CheckBox Content="Freeze" Height="20" HorizontalAlignment="Left" Margin="0,70,0,0" Name="chkPositionZ" VerticalAlignment="Top" Width="64" Grid.Column="2" IsChecked="{Binding Path=Player.Settings.FreezePositionSettings.IsFreezeZ, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkPositionZ_Checked" RenderTransformOrigin="-0.453,2.5"/>
                         <CheckBox Content="Disable Controls" Height="20" HorizontalAlignment="Left" Margin="10,98,0,0" x:Name="chkPositionZ_Copy" VerticalAlignment="Top" Width="144" IsChecked="{Binding Player.IsControlsDisabled, ElementName=PlayerInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="-0.453,2.5" Grid.ColumnSpan="3"/>
                     </Grid>
                 </GroupBox>
