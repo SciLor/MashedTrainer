@@ -32,7 +32,7 @@
                         </Grid.RowDefinitions>
                         <Label Content="Max. Distance" Grid.Column="0" Grid.Row="0"></Label>
                         <TextBox x:Name="txtMaxDistance" Grid.Column="1" Grid.Row="0"
-                                 Text="{Binding Path=Game.MaximumDistance, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                 Text="{Binding Path=Game.MaximumDistance, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
                         <Label Content="Warn. Distance" Grid.Column="0" Grid.Row="1"></Label>
                         <TextBox x:Name="txtWarnDistance" Grid.Column="1" Grid.Row="1"
