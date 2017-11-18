@@ -17,11 +17,22 @@ using SciLors_Mashed_Trainer.Types.Settings.Player;
 namespace SciLors_Mashed_Trainer.Types {
     public class Game : BaseMemorySharp, IDisposable {
         private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
-        private IntPtr DISTANCE_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
+        private IntPtr MAXIMUM_DISTANCE;
+        private IntPtr MAXIMUM_DISTANCE_ORIGINAL = new IntPtr(0x5DD620 - PROCESS_BASE);
+        private IntPtr DISTANCE_WARNING_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
         private IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4 - PROCESS_BASE); //0x659338 //Readonly
+        private IntPtr MAXIMUM_DAMAGE_TRESHOLD;
+        private IntPtr MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL = new IntPtr(0x5DE290 - PROCESS_BASE);
+        private IntPtr MAXIMUM_DAMAGE_RESET_VALUE = new IntPtr(0x423FFA - PROCESS_BASE); //Change value in asm mov
+
+        //Pointers to change target address in code;
+        private IntPtr MAXIMUM_DISTANCE_POINTER = new IntPtr(0x41340D - PROCESS_BASE);
+        private IntPtr MAXIMUM_DAMAGE_TRESHOLD_POINTER = new IntPtr(0x423FEC - PROCESS_BASE);
 
         private RemoteAllocation funcChangeWeapon;
         private RemoteAllocation funcDropWeapon;
+        private RemoteAllocation memMaxDistance;
+        private RemoteAllocation memMaxDamage;
 
         public List<Player> Players = new List<Player>();
 
@@ -36,14 +47,19 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private float maximumDistance;
         public float MaximumDistance {
-            get { return 10; }
+            get { return maximumDistance; }
+            set {
+                memMaxDistance.Write<float>(value);
+                maximumDistance = value;
+            }
         }
         private float distanceWarningThreshold;
         public float DistanceWarningThreshold {
             get { return distanceWarningThreshold; }
             set {
-                Process[DISTANCE_THRESHOLD].Write<float>(value);
+                Process[DISTANCE_WARNING_THRESHOLD].Write<float>(value);
                 distanceWarningThreshold = value;
             }
         }
@@ -58,6 +74,15 @@ namespace SciLors_Mashed_Trainer.Types {
             get { return maximumPoints; }
         }
 
+        private float maximumDamage;
+        public float MaximumDamage {
+            get { return maximumDamage; }
+            set {
+                memMaxDamage.Write<float>(value);
+                Process[MAXIMUM_DAMAGE_RESET_VALUE].Write<float>(value);
+            }
+        }
+
         public WeaponHelper WeaponHelper;
 
         public Game(Process process) : base(process) {
@@ -68,12 +93,22 @@ namespace SciLors_Mashed_Trainer.Types {
         
         private void readAndInjectAsmFunctions() {
             byte[] asmBytes = File.ReadAllBytes("Asm\\ChangeWeapon.bin");
-            funcChangeWeapon = Process.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcChangeWeapon = Process.Memory.Allocate(asmBytes.Length);
             funcChangeWeapon.Write<byte>(asmBytes);
 
             asmBytes = File.ReadAllBytes("Asm\\DropWeapon.bin");
-            funcDropWeapon = Process.Memory.Allocate(asmBytes.Length, MemoryProtectionFlags.ExecuteReadWrite);
+            funcDropWeapon = Process.Memory.Allocate(asmBytes.Length);
             funcDropWeapon.Write<byte>(asmBytes);
+
+            memMaxDistance = Process.Memory.Allocate(4);
+            MAXIMUM_DISTANCE = memMaxDistance.Information.AllocationBase;
+            Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE.ToInt32());
+            MaximumDistance = Process[MAXIMUM_DISTANCE_ORIGINAL].Read<float>();
+
+            memMaxDamage = Process.Memory.Allocate(4);
+            MAXIMUM_DAMAGE_TRESHOLD = memMaxDamage.Information.AllocationBase;
+            Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD.ToInt32());
+            MaximumDamage = Process[MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL].Read<float>();
         }
 
         private void ExecuteExtraFeatures() {
@@ -185,16 +220,18 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public void Update() {
             playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
-            distanceWarningThreshold = Process[DISTANCE_THRESHOLD].Read<float>();
+            maximumDistance = memMaxDistance.Read<float>();
+            distanceWarningThreshold = Process[DISTANCE_WARNING_THRESHOLD].Read<float>();
             isActive = true;
             maximumPoints = Process[MAXIMUM_POINTS].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
+            
+            maximumDamage = Process[MAXIMUM_DAMAGE_RESET_VALUE].Read<float>();
 
             foreach (Player player in Players) {
                 player.Update();
             }
 
             ExecuteExtraFeatures();
-
             RaisePropertyChanged();
         }
  
@@ -211,6 +248,10 @@ namespace SciLors_Mashed_Trainer.Types {
 
         protected virtual void DoDispose() {
             if (!disposed) {
+                //Revert changed pointers in code
+                Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE_ORIGINAL.ToInt32() + PROCESS_BASE);
+                Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL.ToInt32() + PROCESS_BASE);
+
                 Process.Dispose();
                 disposed = true;
             }

@@ -38,8 +38,11 @@ namespace SciLors_Mashed_Trainer.Controls {
 
         private void btnResetDistance_Click(object sender, RoutedEventArgs e) {
             Game.DistanceWarningThreshold = 7;
-
             Game.RaisePropertyChanged();
+        }
+
+        private void sldMaxDamage_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            lblMaxDamage.Content = Math.Round(sldMaxDamage.Value) + "%";
         }
     }
 }
