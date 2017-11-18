@@ -9,7 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="1330">
     <Grid>
         <GroupBox Header="Game" Name="grpBase"
-                   IsEnabled="{Binding Path=Game.IsActive, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
+                   IsEnabled="{Binding Path=Game.IsRunning, ElementName=GameInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=False}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
