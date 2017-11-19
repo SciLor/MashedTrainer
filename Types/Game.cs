@@ -25,15 +25,25 @@ namespace SciLors_Mashed_Trainer.Types {
         private IntPtr MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL = new IntPtr(0x5DE290 - PROCESS_BASE);
         private IntPtr MAXIMUM_DAMAGE_RESET_VALUE = new IntPtr(0x423FFA - PROCESS_BASE); //Change value in asm mov
         private IntPtr GAME_ACTIVE = new IntPtr(0x6AE110 - PROCESS_BASE); //also zero on pause
+        private IntPtr CAMERA_TILT_MULTIPLICATOR = new IntPtr(0x5DE290 - PROCESS_BASE); //normally bound to max distance
+        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER;
+        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL = new IntPtr(0x5DD41C - PROCESS_BASE);
+        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD;
+        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL = new IntPtr(0x5DD330 - PROCESS_BASE);
 
         //Pointers to change target address in code;
         private IntPtr MAXIMUM_DISTANCE_POINTER = new IntPtr(0x41340D - PROCESS_BASE);
         private IntPtr MAXIMUM_DAMAGE_TRESHOLD_POINTER = new IntPtr(0x423FEC - PROCESS_BASE);
+        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER = new IntPtr(0x450BC0 - PROCESS_BASE);
+        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD_POINTER = new IntPtr(0x450BC6 - PROCESS_BASE);
 
         private RemoteAllocation funcChangeWeapon;
         private RemoteAllocation funcDropWeapon;
+
         private RemoteAllocation memMaxDistance;
         private RemoteAllocation memMaxDamage;
+        private RemoteAllocation memCameraHeightDistanceDivider;
+        private RemoteAllocation memCameraHeightDistanceAdd;
 
         public List<Player> Players = new List<Player>();
 
@@ -88,6 +98,29 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private float cameraTiltMultiplicator;
+        public float CameraTiltMultiplicator {
+            get { return cameraTiltMultiplicator; }
+            set {
+                Process[CAMERA_TILT_MULTIPLICATOR].Write<float>(value);
+            }
+        }
+
+        private float cameraHeightDistanceDivider;
+        public float CameraHeightDistanceDivider {
+            get { return cameraHeightDistanceDivider; }
+            set {
+                memCameraHeightDistanceDivider.Write<float>(value);
+            }
+        }
+        private float cameraHeightDistanceAdd;
+        public float CameraHeightDistanceAdd {
+            get { return cameraHeightDistanceAdd; }
+            set {
+                memCameraHeightDistanceAdd.Write<float>(value);
+            }
+        }
+
         public WeaponHelper WeaponHelper;
 
         public Game(Process process) : base(process) {
@@ -114,6 +147,17 @@ namespace SciLors_Mashed_Trainer.Types {
             MAXIMUM_DAMAGE_TRESHOLD = memMaxDamage.Information.AllocationBase;
             Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD.ToInt32());
             MaximumDamage = Process[MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL].Read<float>();
+
+
+            memCameraHeightDistanceDivider = Process.Memory.Allocate(4);
+            CAMERA_HEIGHT_DISTANCE_DIVIDER = memCameraHeightDistanceDivider.Information.AllocationBase;
+            Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_DIVIDER.ToInt32());
+            CameraHeightDistanceDivider = Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL].Read<float>();
+
+            memCameraHeightDistanceAdd = Process.Memory.Allocate(4);
+            CAMERA_HEIGHT_DISTANCE_ADD = memCameraHeightDistanceAdd.Information.AllocationBase;
+            Process[CAMERA_HEIGHT_DISTANCE_ADD_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_ADD.ToInt32());
+            CameraHeightDistanceAdd = Process[CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL].Read<float>();
         }
 
         private void ExecuteExtraFeatures() {
@@ -236,6 +280,10 @@ namespace SciLors_Mashed_Trainer.Types {
 
             isActive = Process[GAME_ACTIVE].Read<bool>();
 
+            cameraTiltMultiplicator = Process[CAMERA_TILT_MULTIPLICATOR].Read<float>();
+            cameraHeightDistanceDivider = memCameraHeightDistanceDivider.Read<float>();
+            cameraHeightDistanceAdd = memCameraHeightDistanceAdd.Read<float>();
+
             foreach (Player player in Players) {
                 player.Update();
             }
@@ -261,6 +309,8 @@ namespace SciLors_Mashed_Trainer.Types {
                     //Revert changed pointers in code
                     Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE_ORIGINAL.ToInt32() + PROCESS_BASE);
                     Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL.ToInt32() + PROCESS_BASE);
+                    Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL.ToInt32() + PROCESS_BASE);
+                    Process[CAMERA_HEIGHT_DISTANCE_ADD_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL.ToInt32() + PROCESS_BASE);
                     Process.Dispose();
                 }
                 disposed = true;

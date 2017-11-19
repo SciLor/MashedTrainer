@@ -45,5 +45,11 @@ namespace SciLors_Mashed_Trainer.Controls {
         private void sldMaxDamage_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             lblMaxDamage.Content = Math.Round(sldMaxDamage.Value) + "%";
         }
+
+        private void btnResetCamera_Click(object sender, RoutedEventArgs e) {
+            Game.CameraTiltMultiplicator = 50;
+            Game.CameraHeightDistanceDivider = 5;
+            Game.CameraHeightDistanceAdd = 1;
+        }
     }
 }
