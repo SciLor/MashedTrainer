@@ -9,7 +9,7 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
         public enum WeaponId {
             None = 0x00,
             Mortar = 0x07,
-            Maschinegun = 0x09,
+            Machinegun = 0x09,
             Drum = 0x0A,
             Rocket = 0x0B,
             Mines = 0x0C,

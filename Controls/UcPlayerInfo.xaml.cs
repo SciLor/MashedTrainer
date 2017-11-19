@@ -33,8 +33,10 @@ namespace SciLors_Mashed_Trainer.Controls {
             get { return (Player)GetValue(PlayerProperty); }
             set {
                 SetValue(PlayerProperty, value);
-                if(value != null)
+                if (value != null) {
                     value.PropertyChanged += Player_PropertyChanged;
+                    uwsWeaponSelector.Game = value.Game;
+                }
             }
         }
 

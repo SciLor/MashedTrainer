@@ -76,6 +76,7 @@
     <Compile Include="Types\BaseMemory.cs" />
     <Compile Include="Types\BaseMemorySharp.cs" />
     <Compile Include="Types\Game.cs" />
+    <Compile Include="Types\GameFiles.cs" />
     <Compile Include="Types\Player.cs" />
     <Compile Include="Types\Position.cs" />
     <Compile Include="Types\Settings\Game\DriveOverReviveSettings.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Types\Weapons\Shotgun.cs" />
     <Compile Include="Types\Weapons\Rocket.cs" />
     <Compile Include="Types\Weapons\Drum.cs" />
-    <Compile Include="Types\Weapons\MaschineGun.cs" />
+    <Compile Include="Types\Weapons\MachineGun.cs" />
     <Compile Include="Types\Weapons\Mortar.cs" />
     <Compile Include="Types\Weapons\Weapon.cs" />
     <Compile Include="Types\Weapons\WeaponHelper.cs" />
@@ -140,19 +141,41 @@
     <Content Include="Asm\DropWeapon.asm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Img\UI\Kid-icon.png" />
-    <Resource Include="Img\UI\Robot-icon.png" />
-    <Resource Include="Img\Hazard.bmp" />
-    <Resource Include="Img\Shine.bmp" />
-    <Resource Include="Img\RPG.png" />
-    <Resource Include="Img\SelfDestruct.png" />
-    <Resource Include="Img\Shotgun.png" />
-    <Resource Include="Img\mine.png" />
-    <Resource Include="Img\Missile.png" />
-    <Resource Include="Img\Mortar.png" />
-    <Resource Include="Img\FlameThrower.png" />
-    <Resource Include="Img\gattlingun.png" />
-    <Resource Include="Img\DepthCharge.png" />
+    <Resource Include="Img2\UI\Kid-icon.png" />
+    <Resource Include="Img2\UI\Robot-icon.png" />
+    <Content Include="Img2\Hazard.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\Shine.bmp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\RPG.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\SelfDestruct.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\Shotgun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\mine.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\Missile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\Mortar.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\FlameThrower.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\gattlingun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Img2\DepthCharge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

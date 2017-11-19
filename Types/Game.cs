@@ -51,6 +51,10 @@ namespace SciLors_Mashed_Trainer.Types {
             get { return Process.IsRunning; }
         }
 
+        public GameFiles GameFiles {
+            get; set;
+        }
+
         public GameSettings Settings {
             get; set;
         }
@@ -127,6 +131,7 @@ namespace SciLors_Mashed_Trainer.Types {
             readAndInjectAsmFunctions();
             this.Settings = new GameSettings();
             this.WeaponHelper = new WeaponHelper(this);
+            this.GameFiles = new GameFiles(this);
         }
         
         private void readAndInjectAsmFunctions() {

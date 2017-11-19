@@ -1,4 +1,5 @@
-﻿using SciLors_Mashed_Trainer.Types.Weapons;
+﻿using SciLors_Mashed_Trainer.Types;
+using SciLors_Mashed_Trainer.Types.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,16 @@ namespace SciLors_Mashed_Trainer.Controls {
     /// Interaction logic for UcWeaponSelector.xaml
     /// </summary>
     public partial class UcWeaponSelector : UserControl {
+
+        public static readonly DependencyProperty GameProperty =
+            DependencyProperty.Register("Game", typeof(Game), typeof(UcWeaponSelector), new PropertyMetadata(null));
+        public Game Game {
+            get { return (Game)GetValue(GameProperty); }
+            set {
+                SetValue(GameProperty, value);
+            }
+        }
+
         public delegate void WeaponClickEventHandler(Weapon.WeaponId weaponId);
 
         public event WeaponClickEventHandler WeaponClick;
@@ -30,7 +41,7 @@ namespace SciLors_Mashed_Trainer.Controls {
 
             toggleButtons = new Dictionary<Weapon.WeaponId, ToggleButton> {
                 { Weapon.WeaponId.Mortar, btnMortar },
-                { Weapon.WeaponId.Maschinegun, btnMachinegun },
+                { Weapon.WeaponId.Machinegun, btnMachinegun },
                 { Weapon.WeaponId.Drum, btnDrum },
 
                 { Weapon.WeaponId.Rocket, btnRocket },
@@ -75,9 +86,7 @@ namespace SciLors_Mashed_Trainer.Controls {
         }
 
         private void btnWeapon_Click(object sender, RoutedEventArgs e) {
-            if (WeaponClick != null) {
-                WeaponClick((Weapon.WeaponId)((Control)sender).Tag);
-            }
+            WeaponClick?.Invoke((Weapon.WeaponId)((Control)sender).Tag);
         }
     }
 }
