@@ -36,8 +36,8 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
             if (Flashbang.GetValidPointers().Contains(pointer)) {
                 return new Flashbang(game);
             }
-            if (MaschineGun.GetValidPointers().Contains(pointer)) {
-                return new MaschineGun(game);
+            if (MachineGun.GetValidPointers().Contains(pointer)) {
+                return new MachineGun(game);
             }
             if (Mine.GetValidPointers().Contains(pointer)) {
                 return new Mine(game);

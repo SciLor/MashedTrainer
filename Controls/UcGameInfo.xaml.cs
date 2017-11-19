@@ -25,6 +25,8 @@ namespace SciLors_Mashed_Trainer.Controls {
             get { return (Game)GetValue(GameProperty); }
             set {
                 SetValue(GameProperty, value);
+                uwsRandomWeapon.Game = value;
+                uwsWeaponboxes.Game = value;
                 if (value != null) {
                     value.Settings.RandomWeaponSettings.WeaponSelector = uwsRandomWeapon;
                     value.Settings.WeaponBoxesSettings.WeaponSelector = uwsWeaponboxes;
