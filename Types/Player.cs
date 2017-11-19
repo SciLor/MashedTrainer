@@ -214,7 +214,7 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         public void Update() {
-            if (Game.IsRunning)
+            if (!Game.IsRunning)
                 return;
             points = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset);
             pointsChange = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET);
