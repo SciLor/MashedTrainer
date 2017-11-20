@@ -98,7 +98,7 @@
                 </GroupBox>
                 <GroupBox Name="grpWeaponBox" Grid.Column="2" Height="193" VerticalAlignment="Top">
                     <GroupBox.Header>
-                        <CheckBox x:Name="chkWeaponBoxEnabled" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Change weaponboxes</CheckBox>
+                        <CheckBox x:Name="chkWeaponBoxEnabled" IsEnabled="False" IsChecked="{Binding Path=Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">Change weaponboxes</CheckBox>
                     </GroupBox.Header>
                     <Grid IsEnabled="{Binding ElementName=chkWeaponBoxEnabled, Path=IsChecked}" Margin="0,-1,0,1">
                         <Grid.ColumnDefinitions>
