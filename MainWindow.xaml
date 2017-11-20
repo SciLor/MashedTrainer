@@ -20,7 +20,10 @@
                 <!--Separator /-->
                 <MenuItem Name="mniExit" Header="Exit" Click="mniExit_Click" />
             </MenuItem>
-            <MenuItem Header="Donate" HorizontalAlignment="Right" Click="MenuItem_Click"/>
+            <MenuItem Header="About" HorizontalAlignment="Right">
+                <MenuItem x:Name="mniMashedRunner" Header="Mashed Runner" Click="mniMashedRunner_Click"/>
+                <MenuItem x:Name="mniDonate" Header="Donate" Click="mniDonate_Click"/>
+            </MenuItem>
         </Menu>
         <TabControl Name="tabMain" Grid.Row="1">
             <TabItem Header="Players" Name="taiPlayers">

@@ -34,7 +34,7 @@ namespace SciLors_Mashed_Trainer {
             initializePlayerGrid();
 
             timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 1);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 50);
             timer.Start();
 
         }
@@ -96,7 +96,11 @@ namespace SciLors_Mashed_Trainer {
             Application.Current.Shutdown();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e) {
+        private void mniDonate_Click(object sender, RoutedEventArgs e) {
+            Process.Start("http://www.scilor.com/donate.html");
+        }
+
+        private void mniMashedRunner_Click(object sender, RoutedEventArgs e) {
             Process.Start("http://www.scilor.com/donate.html");
         }
     }
