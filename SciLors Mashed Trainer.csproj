@@ -141,39 +141,39 @@
     <Content Include="Asm\DropWeapon.asm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Img2\UI\Kid-icon.png" />
-    <Resource Include="Img2\UI\Robot-icon.png" />
-    <Content Include="Img2\Hazard.bmp">
+    <Resource Include="Img\UI\Kid-icon.png" />
+    <Resource Include="Img\UI\Robot-icon.png" />
+    <Content Include="Img\Hazard.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\Shine.bmp">
+    <Content Include="Img\Shine.bmp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\RPG.png">
+    <Content Include="Img\RPG.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\SelfDestruct.png">
+    <Content Include="Img\SelfDestruct.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\Shotgun.png">
+    <Content Include="Img\Shotgun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\mine.png">
+    <Content Include="Img\mine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\Missile.png">
+    <Content Include="Img\Missile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\Mortar.png">
+    <Content Include="Img\Mortar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\FlameThrower.png">
+    <Content Include="Img\FlameThrower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\gattlingun.png">
+    <Content Include="Img\gattlingun.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img2\DepthCharge.png">
+    <Content Include="Img\DepthCharge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
