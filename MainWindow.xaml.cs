@@ -16,6 +16,7 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using SciLors_Mashed_Trainer.Controls;
 using Binarysharp.Assemblers.Fasm;
+using SciLors_UpdateCheck;
 
 namespace SciLors_Mashed_Trainer {
     /// <summary>
@@ -29,8 +30,22 @@ namespace SciLors_Mashed_Trainer {
         Player[] players = new Player[4];
         UcPlayerInfo[] playerInfos = new UcPlayerInfo[4];
 
+        public string ProgramVersion {
+            get { return "v0.1.0"; }
+        }
+        public string ProgramName {
+            get { return "mashed-trainer"; }
+        }
+        public string ProgramLongName {
+            get { return "SciLor's Mashed Trainer"; }
+        }
+        public string ProgramTitle {
+            get { return ProgramLongName + " " + ProgramVersion; }
+        }
+
         public MainWindow() {
             InitializeComponent();
+            DataContext = this; //To get title binding working
             initializePlayerGrid();
 
             timer.Tick += new EventHandler(timer_Tick);
@@ -99,9 +114,22 @@ namespace SciLors_Mashed_Trainer {
         private void mniDonate_Click(object sender, RoutedEventArgs e) {
             Process.Start("http://www.scilor.com/donate.html");
         }
+        private void mniWebsite_Click(object sender, RoutedEventArgs e) {
+            Process.Start("http://www.scilor.com/mashed-trainer.html");
+        }
 
         private void mniMashedRunner_Click(object sender, RoutedEventArgs e) {
             Process.Start("http://www.scilor.com/donate.html");
+        }
+
+        private void mniCheckForUpdate_Click(object sender, RoutedEventArgs e) {
+            SciLorsUpdateCheck uc = new SciLorsUpdateCheck();
+            string infoText = uc.checkVersion(ProgramName, ProgramLongName, ProgramVersion);
+            if (uc.LastCheckPositive) {
+                MessageBox.Show(infoText, "Update Check", MessageBoxButton.OK);
+            } else {
+                MessageBox.Show("No update available!", "Update Check", MessageBoxButton.OK);
+            }
         }
     }
 }

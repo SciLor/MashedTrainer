@@ -45,6 +45,10 @@
     <Reference Include="MemorySharp">
       <HintPath>Libs\MemorySharp\MemorySharp.dll</HintPath>
     </Reference>
+    <Reference Include="SciLors UpdateCheck, Version=1.0.3723.38195, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\SciLors UpdateCheck.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -141,6 +145,7 @@
     <Content Include="Asm\DropWeapon.asm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Libs\SciLors UpdateCheck.dll" />
     <Resource Include="Img\UI\Kid-icon.png" />
     <Resource Include="Img\UI\Robot-icon.png" />
     <Content Include="Img\Hazard.bmp">
