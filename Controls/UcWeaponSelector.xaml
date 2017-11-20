@@ -59,33 +59,33 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ToggleButton Name="btnMortar" Grid.Row="0" Grid.Column="0" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgMortar" Source="{Binding Path=Game.GameFiles.BoxMortar, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Mortar.png'}"/>
+            <Image Name="imgMortar" Source="{Binding Path=Game.GameFiles.BoxMortar, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Mortar.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnMachinegun" Grid.Row="0" Grid.Column="1" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgMachinegun" Grid.Row="1" Grid.Column="1" Source="{Binding Path=Game.GameFiles.BoxMachineGun, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/gattlingun.png'}"/>
+            <Image Name="imgMachinegun" Grid.Row="1" Grid.Column="1" Source="{Binding Path=Game.GameFiles.BoxMachineGun, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/gattlingun.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnDrum" Grid.Row="0" Grid.Column="2" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgDrum" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxDrum, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/DepthCharge.png'}"/>
+            <Image Name="imgDrum" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxDrum, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/DepthCharge.png'}"/>
         </ToggleButton>
 
         <ToggleButton Name="btnRocket" Grid.Row="1" Grid.Column="0" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgRocket" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxRocket, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Missile.png'}"/>
+            <Image Name="imgRocket" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxRocket, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Missile.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnMines" Grid.Row="1" Grid.Column="1" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgMines" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxMine, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/mine.png'}"/>
+            <Image Name="imgMines" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxMine, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/mine.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnFlamethrower" Grid.Row="1" Grid.Column="2" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgFlamethrower" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlamethrower, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/FlameThrower.png'}"/>
+            <Image Name="imgFlamethrower" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlamethrower, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/FlameThrower.png'}"/>
         </ToggleButton>
 
         <ToggleButton Name="btnShotgun" Grid.Row="2" Grid.Column="0" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgShotgun" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxShotgun, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Shotgun.png'}"/>
+            <Image Name="imgShotgun" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxShotgun, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Shotgun.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnFlashbang" Grid.Row="2" Grid.Column="1" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgFlashbang" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlashbang, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Shine.bmp'}"/>
+            <Image Name="imgFlashbang" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlashbang, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Shine.bmp'}"/>
         </ToggleButton>
         <ToggleButton Name="btnOil" Grid.Row="2" Grid.Column="2" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgOil" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxOil, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/RPG.png'}"/>
+            <Image Name="imgOil" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxOil, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/RPG.png'}"/>
         </ToggleButton>
     </Grid>
 </UserControl>
