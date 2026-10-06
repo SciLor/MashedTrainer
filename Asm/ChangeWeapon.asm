@@ -54,7 +54,7 @@ _Change_Weapon: ;/* change_weapon(int player_id, int weapon_id)  */
   push eax ;Param 2: Player dependend Structure
   ;esi = player_id
 
-  mov ebx, 0x467E6 ;workaround
+  mov ebx, 0x467E60 ;workaround
   call ebx ;call 0x467E60 ;Call original Set-Weapon Function MFL.exe+67E60 - MFL.exe = 400000
 
   add esp, 8 ;Remove 2 full entries from Stack
