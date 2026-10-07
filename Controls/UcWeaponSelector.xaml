@@ -82,7 +82,7 @@
             <Image Name="imgShotgun" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxShotgun, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Shotgun.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnFlashbang" Grid.Row="2" Grid.Column="1" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
-            <Image Name="imgFlashbang" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlashbang, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Shine.bmp'}"/>
+            <Image Name="imgFlashbang" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxFlashbang, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/Shine.png'}"/>
         </ToggleButton>
         <ToggleButton Name="btnOil" Grid.Row="2" Grid.Column="2" Style="{DynamicResource NoStyleToggleButton}" Click="btnWeapon_Click">
             <Image Name="imgOil" Stretch="Uniform" Source="{Binding Path=Game.GameFiles.BoxOil, ElementName=WeaponSelector, Mode=OneWay, FallbackValue='Img/RPG.png'}"/>

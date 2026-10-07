@@ -146,18 +146,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Libs\SciLors UpdateCheck.dll" />
-    <Resource Include="Img\UI\Kid-icon.png" />
-    <Resource Include="Img\UI\Robot-icon.png" />
-    <Content Include="Img\Hazard.bmp">
+    <Content Include="Img\Hazard.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img\Shine.bmp">
+    <Content Include="Img\Shine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Img\RPG.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Img\SelfDestruct.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Img\Shotgun.png">

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+<g opacity=".65">
+<rect width="32" height="32" fill="#b224fc"/>
+<rect x=".5" y=".5" width="31" height="31" fill="none" stroke="#000"/>
+<path d="M5.51 4.63L18.41 4.63" fill="none" stroke="#000" stroke-width="1.14" stroke-linejoin="miter" stroke-miterlimit="6" stroke-linecap="butt"/>
+<path d="M5.51 17.35L18.41 17.35" fill="none" stroke="#000" stroke-width="1.14" stroke-linejoin="miter" stroke-miterlimit="6" stroke-linecap="butt"/>
+<ellipse cx="5.51" cy="10.99" rx="1.83" ry="6.36" fill="none" stroke="#000" stroke-width="1.14"/>
+<ellipse cx="5.51" cy="10.99" rx="0.60" ry="1.35"/>
+<path d="M18.41 4.63A1.83 6.36 0 0 1 18.41 17.35" fill="none" stroke="#000" stroke-width="1.14"/>
+<path d="M15.50 4.63A1.83 6.36 0 0 1 15.50 17.35" fill="none" stroke="#000" stroke-width="1.14"/>
+<path d="M13.57 14.66L26.47 14.66L26.47 27.38L13.57 27.38z" fill="#b224fc" stroke="none"/>
+<ellipse cx="13.57" cy="21.02" rx="1.83" ry="6.36" fill="#b224fc"/>
+<ellipse cx="26.47" cy="21.02" rx="1.83" ry="6.36" fill="#b224fc"/>
+<path d="M13.57 14.66L26.47 14.66" fill="none" stroke="#000" stroke-width="1.14" stroke-linejoin="miter" stroke-miterlimit="6" stroke-linecap="butt"/>
+<path d="M13.57 27.38L26.47 27.38" fill="none" stroke="#000" stroke-width="1.14" stroke-linejoin="miter" stroke-miterlimit="6" stroke-linecap="butt"/>
+<ellipse cx="13.57" cy="21.02" rx="1.83" ry="6.36" fill="none" stroke="#000" stroke-width="1.14"/>
+<ellipse cx="13.57" cy="21.02" rx="0.60" ry="1.35"/>
+<path d="M26.47 14.66A1.83 6.36 0 0 1 26.47 27.38" fill="none" stroke="#000" stroke-width="1.14"/>
+<path d="M23.56 14.66A1.83 6.36 0 0 1 23.56 27.38" fill="none" stroke="#000" stroke-width="1.14"/>
+</g>
+</svg>

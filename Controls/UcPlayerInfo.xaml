@@ -32,7 +32,7 @@
                         <Label Height="24" Margin="1,71,107,0" VerticalAlignment="Top" HorizontalContentAlignment="Right" Content="Distance:" />
                         <Label Height="24" Margin="62,71,0,0" x:Name="lblDistance" VerticalAlignment="Top" HorizontalAlignment="Left" Width="72" 
                                Content="{Binding Path=Player.Distance, ElementName=PlayerInfo, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=0}"/>
-                        <Image x:Name="imgWarning" HorizontalAlignment="Right" Height="24" Margin="0,71,6,0" VerticalAlignment="Top" Width="24" Source="{Binding Path=Player.Game.GameFiles.Hazard, ElementName=PlayerInfo, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Hazard.bmp'}" Opacity="0.5"/>
+                        <Image x:Name="imgWarning" HorizontalAlignment="Right" Height="24" Margin="0,71,6,0" VerticalAlignment="Top" Width="24" Source="{Binding Path=Player.Game.GameFiles.Hazard, ElementName=PlayerInfo, Mode=OneWay, FallbackValue='/SciLorsMashedTrainer;component/Img/Hazard.png'}" Opacity="0.5"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Position" Height="140" Margin="4,121,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="178">
