@@ -75,6 +75,12 @@
                         <controls:UcWeaponSelector x:Name="uwsWeaponSelector" Grid.ColumnSpan="3" Grid.Row="1" WeaponClick="uwsWeaponSelector_WeaponClick" />
                     </Grid>
                 </GroupBox>
+                <GroupBox Header="Car" Height="66" Margin="186,232,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="128">
+                    <Grid>
+                        <Button Content="Flip" x:Name="btnFlip" Margin="6,4,6,0" Height="22" VerticalAlignment="Top" Click="btnFlip_Click"/>
+                        <Button Content="Turn 180&#176;" x:Name="btnTurn" Margin="6,30,6,0" Height="22" VerticalAlignment="Top" Click="btnTurn_Click"/>
+                    </Grid>
+                </GroupBox>
                 <GroupBox Header="Damage" Height="233" Margin="186,-5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="128">
                     <Grid>
                         <Label x:Name="lblDamageFront" Content="0%" Height="26" Margin="14,27,14,0"  VerticalAlignment="Top" Width="152" HorizontalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />

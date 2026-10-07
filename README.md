@@ -40,6 +40,17 @@ http://www.scilor.com/donate.html
 
 ## ChangeLog:
 
+### v0.2.0(2026-10-07)
+- New: "Flip" and "Turn 180°" buttons to right or turn the car
+- New: Camera settings "Height Distance factor" and "Zoom limit"
+- Drive over revive now flips cars that are on their roof
+- Maximum distance/damage and camera values now patch only the instructions of their feature instead of shared game constants (fixes side effects on HUD/AI/physics)
+- Fix freeze/set position by writing both car matrix buffers
+- Fix wrong address in ChangeWeapon.asm (0x467E6 -> 0x467E60)
+- Add reverse engineering docs (trainer and weapon ASM analysis)
+- Add `Asm/build.sh` to rebuild the `.bin` files from the `.asm` sources with fasm
+- Add GitHub Action that checks the `.bin` files are up to date, builds the trainer and drafts a release on `v*` tags
+
 ### v0.1.0(2017-11-20)
 - Initial Release
 

@@ -123,13 +123,15 @@
                         <Slider Value="{Binding Path=Game.MaximumDamage, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="sldMaxDamage" Margin="0,22,-2,0" VerticalAlignment="Top" Maximum="100" SmallChange="1" TickFrequency="5" TickPlacement="Both" ValueChanged="sldMaxDamage_ValueChanged"/>
                     </Grid>
                 </GroupBox>
-                <GroupBox Header="Camera" x:Name="grpCamera" Grid.Column="0" Height="123" VerticalAlignment="Top" Margin="0,175,0,0">
+                <GroupBox Header="Camera" x:Name="grpCamera" Grid.Column="0" Height="173" VerticalAlignment="Top" Margin="0,175,0,0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -147,7 +149,15 @@
                         <TextBox x:Name="txtCameraHeightDistanceAdd" Grid.Column="1" Grid.Row="2"
                             Text="{Binding Game.CameraHeightDistanceAdd, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                        <Button x:Name="btnResetCamera" Content="Reset" Grid.Column="1" Grid.Row="3" Height="21" VerticalAlignment="Top" Click="btnResetCamera_Click"/>
+                        <Label Content="Height Distance factor" Grid.Column="0" Grid.Row="3"/>
+                        <TextBox x:Name="txtCameraHeightDistanceFactor" Grid.Column="1" Grid.Row="3"
+                            Text="{Binding Game.CameraHeightDistanceFactor, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Label Content="Zoom limit" Grid.Column="0" Grid.Row="4"/>
+                        <TextBox x:Name="txtCameraZoomLimit" Grid.Column="1" Grid.Row="4"
+                            Text="{Binding Game.CameraZoomLimit, ElementName=GameInfo, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <Button x:Name="btnResetCamera" Content="Reset" Grid.Column="1" Grid.Row="5" Height="21" VerticalAlignment="Top" Click="btnResetCamera_Click"/>
                     </Grid>
                 </GroupBox>
             </Grid>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Diagnostics;
 using Binarysharp.Assemblers.Fasm;
 using System.IO;
+using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Memory;
 using Binarysharp.MemoryManagement.Native;
 using Binarysharp.MemoryManagement.Assembly.CallingConvention;
@@ -17,33 +18,29 @@ using SciLors_Mashed_Trainer.Types.Settings.Player;
 namespace SciLors_Mashed_Trainer.Types {
     public class Game : BaseMemorySharp, IDisposable {
         private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
-        private IntPtr MAXIMUM_DISTANCE;
-        private IntPtr MAXIMUM_DISTANCE_ORIGINAL = new IntPtr(0x5DD620 - PROCESS_BASE);
-        private IntPtr DISTANCE_WARNING_THRESHOLD = new IntPtr(0x5DDB14 - PROCESS_BASE);
-        private IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4 - PROCESS_BASE); //0x659338 //Readonly
-        private IntPtr MAXIMUM_DAMAGE_TRESHOLD;
-        private IntPtr MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL = new IntPtr(0x5DE290 - PROCESS_BASE);
-        private IntPtr MAXIMUM_DAMAGE_RESET_VALUE = new IntPtr(0x423FFA - PROCESS_BASE); //Change value in asm mov
-        private IntPtr GAME_ACTIVE = new IntPtr(0x6AE110 - PROCESS_BASE); //also zero on pause
-        private IntPtr CAMERA_TILT_MULTIPLICATOR = new IntPtr(0x5DE290 - PROCESS_BASE); //normally bound to max distance
-        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER;
-        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL = new IntPtr(0x5DD41C - PROCESS_BASE);
-        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD;
-        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL = new IntPtr(0x5DD330 - PROCESS_BASE);
-
-        //Pointers to change target address in code;
-        private IntPtr MAXIMUM_DISTANCE_POINTER = new IntPtr(0x41340D - PROCESS_BASE);
-        private IntPtr MAXIMUM_DAMAGE_TRESHOLD_POINTER = new IntPtr(0x423FEC - PROCESS_BASE);
-        private IntPtr CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER = new IntPtr(0x450BC0 - PROCESS_BASE);
-        private IntPtr CAMERA_HEIGHT_DISTANCE_ADD_POINTER = new IntPtr(0x450BC6 - PROCESS_BASE);
+        private IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4 - PROCESS_BASE); //0x659338 is the same value for another mode, written once at 0x41FC10
+        private IntPtr GAME_ACTIVE = new IntPtr(0x6AE110 - PROCESS_BASE); //race audio streams created (0x46F5C0) / destroyed; also zero on pause
 
         private RemoteAllocation funcChangeWeapon;
         private RemoteAllocation funcDropWeapon;
 
-        private RemoteAllocation memMaxDistance;
-        private RemoteAllocation memMaxDamage;
-        private RemoteAllocation memCameraHeightDistanceDivider;
-        private RemoteAllocation memCameraHeightDistanceAdd;
+        //The game shares these float constants between dozens of unrelated places (HUD, AI, physics), so instead of
+        //changing the constant itself we redirect only the instruction operands that belong to the feature.
+        private List<PatchedFloat> patches = new List<PatchedFloat>();
+        private PatchedFloat maxDistance;
+        private PatchedFloat warningDistance;
+        private PatchedFloat maxDamage;
+        private PatchedFloat cameraTilt;
+        private PatchedFloat cameraHeightDivider;
+        private PatchedFloat cameraHeightAdd;
+        private PatchedFloat cameraHeightFactor;
+        private PatchedFloat cameraZoomLimit;
+
+        private PatchedFloat Patch(int originalAddress, int[] pointerSites, int[] immediateSites = null) {
+            PatchedFloat patch = new PatchedFloat(Process, originalAddress, pointerSites, immediateSites);
+            patches.Add(patch);
+            return patch;
+        }
 
         public List<Player> Players = new List<Player>();
 
@@ -70,7 +67,7 @@ namespace SciLors_Mashed_Trainer.Types {
         public float MaximumDistance {
             get { return maximumDistance; }
             set {
-                memMaxDistance.Write<float>(value);
+                maxDistance.Value = value;
                 maximumDistance = value;
             }
         }
@@ -78,7 +75,7 @@ namespace SciLors_Mashed_Trainer.Types {
         public float DistanceWarningThreshold {
             get { return distanceWarningThreshold; }
             set {
-                Process[DISTANCE_WARNING_THRESHOLD].Write<float>(value);
+                warningDistance.Value = value;
                 distanceWarningThreshold = value;
             }
         }
@@ -97,8 +94,7 @@ namespace SciLors_Mashed_Trainer.Types {
         public float MaximumDamage {
             get { return maximumDamage; }
             set {
-                memMaxDamage.Write<float>(value);
-                Process[MAXIMUM_DAMAGE_RESET_VALUE].Write<float>(value);
+                maxDamage.Value = value;
             }
         }
 
@@ -106,7 +102,7 @@ namespace SciLors_Mashed_Trainer.Types {
         public float CameraTiltMultiplicator {
             get { return cameraTiltMultiplicator; }
             set {
-                Process[CAMERA_TILT_MULTIPLICATOR].Write<float>(value);
+                cameraTilt.Value = value;
             }
         }
 
@@ -114,14 +110,28 @@ namespace SciLors_Mashed_Trainer.Types {
         public float CameraHeightDistanceDivider {
             get { return cameraHeightDistanceDivider; }
             set {
-                memCameraHeightDistanceDivider.Write<float>(value);
+                cameraHeightDivider.Value = value;
             }
         }
         private float cameraHeightDistanceAdd;
         public float CameraHeightDistanceAdd {
             get { return cameraHeightDistanceAdd; }
             set {
-                memCameraHeightDistanceAdd.Write<float>(value);
+                cameraHeightAdd.Value = value;
+            }
+        }
+        private float cameraHeightDistanceFactor;
+        public float CameraHeightDistanceFactor {
+            get { return cameraHeightDistanceFactor; }
+            set {
+                cameraHeightFactor.Value = value;
+            }
+        }
+        private float cameraZoomLimitValue;
+        public float CameraZoomLimit {
+            get { return cameraZoomLimitValue; }
+            set {
+                cameraZoomLimit.Value = value;
             }
         }
 
@@ -143,27 +153,28 @@ namespace SciLors_Mashed_Trainer.Types {
             funcDropWeapon = Process.Memory.Allocate(asmBytes.Length);
             funcDropWeapon.Write<byte>(asmBytes);
 
-            memMaxDistance = Process.Memory.Allocate(4);
-            MAXIMUM_DISTANCE = memMaxDistance.Information.AllocationBase;
-            Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE.ToInt32());
-            MaximumDistance = Process[MAXIMUM_DISTANCE_ORIGINAL].Read<float>();
-
-            memMaxDamage = Process.Memory.Allocate(4);
-            MAXIMUM_DAMAGE_TRESHOLD = memMaxDamage.Information.AllocationBase;
-            Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD.ToInt32());
-            MaximumDamage = Process[MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL].Read<float>();
-
-
-            memCameraHeightDistanceDivider = Process.Memory.Allocate(4);
-            CAMERA_HEIGHT_DISTANCE_DIVIDER = memCameraHeightDistanceDivider.Information.AllocationBase;
-            Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_DIVIDER.ToInt32());
-            CameraHeightDistanceDivider = Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL].Read<float>();
-
-            memCameraHeightDistanceAdd = Process.Memory.Allocate(4);
-            CAMERA_HEIGHT_DISTANCE_ADD = memCameraHeightDistanceAdd.Information.AllocationBase;
-            Process[CAMERA_HEIGHT_DISTANCE_ADD_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_ADD.ToInt32());
-            CameraHeightDistanceAdd = Process[CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL].Read<float>();
+            //fcomp operand in FUN_004131d0 (equality test against 0x8C7E00, see doc/TrainerAnalysis.md)
+            maxDistance = Patch(0x5DD620, new[] { 0x41340D });
+            //fcomp operand in FUN_0044c140 (distance warning); the global 7.0 is also used by the HUD layout
+            warningDistance = Patch(0x5DDB14, new[] { 0x44C16B });
+            //fcomp operand in FUN_00423fe0 + the 50.0 it stores when the limit is exceeded
+            maxDamage = Patch(0x5DE290, new[] { 0x423FEC }, new[] { 0x423FFA });
+            //camera function FUN_0044fa30: pitch = tilt * zoom / zoomLimit - 5
+            cameraTilt = Patch(0x5DE290, new[] { 0x450AEC });
+            //camera distance = zoom / factor / divider + add
+            cameraHeightFactor = Patch(0x5DDB18, new[] { 0x450BBA });
+            cameraHeightDivider = Patch(0x5DD41C, new[] { 0x450BC0 });
+            cameraHeightAdd = Patch(0x5DD330, new[] { 0x450BC6 });
+            //zoom is clamped to 10.0 (compares + immediates) and normalised by 10.0 in FUN_0044fa30
+            cameraZoomLimit = Patch(0x5DD620, CAMERA_ZOOM_LIMIT_OPERANDS, CAMERA_ZOOM_LIMIT_IMMEDIATES);
         }
+
+        private static readonly int[] CAMERA_ZOOM_LIMIT_OPERANDS = {
+            0x45081A, 0x450956, 0x45099F, 0x450AF8, 0x450B1A, 0x450C69, 0x450C7B, 0x450C93, 0x450CBB,
+            0x451013, 0x45101F, 0x45102B, 0x451037, 0x451043, 0x45104F, 0x4511F9, 0x451205, 0x451211,
+            0x45121D, 0x451229, 0x451235, 0x4512B8, 0x4512FC, 0x45141E, 0x451468
+        };
+        private static readonly int[] CAMERA_ZOOM_LIMIT_IMMEDIATES = { 0x45082B, 0x450967, 0x45097A, 0x4509B0 };
 
         private void ExecuteExtraFeatures() {
             if (!IsActive)
@@ -194,6 +205,8 @@ namespace SciLors_Mashed_Trainer.Types {
                         continue;
 
                     playerDead.IsAlive = true;
+                    if (playerDead.IsOnRoof)
+                        playerDead.Flip();
                     if (dos.IsRepair)
                         playerDead.Repair();
 
@@ -277,17 +290,19 @@ namespace SciLors_Mashed_Trainer.Types {
                 return;
 
             playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
-            maximumDistance = memMaxDistance.Read<float>();
-            distanceWarningThreshold = Process[DISTANCE_WARNING_THRESHOLD].Read<float>();
+            maximumDistance = maxDistance.Value;
+            distanceWarningThreshold = warningDistance.Value;
             maximumPoints = Process[MAXIMUM_POINTS].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
             
-            maximumDamage = Process[MAXIMUM_DAMAGE_RESET_VALUE].Read<float>();
+            maximumDamage = maxDamage.Value;
 
             isActive = Process[GAME_ACTIVE].Read<bool>();
 
-            cameraTiltMultiplicator = Process[CAMERA_TILT_MULTIPLICATOR].Read<float>();
-            cameraHeightDistanceDivider = memCameraHeightDistanceDivider.Read<float>();
-            cameraHeightDistanceAdd = memCameraHeightDistanceAdd.Read<float>();
+            cameraTiltMultiplicator = cameraTilt.Value;
+            cameraHeightDistanceDivider = cameraHeightDivider.Value;
+            cameraHeightDistanceAdd = cameraHeightAdd.Value;
+            cameraHeightDistanceFactor = cameraHeightFactor.Value;
+            cameraZoomLimitValue = cameraZoomLimit.Value;
 
             foreach (Player player in Players) {
                 player.Update();
@@ -311,11 +326,10 @@ namespace SciLors_Mashed_Trainer.Types {
         protected virtual void DoDispose() {
             if (!disposed) {
                 if (IsRunning) {
-                    //Revert changed pointers in code
-                    Process[MAXIMUM_DISTANCE_POINTER].Write<int>(MAXIMUM_DISTANCE_ORIGINAL.ToInt32() + PROCESS_BASE);
-                    Process[MAXIMUM_DAMAGE_TRESHOLD_POINTER].Write<int>(MAXIMUM_DAMAGE_TRESHOLD_ORIGINAL.ToInt32() + PROCESS_BASE);
-                    Process[CAMERA_HEIGHT_DISTANCE_DIVIDER_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_DIVIDER_ORIGINAL.ToInt32() + PROCESS_BASE);
-                    Process[CAMERA_HEIGHT_DISTANCE_ADD_POINTER].Write<int>(CAMERA_HEIGHT_DISTANCE_ADD_ORIGINAL.ToInt32() + PROCESS_BASE);
+                    //Revert changed pointers/immediates in code
+                    foreach (PatchedFloat patch in patches) {
+                        patch.Restore();
+                    }
                     Process.Dispose();
                 }
                 disposed = true;
@@ -330,5 +344,50 @@ namespace SciLors_Mashed_Trainer.Types {
             DoDispose();
         }
         #endregion
+    }
+
+    //A float in the game's memory that a set of instructions is redirected to (operand addresses) and/or
+    //copies as an immediate (e.g. mov [x], imm32). Addresses are absolute (image base 0x400000).
+    public class PatchedFloat {
+        private const int IMAGE_BASE = 0x400000;
+        private readonly MemorySharp process;
+        private readonly RemoteAllocation memory;
+        private readonly int originalAddress;
+        private readonly float original;
+        private readonly int[] operandSites;
+        private readonly int[] immediateSites;
+
+        public PatchedFloat(MemorySharp process, int originalAddress, int[] operandSites, int[] immediateSites) {
+            this.process = process;
+            this.originalAddress = originalAddress;
+            this.operandSites = operandSites;
+            this.immediateSites = immediateSites ?? new int[0];
+            original = process[new IntPtr(originalAddress - IMAGE_BASE)].Read<float>();
+            memory = process.Memory.Allocate(4);
+            memory.Write<float>(original);
+            int target = memory.Information.AllocationBase.ToInt32();
+            foreach (int site in operandSites) {
+                process[new IntPtr(site - IMAGE_BASE)].Write<int>(target);
+            }
+        }
+
+        public float Value {
+            get { return memory.Read<float>(); }
+            set {
+                memory.Write<float>(value);
+                foreach (int site in immediateSites) {
+                    process[new IntPtr(site - IMAGE_BASE)].Write<float>(value);
+                }
+            }
+        }
+
+        public void Restore() {
+            foreach (int site in operandSites) {
+                process[new IntPtr(site - IMAGE_BASE)].Write<int>(originalAddress);
+            }
+            foreach (int site in immediateSites) {
+                process[new IntPtr(site - IMAGE_BASE)].Write<float>(original);
+            }
+        }
     }
 }

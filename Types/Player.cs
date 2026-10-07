@@ -31,10 +31,21 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
         private const int PLAYER_BOT = 0xD00; //0/1
 
-        private const int BASE_ADDRESS_EXTENDER = 0x928;
-        private const int PLAYER_POSITION_X = BASE_ADDRESS_EXTENDER + 0x30;
-        private const int PLAYER_POSITION_Y = BASE_ADDRESS_EXTENDER + 0x38;
-        private const int PLAYER_POSITION_Z = BASE_ADDRESS_EXTENDER + 0x34;
+        //The car pose is an RwMatrix (right, up, at, pos; 0x40 bytes). The game keeps two of them (double buffer)
+        //at 0x928 and 0x968 and reads the one selected by the index at 0x9AC; the other one is overwritten every tick.
+        private const int PLAYER_MATRIX = 0x928;
+        private const int PLAYER_MATRIX_SIZE = 0x40;
+        private const int PLAYER_MATRIX_INDEX = 0x9AC;
+        private const int MATRIX_RIGHT = 0x00;
+        private const int MATRIX_UP = 0x10;
+        private const int MATRIX_AT = 0x20;
+        private const int MATRIX_POS = 0x30;
+        private const int PLAYER_VELOCITY = 0x144; //world space, 3 floats
+        //RenderWare is Y-up: the game's "Y" (0x34) is the height, the trainer's historical Y/Z are the ground plane axes.
+        private const int PLAYER_POSITION_X = MATRIX_POS + 0x00;
+        private const int PLAYER_POSITION_Y = MATRIX_POS + 0x08;
+        private const int PLAYER_POSITION_Z = MATRIX_POS + 0x04;
+        private const float FLIP_LIFT = 1.5f;
 
         private const int PLAYER_POINTS_CHANGE_OFFSET = 0x40;
         private const int PLAYER_POINTS_CHANGE_VISUAL_OFFSET = 0x20;
@@ -90,6 +101,14 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         private int playerBaseOffset;
+        private bool isOnRoof;
+        public bool IsOnRoof {
+            get { return isOnRoof; }
+        }
+        private int matrixIndex;
+        private int MatrixOffset(int index) {
+            return playerBaseOffset + PLAYER_MATRIX + (index & 1) * PLAYER_MATRIX_SIZE;
+        }
         private bool isAlive;
         public bool IsAlive {
             get {
@@ -174,9 +193,11 @@ namespace SciLors_Mashed_Trainer.Types {
         public Position Position {
             get { return position; }
             set {
-                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_X, value.X);
-                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Y, value.Y);
-                Process[BASE_ADDRESS].Write<float>(playerBaseOffset + PLAYER_POSITION_Z, value.Z);
+                for (int i = 0; i < 2; i++) {
+                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_X, value.X);
+                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_Y, value.Y);
+                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_Z, value.Z);
+                }
 
                 position = value;
             }
@@ -224,9 +245,11 @@ namespace SciLors_Mashed_Trainer.Types {
             isControlsDisabled = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_CONTROLS_DISABLED);
             isBot = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_BOT);
 
-            position.X = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_X);
-            position.Y = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Y);
-            position.Z = Process[BASE_ADDRESS].Read<float>(playerBaseOffset + PLAYER_POSITION_Z);
+            matrixIndex = Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX) & 1;
+            isOnRoof = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + MATRIX_UP + 4) < 0; //up vector points down
+            position.X = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_X);
+            position.Y = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_Y);
+            position.Z = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_Z);
 
             distance = Process[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
 
@@ -246,6 +269,70 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public void DropWeapon() {
             Game.DropWeapon(Id);
+        }
+
+        private float[] ReadVector(int offset) {
+            return new float[] {
+                Process[BASE_ADDRESS].Read<float>(offset),
+                Process[BASE_ADDRESS].Read<float>(offset + 4),
+                Process[BASE_ADDRESS].Read<float>(offset + 8)
+            };
+        }
+        private void WriteVector(int offset, float[] v) {
+            for (int i = 0; i < 3; i++) {
+                Process[BASE_ADDRESS].Write<float>(offset + 4 * i, v[i]);
+            }
+        }
+        private static float Dot(float[] a, float[] b) {
+            return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+        }
+
+        //Rotates the car 180 degrees around its forward axis (right and up are negated) and lifts it a bit
+        //so the wheels don't start inside the ground. Both matrix buffers are written because the game
+        //swaps them every tick.
+        public void Flip() {
+            int current = MatrixOffset(Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX));
+            float[] right = ReadVector(current + MATRIX_RIGHT);
+            float[] up = ReadVector(current + MATRIX_UP);
+            float[] pos = ReadVector(current + MATRIX_POS);
+            for (int i = 0; i < 3; i++) {
+                right[i] = -right[i];
+                up[i] = -up[i];
+            }
+            pos[1] += FLIP_LIFT;
+            for (int i = 0; i < 2; i++) {
+                WriteVector(MatrixOffset(i) + MATRIX_RIGHT, right);
+                WriteVector(MatrixOffset(i) + MATRIX_UP, up);
+                WriteVector(MatrixOffset(i) + MATRIX_POS, pos);
+            }
+        }
+
+        //Rotates the car (and its velocity, so it doesn't keep sliding the old way) around its own up axis.
+        //The sign of the angle (left/right) is not verified in game, 180 is symmetric.
+        public void Turn(float degrees) {
+            int current = MatrixOffset(Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX));
+            float[] right = ReadVector(current + MATRIX_RIGHT);
+            float[] at = ReadVector(current + MATRIX_AT);
+            float[] velocity = ReadVector(playerBaseOffset + PLAYER_VELOCITY);
+            double rad = degrees * Math.PI / 180.0;
+            float c = (float)Math.Cos(rad);
+            float s = (float)Math.Sin(rad);
+
+            float[] newRight = new float[3];
+            float[] newAt = new float[3];
+            float[] newVelocity = new float[3];
+            float vRight = Dot(velocity, right);
+            float vAt = Dot(velocity, at);
+            for (int i = 0; i < 3; i++) {
+                newRight[i] = c * right[i] + s * at[i];
+                newAt[i] = c * at[i] - s * right[i];
+                newVelocity[i] = velocity[i] + vRight * (newRight[i] - right[i]) + vAt * (newAt[i] - at[i]);
+            }
+            for (int i = 0; i < 2; i++) {
+                WriteVector(MatrixOffset(i) + MATRIX_RIGHT, newRight);
+                WriteVector(MatrixOffset(i) + MATRIX_AT, newAt);
+            }
+            WriteVector(playerBaseOffset + PLAYER_VELOCITY, newVelocity);
         }
 
         private void RepairFront() {

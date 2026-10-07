@@ -117,6 +117,14 @@ namespace SciLors_Mashed_Trainer.Controls {
             lblDamageBack.Content = Math.Round(sldDamageBack.Value) + "%";
         }
 
+        private void btnFlip_Click(object sender, RoutedEventArgs e) {
+            Player.Flip();
+        }
+
+        private void btnTurn_Click(object sender, RoutedEventArgs e) {
+            Player.Turn(180);
+        }
+
         private void btnDamageRepair_Click(object sender, RoutedEventArgs e) {
             Player.Repair();
         }

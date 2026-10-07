@@ -52,6 +52,8 @@ namespace SciLors_Mashed_Trainer.Controls {
             Game.CameraTiltMultiplicator = 50;
             Game.CameraHeightDistanceDivider = 5;
             Game.CameraHeightDistanceAdd = 1;
+            Game.CameraHeightDistanceFactor = 0.8f;
+            Game.CameraZoomLimit = 10;
         }
     }
 }
