@@ -38,7 +38,6 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public bool IsRunning => Target.IsRunning;
 
-        public GameFiles GameFiles { get; set; } = null!;
         public GameSettings Settings { get; set; } = null!;
 
         private int playerCount;
@@ -136,7 +135,6 @@ namespace SciLors_Mashed_Trainer.Types {
             readAndInjectAsmFunctions();
             this.Settings = new GameSettings();
             this.WeaponHelper = new WeaponHelper(this);
-            this.GameFiles = new GameFiles(this);
         }
 
         private void readAndInjectAsmFunctions() {
@@ -219,7 +217,7 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private void RandomWeaponEquip() {
             RandomWeaponSettings rws = Settings.RandomWeaponSettings;
-            if (!rws.IsEnabled) return;
+            if (!rws.IsEnabled || rws.WeaponSelector == null) return;
 
             List<Weapon.WeaponId> weapons = rws.WeaponSelector.GetEnabledWeapons();
             if (weapons.Count == 0) return;

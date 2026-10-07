@@ -97,6 +97,7 @@ namespace SciLors_Mashed_Trainer {
         private void AttachToTarget(IMemoryTarget target) {
             var ucGameInfo = this.FindControl<UcGameInfo>("ucGameInfo");
             game = new Game(target);
+            game.Update();
 
             foreach (Player.PlayerId playerId in Enum.GetValues<Player.PlayerId>()) {
                 int id = (int)playerId;

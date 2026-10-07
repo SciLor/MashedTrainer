@@ -1,4 +1,4 @@
-﻿using SciLors_Mashed_Trainer.Controls;
+using SciLors_Mashed_Trainer.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace SciLors_Mashed_Trainer.Types.Settings.Game {
         public bool IsEnabled { get; set; }
         public int MinimalTimeInS { get; set; }
         public int MaximalTimeInS { get; set; }
-        public UcWeaponSelector WeaponSelector;
+        public UcWeaponSelector? WeaponSelector { get; set; }
         public bool IsSameWeaponForAll { get; set; }
         public bool IsDropPreviousWeapon { get; set; }
         public bool IsSkipBots { get; set; }

@@ -111,10 +111,12 @@ namespace SciLors_Mashed_Trainer.Core {
             int offset = 0;
 
             // Push args reverse
-            for (int i = argCount - 1; i >= 0; i--) {
-                stub[offset++] = 0x68; // push imm32
-                Array.Copy(BitConverter.GetBytes(arguments[i]), 0, stub, offset, 4);
-                offset += 4;
+            if (arguments != null) {
+                for (int i = argCount - 1; i >= 0; i--) {
+                    stub[offset++] = 0x68; // push imm32
+                    Array.Copy(BitConverter.GetBytes(arguments[i]), 0, stub, offset, 4);
+                    offset += 4;
+                }
             }
 
             // mov eax, functionAddress

@@ -40,7 +40,7 @@ namespace SciLors_Mashed_Trainer.Tests {
             var frame0 = window.CaptureRenderedFrame();
             Assert.That(frame0, Is.Not.Null, "Rendered frame should not be null");
             using (frame0) {
-                frame0.Save(playersPng);
+                frame0!.Save(playersPng);
             }
             Assert.That(File.Exists(playersPng), Is.True, "tab_Players.png should be generated");
             TestContext.WriteLine($"Generated screenshot: {playersPng} ({new FileInfo(playersPng).Length} bytes)");
@@ -65,7 +65,7 @@ namespace SciLors_Mashed_Trainer.Tests {
             var frame1 = window.CaptureRenderedFrame();
             Assert.That(frame1, Is.Not.Null, "Rendered frame should not be null");
             using (frame1) {
-                frame1.Save(gamePng);
+                frame1!.Save(gamePng);
             }
             Assert.That(File.Exists(gamePng), Is.True, "tab_Game.png should be generated");
             TestContext.WriteLine($"Generated screenshot: {gamePng} ({new FileInfo(gamePng).Length} bytes)");

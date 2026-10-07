@@ -183,17 +183,31 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
+        private bool isUpdatingFromMemory;
         private Position position = new Position();
         public Position Position {
             get => position;
             set {
-                for (int i = 0; i < 2; i++) {
-                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_X), value.X);
-                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Y), value.Y);
-                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Z), value.Z);
+                if (position != null) {
+                    position.PropertyChanged -= Position_PropertyChanged;
                 }
-                position = value;
+                position = value ?? new Position();
+                position.PropertyChanged += Position_PropertyChanged;
+                WritePositionToMemory(position);
                 OnPropertyChanged(nameof(Position));
+            }
+        }
+
+        private void Position_PropertyChanged(object? sender, PropertyChangedEventArgs e) {
+            if (isUpdatingFromMemory) return;
+            WritePositionToMemory(position);
+        }
+
+        private void WritePositionToMemory(Position pos) {
+            for (int i = 0; i < 2; i++) {
+                Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_X), pos.X);
+                Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Y), pos.Y);
+                Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Z), pos.Z);
             }
         }
 
@@ -220,6 +234,7 @@ namespace SciLors_Mashed_Trainer.Types {
             game.Players.Add(this);
             Id = id;
             Settings = new PlayerSettings();
+            position.PropertyChanged += Position_PropertyChanged;
             playerBaseOffset = PLAYER_BASE_DISTANCE * (int)Id;
             playerWeaponOffset = PLAYER_WEAPON_DISTANCE * (int)Id;
             playerPointsOffset = PLAYER_POINTS_DISTANCE * (int)Id;
@@ -241,9 +256,14 @@ namespace SciLors_Mashed_Trainer.Types {
             matrixIndex = Target.Read<int>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_MATRIX_INDEX)) & 1;
             isOnRoof = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + MATRIX_UP + 4)) < 0;
 
-            position.X = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_X));
-            position.Y = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Y));
-            position.Z = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Z));
+            isUpdatingFromMemory = true;
+            try {
+                position.X = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_X));
+                position.Y = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Y));
+                position.Z = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Z));
+            } finally {
+                isUpdatingFromMemory = false;
+            }
 
             distance = Target.Read<float>(IntPtr.Add(BASE_DISTANCE_ADDRESS, playerDistanceOffset));
 

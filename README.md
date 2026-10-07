@@ -1,62 +1,94 @@
-# SciLor's Mashed Trainer v0.1.0
+# SciLor's Mashed Trainer v0.2.0
 
-![Screenshot](https://raw.githubusercontent.com/SciLor/MashedTrainer/master/SciLorsMashedTrainerv0.0.1.Slice.png)
+Modern, cross-platform trainer for the PC game **Mashed: Fully Loaded**. Re-engineered on .NET 8 and Avalonia UI with automated headless GUI testing, simulation support, and dual distribution profiles.
 
-## Sidenode
-[Mashed and Mashed Fully Loader Runner](https://github.com/SciLor/MashedRunner)
+---
 
-## ReadMe
+## Screenshots
 
-You will need the .NET Framework 4.5
-https://www.microsoft.com/en-us/download/details.aspx?id=30653
+### Players Tab
+![Players Tab](screenshots/tab_Players.png)
 
-SciLor's Mashed Trainer is the first trainer for the game Mashed Fully Loaded (not for Mashed!).
+### Game Tab
+![Game Tab](screenshots/tab_Game.png)
 
-I recommend using DXWnd to put the game into windowed mode for better usage of the trainer.
+---
+
+## Downloads & Requirements
+
+The trainer is distributed in two builds on each release:
+
+1. **Standalone (Zero Prerequisites)**: Self-contained single executable (`MashedTrainer-Standalone-win-x86.zip`). Requires no .NET runtime installed.
+2. **Tiny (Framework-Dependent)**: Ultra-compact build (~3 MB) (`MashedTrainer-Tiny-win-x86.zip`). Requires the [.NET 8 Desktop Runtime (x86)](https://dotnet.microsoft.com/download/dotnet/8.0).
+
+> **Note**: I recommend using [DXWnd](https://sourceforge.net/projects/dxwnd/) to run Mashed in windowed mode alongside the trainer.
+
+---
 
 ## Features
-### Player
-- Change/Freeze points
-- Revive player
-- Teleport player
-- Freeze players position
-- Freeze players controls (except weapon)
-- Equip and Drop weapons.
-- Damage and Repair the car
 
-### Game
-- Set maximum distance (including warning distance)
-- Set maximum damage level (normally 50%)
-- Change camera behaviour (tilt, height)
+### Player (Per-Player Controls for P1–P4)
+- **Score**: Change and freeze points
+- **Revive**: Instant respawn and revive toggle
+- **Teleport & Freeze**: View and set coordinates (X, Y, Z) and freeze axes individually
+- **Controls**: Disable/enable player vehicle controls
+- **Weapons**: Equip any of the 9 weapons instantly, or drop active weapon
+- **Damage**: Adjust front and back damage sliders, toggle individual damage parts (Hood, Trunk, Glass), and 1-click Full Repair
+- **Car Physics**: 1-click **Flip** (rights an upside-down car) and **Turn 180°**
 
-### Fun Extensions
-- Randomly equip a weapon from time to time
-- Drive over revive to make multiplayer even more fun.
+### Game & Camera
+- **Destroy Distance**: Customize warning threshold and maximum elimination distance
+- **Maximum Damage**: Set maximum damage cap (normally 50%)
+- **Camera Tuning**: Adjust camera tilt multiplier, height distance divider, height add, height distance factor, and zoom limit
 
-### Known Bugs
+### Fun Modifiers
+- **Random Weapon Equip**: Periodically equips randomized weapons for all players or bots
+- **Drive-Over Revive**: Drive over eliminated opponents to bring them back into the race, automatically flipping cars on their roof
 
-If you like my hard work PLEASE DONATE! :)
-http://www.scilor.com/donate.html
+---
 
-## ChangeLog:
+## Building & Testing
 
-### v0.2.0(2026-10-07)
-- New: "Flip" and "Turn 180°" buttons to right or turn the car
-- New: Camera settings "Height Distance factor" and "Zoom limit"
-- Drive over revive now flips cars that are on their roof
-- Maximum distance/damage and camera values now patch only the instructions of their feature instead of shared game constants (fixes side effects on HUD/AI/physics)
-- Fix freeze/set position by writing both car matrix buffers
-- Fix wrong address in ChangeWeapon.asm (0x467E6 -> 0x467E60)
-- Add reverse engineering docs (trainer and weapon ASM analysis)
-- Add `Asm/build.sh` to rebuild the `.bin` files from the `.asm` sources with fasm
-- Add GitHub Action that checks the `.bin` files are up to date, builds the trainer and drafts a release on `v*` tags
+### Requirements
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 
-### v0.1.0(2017-11-20)
+### Building
+```bash
+# Build trainer
+dotnet build MashedTrainer.sln -c Release
+
+# Run automated tests and capture headless GUI screenshots
+dotnet test MashedTrainer.sln -c Release
+```
+
+### Developing on Linux
+The trainer features a built-in memory target simulator (`MockMemoryTarget`) that automatically activates when running outside Windows without the game process. You can fully develop, test, and render the GUI headlessly on Linux without needing Windows or the actual game executable.
+
+---
+
+## ChangeLog
+
+### v0.2.0 (2026-10-07)
+- **Platform Migration**: Completely modernized from .NET Framework 4.5 / WPF to .NET 8 / Avalonia UI.
+- **Cross-Platform Development**: Native Linux building and testing support with headless screenshot generation.
+- **Dual Distribution**: Available as both a lightweight framework-dependent build and a zero-dependency standalone single-file binary.
+- **UI Redesign**: Dark tactical combat HUD theme matching the style of *Mashed: Drive to Survive*, featuring 1:1 square weapon loadout grids and high-visibility combat selection rings.
+- **Dedicated Game Tab**: Separated global game, camera, and modifier controls into their own dedicated tab.
+- **New Controls**: Added "Flip" and "Turn 180°" vehicle righting actions, camera "Height factor" and "Zoom limit" controls.
+- **Bug Fixes**:
+  - Fixed vehicle coordinate setting by synchronizing both game matrix buffers.
+  - Patching logic now targets specific instructions rather than shared global constants, eliminating AI/physics side-effects.
+  - Fixed typo in `ChangeWeapon.asm` target address (`0x467E6` -> `0x467E60`).
+- **CI/CD**: Added GitHub Actions workflows for continuous build, test, and automated tag-based releases.
+
+### v0.1.0 (2017-11-20)
 - Initial Release
 
-## Web
-My Website: http://www.scilor.com/
+---
 
-SciLor's Mashed Trainer Website: http://www.scilor.com/mashed-trainer.html
+## Author & Support
 
-Donation: http://www.scilor.com/donate.html
+- **Author**: SciLor
+- **Website**: [scilor.com](http://www.scilor.com/)
+- **Companion Tool**: [Mashed and Mashed Fully Loaded Runner](https://github.com/SciLor/MashedRunner)
+- **Donate**: If you enjoy this trainer, [donations are warmly appreciated](http://www.scilor.com/donate.html)!

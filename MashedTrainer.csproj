@@ -34,7 +34,7 @@
     <None Update="Asm\*.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <AvaloniaResource Include="Img\**" />
+    <AvaloniaResource Include="Img\*.png;Img\*.svg" />
   </ItemGroup>
 </Project>
 
