@@ -1,0 +1,140 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:SciLors_Mashed_Trainer.Controls"
+             x:Class="SciLors_Mashed_Trainer.Controls.UcGameInfo"
+             x:Name="GameInfo">
+    <Border BorderBrush="#555" BorderThickness="1" CornerRadius="4" Margin="3" Padding="6">
+        <Grid ColumnDefinitions="*,*,*">
+            <!-- Column 0: Distance, Damage, Camera -->
+            <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,3,0">
+                <!-- Destroy Distance -->
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Destroy Distance" FontWeight="Bold" FontSize="12" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" Margin="0,2,0,0">
+                            <TextBlock Text="Max. Distance" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtMaxDistance" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.MaximumDistance, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Warn. Distance" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtWarnDistance" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.DistanceWarningThreshold, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <Button Name="btnResetDistance" Grid.Row="2" Grid.Column="1" Content="Reset"
+                                    Click="btnResetDistance_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2,4,2,0" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Maximum Damage -->
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Maximum Damage" FontWeight="Bold" FontSize="12" />
+                        <TextBlock Name="lblMaxDamage" Text="50%" HorizontalAlignment="Center" />
+                        <Slider Name="sldMaxDamage" Minimum="0" Maximum="100"
+                                Value="{Binding Game.MaximumDamage, ElementName=GameInfo, Mode=TwoWay}"
+                                ValueChanged="sldMaxDamage_ValueChanged" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Camera -->
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Camera" FontWeight="Bold" FontSize="12" />
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
+                            <TextBlock Text="Tilt mult." Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtCameraTiltMulti" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.CameraTiltMultiplicator, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Height div." Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtCameraHeightDistanceDiv" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.CameraHeightDistanceDivider, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Height add" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtCameraHeightDistanceAdd" Grid.Row="2" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.CameraHeightDistanceAdd, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Height factor" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtCameraHeightDistanceFactor" Grid.Row="3" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.CameraHeightDistanceFactor, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Zoom limit" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtCameraZoomLimit" Grid.Row="4" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.CameraZoomLimit, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <Button Name="btnResetCamera" Grid.Row="5" Grid.Column="1" Content="Reset"
+                                    Click="btnResetCamera_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2,4,2,0" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Column 1: Random Weapon Equip -->
+            <StackPanel Grid.Column="1" Spacing="6" Margin="3,0,3,0">
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <CheckBox Name="chkWeaponDropEnabled" Content="Random Weapon Equip" FontWeight="Bold"
+                                  IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
+                            <TextBlock Text="Min. Time (s)" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtWeaponEquipMin" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.Settings.RandomWeaponSettings.MinimalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
+
+                            <TextBlock Text="Max. Time (s)" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtWeaponEquipMax" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.Settings.RandomWeaponSettings.MaximalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
+                        </Grid>
+
+                        <TextBlock Text="Weapons" FontWeight="SemiBold" Margin="0,4,0,2" />
+                        <local:UcWeaponSelector x:Name="uwsRandomWeapon" Height="140" />
+
+                        <CheckBox Name="chkWeaponDropSame" Content="Same for all"
+                                  IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsSameWeaponForAll, ElementName=GameInfo, Mode=TwoWay}" />
+                        <CheckBox Name="chkWeaponDropDrop" Content="Drop Weapon"
+                                  IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsDropPreviousWeapon, ElementName=GameInfo, Mode=TwoWay}" />
+                        <CheckBox Name="chkWeaponDropSkipBots" Content="Skip Bots"
+                                  IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Column 2: Drive Over Revive, Weapon Boxes -->
+            <StackPanel Grid.Column="2" Spacing="6" Margin="3,0,0,0">
+                <!-- Drive over revive -->
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <CheckBox Name="chkReviveEnabled" Content="Drive Over Revive" FontWeight="Bold"
+                                  IsChecked="{Binding Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" Margin="0,4,0,0">
+                            <TextBlock Text="Min. Distance" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <TextBox Name="txtRespawnDistance" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Text="{Binding Game.Settings.DriveOverReviveSettings.MinimalReviceDistance, ElementName=GameInfo, Mode=TwoWay}" />
+                        </Grid>
+
+                        <CheckBox Name="chkReviveRepair" Content="Repair Car"
+                                  IsChecked="{Binding Game.Settings.DriveOverReviveSettings.IsRepair, ElementName=GameInfo, Mode=TwoWay}" />
+                        <CheckBox Name="chkReviveSkipBots" Content="Skip Bots"
+                                  IsChecked="{Binding Game.Settings.DriveOverReviveSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Weapon Boxes -->
+                <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
+                    <StackPanel Spacing="4">
+                        <CheckBox Name="chkWeaponBoxEnabled" Content="Change Weapon Boxes" FontWeight="Bold" IsEnabled="False"
+                                  IsChecked="{Binding Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+
+                        <TextBlock Text="Weapons" FontWeight="SemiBold" Margin="0,4,0,2" />
+                        <local:UcWeaponSelector x:Name="uwsWeaponboxes" Height="140" />
+
+                        <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots"
+                                  IsChecked="{Binding Game.Settings.WeaponBoxesSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay}" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
+

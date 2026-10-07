@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="SciLors_Mashed_Trainer.Controls.UcWeaponSelector">
+    <Grid Name="grdBase" ColumnDefinitions="*,*,*" RowDefinitions="*,*,*">
+        <ToggleButton Name="btnMortar" Grid.Row="0" Grid.Column="0" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/Mortar.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnMachinegun" Grid.Row="0" Grid.Column="1" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/gattlingun.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnDrum" Grid.Row="0" Grid.Column="2" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/DepthCharge.png" Stretch="Uniform" />
+        </ToggleButton>
+
+        <ToggleButton Name="btnRocket" Grid.Row="1" Grid.Column="0" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/Missile.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnMines" Grid.Row="1" Grid.Column="1" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/mine.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnFlamethrower" Grid.Row="1" Grid.Column="2" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/FlameThrower.png" Stretch="Uniform" />
+        </ToggleButton>
+
+        <ToggleButton Name="btnShotgun" Grid.Row="2" Grid.Column="0" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/Shotgun.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnFlashbang" Grid.Row="2" Grid.Column="1" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/Shine.png" Stretch="Uniform" />
+        </ToggleButton>
+        <ToggleButton Name="btnOil" Grid.Row="2" Grid.Column="2" Click="btnWeapon_Click" Margin="2" Padding="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Image Source="/Img/RPG.png" Stretch="Uniform" />
+        </ToggleButton>
+    </Grid>
+</UserControl>
+

@@ -3,3 +3,8 @@ obj/**
 Release/**
 tmp/**
 artifacts_downloaded/**
+dist/**
+tests/bin/**
+tests/obj/**
+tools/mfl_dummy/mfl_dummy
+tools/mfl_dummy/mfl_dummy.exe

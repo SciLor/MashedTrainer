@@ -1,14 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SciLors_Mashed_Trainer.Types.Weapons {
     public class WeaponHelper {
-        private Game game;
-        private NoWeapon noWeapon;
-        private Dictionary<IntPtr, Weapon> weaponCache = new Dictionary<IntPtr, Weapon>();
+        private readonly Game game;
+        private readonly NoWeapon noWeapon;
+        private readonly Dictionary<IntPtr, Weapon> weaponCache = new Dictionary<IntPtr, Weapon>();
 
         public WeaponHelper(Game game) {
             this.game = game;
@@ -17,15 +14,14 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
 
         public Weapon GetWeapon(Player player) {
             IntPtr ptr = player.WeaponPointer;
-            Weapon weapon;
-            if (weaponCache.ContainsKey(ptr)) {
-                weapon = weaponCache[ptr];
-            } else {
-                weapon = InitWeapon(ptr);
-                weaponCache.Add(ptr, weapon);
+            if (weaponCache.TryGetValue(ptr, out Weapon? weapon)) {
+                return weapon;
             }
+            weapon = InitWeapon(ptr);
+            weaponCache[ptr] = weapon;
             return weapon;
         }
+
         private Weapon InitWeapon(IntPtr pointer) {
             if (Drum.GetValidPointers().Contains(pointer)) {
                 return new Drum(game);
@@ -53,9 +49,6 @@ namespace SciLors_Mashed_Trainer.Types.Weapons {
             }
             if (Shotgun.GetValidPointers().Contains(pointer)) {
                 return new Shotgun(game);
-            }
-            if (Drum.GetValidPointers().Contains(pointer)) {
-                return new Drum(game);
             }
             return this.noWeapon;
         }

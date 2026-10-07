@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
 using System.ComponentModel;
+using SciLors_Mashed_Trainer.Core;
+using SciLors_Mashed_Trainer.Types.Settings.Player;
 using SciLors_Mashed_Trainer.Types.Weapons;
 using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
-using SciLors_Mashed_Trainer.Types.Settings.Player;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Player : BaseMemorySharp {
@@ -16,23 +14,18 @@ namespace SciLors_Mashed_Trainer.Types {
             FOUR = 3
         }
 
-        public const int CHANGE_POINTS_INITIAL_VALUE = -1000; // FFFFFC18
+        public const int CHANGE_POINTS_INITIAL_VALUE = -1000;
 
-        private IntPtr BASE_ADDRESS = new IntPtr(0x8B06E0 - PROCESS_BASE);
-        private IntPtr BASE_WEAPON_ADDRESS = new IntPtr(0x8BEDCC - PROCESS_BASE);
-        private IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40 - PROCESS_BASE);
-        private IntPtr BASE_POINTS_CHANGE_ADDRESS = new IntPtr(0x8D8B80 - PROCESS_BASE);
-        private IntPtr BASE_POINT_CHANGE_VISUAL_ADDRESS = new IntPtr(0x8D8B60 - PROCESS_BASE);
-        private IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40 - PROCESS_BASE);
-        private IntPtr BASE_DAMAGE_ADDRESS = new IntPtr(0x65A9E8 - PROCESS_BASE);
-        private IntPtr BASE_PLAYER_COLOR = new IntPtr(0x69D028 - PROCESS_BASE); //Only Human!
+        private readonly IntPtr BASE_ADDRESS = new IntPtr(0x8B06E0);
+        private readonly IntPtr BASE_WEAPON_ADDRESS = new IntPtr(0x8BEDCC);
+        private readonly IntPtr BASE_POINTS_ADDRESS = new IntPtr(0x8D8B40);
+        private readonly IntPtr BASE_DISTANCE_ADDRESS = new IntPtr(0x8C7E40);
+        private readonly IntPtr BASE_DAMAGE_ADDRESS = new IntPtr(0x65A9E8);
 
-        private const int PLAYER_ALIVE = 0x004; //0/1
-        private const int PLAYER_CONTROLS_DISABLED = 0x010; //0/1
-        private const int PLAYER_BOT = 0xD00; //0/1
+        private const int PLAYER_ALIVE = 0x004;
+        private const int PLAYER_CONTROLS_DISABLED = 0x010;
+        private const int PLAYER_BOT = 0xD00;
 
-        //The car pose is an RwMatrix (right, up, at, pos; 0x40 bytes). The game keeps two of them (double buffer)
-        //at 0x928 and 0x968 and reads the one selected by the index at 0x9AC; the other one is overwritten every tick.
         private const int PLAYER_MATRIX = 0x928;
         private const int PLAYER_MATRIX_SIZE = 0x40;
         private const int PLAYER_MATRIX_INDEX = 0x9AC;
@@ -40,8 +33,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int MATRIX_UP = 0x10;
         private const int MATRIX_AT = 0x20;
         private const int MATRIX_POS = 0x30;
-        private const int PLAYER_VELOCITY = 0x144; //world space, 3 floats
-        //RenderWare is Y-up: the game's "Y" (0x34) is the height, the trainer's historical Y/Z are the ground plane axes.
+        private const int PLAYER_VELOCITY = 0x144;
         private const int PLAYER_POSITION_X = MATRIX_POS + 0x00;
         private const int PLAYER_POSITION_Y = MATRIX_POS + 0x08;
         private const int PLAYER_POSITION_Z = MATRIX_POS + 0x04;
@@ -50,13 +42,11 @@ namespace SciLors_Mashed_Trainer.Types {
         private const int PLAYER_POINTS_CHANGE_OFFSET = 0x40;
         private const int PLAYER_POINTS_CHANGE_VISUAL_OFFSET = 0x20;
 
-        //Distances between each players options
         private const int PLAYER_BASE_DISTANCE = 0xD04;
         private const int PLAYER_WEAPON_DISTANCE = 0xB4;
         private const int PLAYER_POINTS_DISTANCE = 0x4;
         private const int PLAYER_DISTANCE_DISTANCE = 0x4;
         private const int PLAYER_DAMAGE_DISTANCE = 0x28;
-        private const int PLAYER_COLOR_DISTANCE = 0xC;
 
         private const int DAMAGE_FRONT_DAMAGE_OFFSET = 0x00;
         private const int DAMAGE_BACK_DAMAGE_OFFSET = 0x04;
@@ -67,122 +57,126 @@ namespace SciLors_Mashed_Trainer.Types {
 
         public PlayerSettings Settings { get; set; }
 
-        private int playerPointsOffset;
+        private readonly int playerPointsOffset;
         private int points;
         public int Points {
-            get { return points; }
+            get => points;
             set {
-                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset, value);
+                Target.Write<int>(IntPtr.Add(BASE_POINTS_ADDRESS, playerPointsOffset), value);
                 points = value;
+                OnPropertyChanged(nameof(Points));
             }
         }
 
         public bool IsActive {
             get {
-                if (!Game.IsActive)
-                    return false;
-                if (Game.PlayerCount <= (int)Id)
-                    return false;
+                if (!Game.IsActive) return false;
+                if (Game.PlayerCount <= (int)Id) return false;
                 return true;
             }
         }
 
-        private int playerWeaponOffset;
-        public Weapon Weapon {
-            get {
-                return Game.WeaponHelper.GetWeapon(this);
-            }
-        }
+        private readonly int playerWeaponOffset;
+        public Weapon Weapon => Game.WeaponHelper.GetWeapon(this);
         private IntPtr weaponPointer = IntPtr.Zero;
-        public IntPtr WeaponPointer {
-            get {
-                return weaponPointer;
+        public IntPtr WeaponPointer => weaponPointer;
+
+        private readonly int playerBaseOffset;
+        private bool isOnRoof;
+        public bool IsOnRoof => isOnRoof;
+
+        private int matrixIndex;
+        private int MatrixOffset(int index) {
+            return playerBaseOffset + PLAYER_MATRIX + ((index & 1) * PLAYER_MATRIX_SIZE);
+        }
+
+        private bool isAlive;
+        public bool IsAlive {
+            get => isAlive;
+            set {
+                Target.Write<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_ALIVE), value);
+                isAlive = value;
+                IsControlsDisabled = !value;
+                OnPropertyChanged(nameof(IsAlive));
             }
         }
 
-        private int playerBaseOffset;
-        private bool isOnRoof;
-        public bool IsOnRoof {
-            get { return isOnRoof; }
-        }
-        private int matrixIndex;
-        private int MatrixOffset(int index) {
-            return playerBaseOffset + PLAYER_MATRIX + (index & 1) * PLAYER_MATRIX_SIZE;
-        }
-        private bool isAlive;
-        public bool IsAlive {
-            get {
-                return isAlive;
-            }
-            set {
-                Process[BASE_ADDRESS].Write<bool>(playerBaseOffset + PLAYER_ALIVE, value);
-                isAlive = value;
-                IsControlsDisabled = !value;
-            }
-        }
         private bool isControlsDisabled;
         public bool IsControlsDisabled {
-            get {
-                return isControlsDisabled;
-            }
+            get => isControlsDisabled;
             set {
-                Process[BASE_ADDRESS].Write<bool>(playerBaseOffset + PLAYER_CONTROLS_DISABLED, value);
+                Target.Write<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_CONTROLS_DISABLED), value);
                 isControlsDisabled = value;
+                OnPropertyChanged(nameof(IsControlsDisabled));
             }
         }
 
         private bool isBot;
-        public bool IsBot {
-            get {
-                return isBot;
+        public bool IsBot => isBot;
+
+        private readonly int playerDamageOffset;
+        private float damageFront;
+        public float DamageFront {
+            get => damageFront;
+            set {
+                Target.Write<float>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET), value);
+                damageFront = value;
+                OnPropertyChanged(nameof(DamageFront));
             }
         }
 
-        private int playerDamageOffset;
-        private float damageFront;
-        public float DamageFront {
-            get { return damageFront; }
-            set {
-                Process[BASE_DAMAGE_ADDRESS].Write<float>(playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET, value);
-            }
-        }
         private float damageBack;
         public float DamageBack {
-            get { return damageBack; }
+            get => damageBack;
             set {
-                Process[BASE_DAMAGE_ADDRESS].Write<float>(playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET, value);
+                Target.Write<float>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET), value);
+                damageBack = value;
+                OnPropertyChanged(nameof(DamageBack));
             }
         }
+
         private bool isDamagedHood;
         public bool IsDamagedHood {
-            get { return isDamagedHood; }
+            get => isDamagedHood;
             set {
-                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_HOOD_OFFSET, value);
+                Target.Write<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_HOOD_OFFSET), value);
+                isDamagedHood = value;
+                OnPropertyChanged(nameof(IsDamagedHood));
             }
         }
+
         private bool isDamagedTrunk;
         public bool IsDamagedTrunk {
-            get { return isDamagedTrunk; }
+            get => isDamagedTrunk;
             set {
-                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_TRUNK_OFFSET, value);
+                Target.Write<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_TRUNK_OFFSET), value);
+                isDamagedTrunk = value;
+                OnPropertyChanged(nameof(IsDamagedTrunk));
             }
         }
+
         private bool isDamagedGlassHood;
         public bool IsDamagedGlassHood {
-            get { return isDamagedGlassHood; }
+            get => isDamagedGlassHood;
             set {
-                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET, value);
+                Target.Write<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET), value);
+                isDamagedGlassHood = value;
+                OnPropertyChanged(nameof(IsDamagedGlassHood));
             }
         }
+
         private bool isDamagedGlassTrunk;
         public bool IsDamagedGlassTrunk {
-            get { return isDamagedGlassTrunk; }
+            get => isDamagedGlassTrunk;
             set {
-                Process[BASE_DAMAGE_ADDRESS].Write<bool>(playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET, value);
+                Target.Write<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET), value);
+                isDamagedGlassTrunk = value;
+                OnPropertyChanged(nameof(IsDamagedGlassTrunk));
             }
         }
+
         public bool IsDamagedGlass {
-            get { return IsDamagedGlassHood || IsDamagedGlassTrunk; }
+            get => IsDamagedGlassHood || IsDamagedGlassTrunk;
             set {
                 IsDamagedGlassHood = value;
                 IsDamagedGlassTrunk = value;
@@ -191,38 +185,37 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private Position position = new Position();
         public Position Position {
-            get { return position; }
+            get => position;
             set {
                 for (int i = 0; i < 2; i++) {
-                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_X, value.X);
-                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_Y, value.Y);
-                    Process[BASE_ADDRESS].Write<float>(MatrixOffset(i) + PLAYER_POSITION_Z, value.Z);
+                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_X), value.X);
+                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Y), value.Y);
+                    Target.Write<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(i) + PLAYER_POSITION_Z), value.Z);
                 }
-
                 position = value;
+                OnPropertyChanged(nameof(Position));
             }
         }
 
-        private int playerDistanceOffset;
+        private readonly int playerDistanceOffset;
         private float distance;
-        public float Distance {
-            get {
-                return distance;
-            }
-        }
+        public float Distance => distance;
 
         private int pointsChange;
         public int PointsChange {
-            get { return pointsChange; }
+            get => pointsChange;
             set {
-                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET, value);
-                Process[BASE_POINTS_ADDRESS].Write<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_VISUAL_OFFSET, value);
+                Target.Write<int>(IntPtr.Add(BASE_POINTS_ADDRESS, playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET), value);
+                Target.Write<int>(IntPtr.Add(BASE_POINTS_ADDRESS, playerPointsOffset + PLAYER_POINTS_CHANGE_VISUAL_OFFSET), value);
+                pointsChange = value;
+                OnPropertyChanged(nameof(PointsChange));
             }
         }
 
         public PlayerId Id { get; set; }
         public Game Game { get; set; }
-        public Player(Game game, PlayerId id) : base(game.Process) {
+
+        public Player(Game game, PlayerId id) : base(game.Target) {
             Game = game;
             game.Players.Add(this);
             Id = id;
@@ -235,30 +228,31 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         public void Update() {
-            if (!Game.IsRunning)
-                return;
-            points = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset);
-            pointsChange = Process[BASE_POINTS_ADDRESS].Read<int>(playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET);
+            if (!Game.IsRunning) return;
 
-            weaponPointer = new IntPtr(Process[BASE_WEAPON_ADDRESS].Read<int>(playerWeaponOffset));
-            isAlive = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_ALIVE);
-            isControlsDisabled = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_CONTROLS_DISABLED);
-            isBot = Process[BASE_ADDRESS].Read<bool>(playerBaseOffset + PLAYER_BOT);
+            points = Target.Read<int>(IntPtr.Add(BASE_POINTS_ADDRESS, playerPointsOffset));
+            pointsChange = Target.Read<int>(IntPtr.Add(BASE_POINTS_ADDRESS, playerPointsOffset + PLAYER_POINTS_CHANGE_OFFSET));
 
-            matrixIndex = Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX) & 1;
-            isOnRoof = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + MATRIX_UP + 4) < 0; //up vector points down
-            position.X = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_X);
-            position.Y = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_Y);
-            position.Z = Process[BASE_ADDRESS].Read<float>(MatrixOffset(matrixIndex) + PLAYER_POSITION_Z);
+            weaponPointer = new IntPtr(Target.Read<int>(IntPtr.Add(BASE_WEAPON_ADDRESS, playerWeaponOffset)));
+            isAlive = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_ALIVE));
+            isControlsDisabled = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_CONTROLS_DISABLED));
+            isBot = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_BOT));
 
-            distance = Process[BASE_DISTANCE_ADDRESS].Read<float>(playerDistanceOffset);
+            matrixIndex = Target.Read<int>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_MATRIX_INDEX)) & 1;
+            isOnRoof = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + MATRIX_UP + 4)) < 0;
 
-            damageFront = Process[BASE_DAMAGE_ADDRESS].Read<float>(playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET);
-            damageBack = Process[BASE_DAMAGE_ADDRESS].Read<float>(playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET);
-            isDamagedHood = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_HOOD_OFFSET);
-            isDamagedTrunk = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_TRUNK_OFFSET);
-            isDamagedGlassHood = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET);
-            isDamagedGlassTrunk = Process[BASE_DAMAGE_ADDRESS].Read<bool>(playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET);
+            position.X = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_X));
+            position.Y = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Y));
+            position.Z = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + PLAYER_POSITION_Z));
+
+            distance = Target.Read<float>(IntPtr.Add(BASE_DISTANCE_ADDRESS, playerDistanceOffset));
+
+            damageFront = Target.Read<float>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_FRONT_DAMAGE_OFFSET));
+            damageBack = Target.Read<float>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_BACK_DAMAGE_OFFSET));
+            isDamagedHood = Target.Read<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_HOOD_OFFSET));
+            isDamagedTrunk = Target.Read<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_TRUNK_OFFSET));
+            isDamagedGlassHood = Target.Read<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_GLASS_HOOD_OFFSET));
+            isDamagedGlassTrunk = Target.Read<bool>(IntPtr.Add(BASE_DAMAGE_ADDRESS, playerDamageOffset + DAMAGE_GLASS_TRUNK_OFFSET));
 
             RaisePropertyChanged();
         }
@@ -273,25 +267,24 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private float[] ReadVector(int offset) {
             return new float[] {
-                Process[BASE_ADDRESS].Read<float>(offset),
-                Process[BASE_ADDRESS].Read<float>(offset + 4),
-                Process[BASE_ADDRESS].Read<float>(offset + 8)
+                Target.Read<float>(IntPtr.Add(BASE_ADDRESS, offset)),
+                Target.Read<float>(IntPtr.Add(BASE_ADDRESS, offset + 4)),
+                Target.Read<float>(IntPtr.Add(BASE_ADDRESS, offset + 8))
             };
         }
+
         private void WriteVector(int offset, float[] v) {
             for (int i = 0; i < 3; i++) {
-                Process[BASE_ADDRESS].Write<float>(offset + 4 * i, v[i]);
+                Target.Write<float>(IntPtr.Add(BASE_ADDRESS, offset + 4 * i), v[i]);
             }
         }
+
         private static float Dot(float[] a, float[] b) {
             return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
         }
 
-        //Rotates the car 180 degrees around its forward axis (right and up are negated) and lifts it a bit
-        //so the wheels don't start inside the ground. Both matrix buffers are written because the game
-        //swaps them every tick.
         public void Flip() {
-            int current = MatrixOffset(Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX));
+            int current = MatrixOffset(Target.Read<int>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_MATRIX_INDEX)));
             float[] right = ReadVector(current + MATRIX_RIGHT);
             float[] up = ReadVector(current + MATRIX_UP);
             float[] pos = ReadVector(current + MATRIX_POS);
@@ -307,10 +300,8 @@ namespace SciLors_Mashed_Trainer.Types {
             }
         }
 
-        //Rotates the car (and its velocity, so it doesn't keep sliding the old way) around its own up axis.
-        //The sign of the angle (left/right) is not verified in game, 180 is symmetric.
         public void Turn(float degrees) {
-            int current = MatrixOffset(Process[BASE_ADDRESS].Read<int>(playerBaseOffset + PLAYER_MATRIX_INDEX));
+            int current = MatrixOffset(Target.Read<int>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_MATRIX_INDEX)));
             float[] right = ReadVector(current + MATRIX_RIGHT);
             float[] at = ReadVector(current + MATRIX_AT);
             float[] velocity = ReadVector(playerBaseOffset + PLAYER_VELOCITY);
@@ -340,11 +331,13 @@ namespace SciLors_Mashed_Trainer.Types {
             IsDamagedHood = false;
             IsDamagedGlassHood = false;
         }
+
         private void RepairBack() {
             DamageBack = 0.0f;
             IsDamagedTrunk = false;
             IsDamagedGlassTrunk = false;
         }
+
         public void Repair() {
             RepairFront();
             RepairBack();

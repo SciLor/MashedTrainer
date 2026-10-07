@@ -1,171 +1,167 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using Binarysharp.Assemblers.Fasm;
 using System.IO;
-using Binarysharp.MemoryManagement;
-using Binarysharp.MemoryManagement.Memory;
-using Binarysharp.MemoryManagement.Native;
-using Binarysharp.MemoryManagement.Assembly.CallingConvention;
-using static SciLors_Mashed_Trainer.Types.Player;
-using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
-using SciLors_Mashed_Trainer.Types.Weapons;
+using System.Linq;
+using SciLors_Mashed_Trainer.Core;
 using SciLors_Mashed_Trainer.Types.Settings.Game;
 using SciLors_Mashed_Trainer.Types.Settings.Player;
+using SciLors_Mashed_Trainer.Types.Weapons;
+using static SciLors_Mashed_Trainer.Types.Player;
+using static SciLors_Mashed_Trainer.Types.Weapons.Weapon;
 
 namespace SciLors_Mashed_Trainer.Types {
     public class Game : BaseMemorySharp, IDisposable {
-        private IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30 - PROCESS_BASE);
-        private IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4 - PROCESS_BASE); //0x659338 is the same value for another mode, written once at 0x41FC10
-        private IntPtr GAME_ACTIVE = new IntPtr(0x6AE110 - PROCESS_BASE); //race audio streams created (0x46F5C0) / destroyed; also zero on pause
+        private readonly IntPtr PLAYER_COUNT = new IntPtr(0x8D8B30);
+        private readonly IntPtr MAXIMUM_POINTS = new IntPtr(0x658DE4);
+        private readonly IntPtr GAME_ACTIVE = new IntPtr(0x6AE110);
 
-        private RemoteAllocation funcChangeWeapon;
-        private RemoteAllocation funcDropWeapon;
+        private IntPtr funcChangeWeapon = IntPtr.Zero;
+        private IntPtr funcDropWeapon = IntPtr.Zero;
 
-        //The game shares these float constants between dozens of unrelated places (HUD, AI, physics), so instead of
-        //changing the constant itself we redirect only the instruction operands that belong to the feature.
-        private List<PatchedFloat> patches = new List<PatchedFloat>();
-        private PatchedFloat maxDistance;
-        private PatchedFloat warningDistance;
-        private PatchedFloat maxDamage;
-        private PatchedFloat cameraTilt;
-        private PatchedFloat cameraHeightDivider;
-        private PatchedFloat cameraHeightAdd;
-        private PatchedFloat cameraHeightFactor;
-        private PatchedFloat cameraZoomLimit;
+        private readonly List<PatchedFloat> patches = new List<PatchedFloat>();
+        private PatchedFloat maxDistance = null!;
+        private PatchedFloat warningDistance = null!;
+        private PatchedFloat maxDamage = null!;
+        private PatchedFloat cameraTilt = null!;
+        private PatchedFloat cameraHeightDivider = null!;
+        private PatchedFloat cameraHeightAdd = null!;
+        private PatchedFloat cameraHeightFactor = null!;
+        private PatchedFloat cameraZoomLimit = null!;
 
-        private PatchedFloat Patch(int originalAddress, int[] pointerSites, int[] immediateSites = null) {
-            PatchedFloat patch = new PatchedFloat(Process, originalAddress, pointerSites, immediateSites);
+        private PatchedFloat Patch(int originalAddress, int[] pointerSites, int[] immediateSites = null!) {
+            var patch = new PatchedFloat(Target, originalAddress, pointerSites, immediateSites);
             patches.Add(patch);
             return patch;
         }
 
         public List<Player> Players = new List<Player>();
 
-        public bool IsRunning {
-            get { return Process.IsRunning; }
-        }
+        public bool IsRunning => Target.IsRunning;
 
-        public GameFiles GameFiles {
-            get; set;
-        }
-
-        public GameSettings Settings {
-            get; set;
-        }
+        public GameFiles GameFiles { get; set; } = null!;
+        public GameSettings Settings { get; set; } = null!;
 
         private int playerCount;
-        public int PlayerCount {
-            get {
-                return playerCount;
-            }
-        }
+        public int PlayerCount => playerCount;
 
         private float maximumDistance;
         public float MaximumDistance {
-            get { return maximumDistance; }
+            get => maximumDistance;
             set {
                 maxDistance.Value = value;
                 maximumDistance = value;
+                OnPropertyChanged(nameof(MaximumDistance));
             }
         }
+
         private float distanceWarningThreshold;
         public float DistanceWarningThreshold {
-            get { return distanceWarningThreshold; }
+            get => distanceWarningThreshold;
             set {
                 warningDistance.Value = value;
                 distanceWarningThreshold = value;
+                OnPropertyChanged(nameof(DistanceWarningThreshold));
             }
         }
 
         private bool isActive;
-        public bool IsActive {
-            get { return isActive; }
-        }
+        public bool IsActive => isActive;
 
         private int maximumPoints;
-        public int MaximumPoints {
-            get { return maximumPoints; }
-        }
+        public int MaximumPoints => maximumPoints;
 
         private float maximumDamage;
         public float MaximumDamage {
-            get { return maximumDamage; }
+            get => maximumDamage;
             set {
                 maxDamage.Value = value;
+                maximumDamage = value;
+                OnPropertyChanged(nameof(MaximumDamage));
             }
         }
 
         private float cameraTiltMultiplicator;
         public float CameraTiltMultiplicator {
-            get { return cameraTiltMultiplicator; }
+            get => cameraTiltMultiplicator;
             set {
                 cameraTilt.Value = value;
+                cameraTiltMultiplicator = value;
+                OnPropertyChanged(nameof(CameraTiltMultiplicator));
             }
         }
 
         private float cameraHeightDistanceDivider;
         public float CameraHeightDistanceDivider {
-            get { return cameraHeightDistanceDivider; }
+            get => cameraHeightDistanceDivider;
             set {
                 cameraHeightDivider.Value = value;
+                cameraHeightDistanceDivider = value;
+                OnPropertyChanged(nameof(CameraHeightDistanceDivider));
             }
         }
+
         private float cameraHeightDistanceAdd;
         public float CameraHeightDistanceAdd {
-            get { return cameraHeightDistanceAdd; }
+            get => cameraHeightDistanceAdd;
             set {
                 cameraHeightAdd.Value = value;
+                cameraHeightDistanceAdd = value;
+                OnPropertyChanged(nameof(CameraHeightDistanceAdd));
             }
         }
+
         private float cameraHeightDistanceFactor;
         public float CameraHeightDistanceFactor {
-            get { return cameraHeightDistanceFactor; }
+            get => cameraHeightDistanceFactor;
             set {
                 cameraHeightFactor.Value = value;
+                cameraHeightDistanceFactor = value;
+                OnPropertyChanged(nameof(CameraHeightDistanceFactor));
             }
         }
+
         private float cameraZoomLimitValue;
         public float CameraZoomLimit {
-            get { return cameraZoomLimitValue; }
+            get => cameraZoomLimitValue;
             set {
                 cameraZoomLimit.Value = value;
+                cameraZoomLimitValue = value;
+                OnPropertyChanged(nameof(CameraZoomLimit));
             }
         }
 
-        public WeaponHelper WeaponHelper;
+        public WeaponHelper WeaponHelper = null!;
 
-        public Game(Process process) : base(process) {
+        public Game(IMemoryTarget target) : base(target) {
             readAndInjectAsmFunctions();
             this.Settings = new GameSettings();
             this.WeaponHelper = new WeaponHelper(this);
             this.GameFiles = new GameFiles(this);
         }
-        
+
         private void readAndInjectAsmFunctions() {
-            byte[] asmBytes = File.ReadAllBytes("Asm\\ChangeWeapon.bin");
-            funcChangeWeapon = Process.Memory.Allocate(asmBytes.Length);
-            funcChangeWeapon.Write<byte>(asmBytes);
+            string baseDir = AppContext.BaseDirectory;
+            string changeWeaponBin = Path.Combine(baseDir, "Asm", "ChangeWeapon.bin");
+            if (File.Exists(changeWeaponBin)) {
+                byte[] asmBytes = File.ReadAllBytes(changeWeaponBin);
+                funcChangeWeapon = Target.Allocate(asmBytes.Length);
+                Target.WriteBytes(funcChangeWeapon, asmBytes);
+            }
 
-            asmBytes = File.ReadAllBytes("Asm\\DropWeapon.bin");
-            funcDropWeapon = Process.Memory.Allocate(asmBytes.Length);
-            funcDropWeapon.Write<byte>(asmBytes);
+            string dropWeaponBin = Path.Combine(baseDir, "Asm", "DropWeapon.bin");
+            if (File.Exists(dropWeaponBin)) {
+                byte[] asmBytes = File.ReadAllBytes(dropWeaponBin);
+                funcDropWeapon = Target.Allocate(asmBytes.Length);
+                Target.WriteBytes(funcDropWeapon, asmBytes);
+            }
 
-            //fcomp operand in FUN_004131d0 (equality test against 0x8C7E00, see doc/TrainerAnalysis.md)
             maxDistance = Patch(0x5DD620, new[] { 0x41340D });
-            //fcomp operand in FUN_0044c140 (distance warning); the global 7.0 is also used by the HUD layout
             warningDistance = Patch(0x5DDB14, new[] { 0x44C16B });
-            //fcomp operand in FUN_00423fe0 + the 50.0 it stores when the limit is exceeded
             maxDamage = Patch(0x5DE290, new[] { 0x423FEC }, new[] { 0x423FFA });
-            //camera function FUN_0044fa30: pitch = tilt * zoom / zoomLimit - 5
             cameraTilt = Patch(0x5DE290, new[] { 0x450AEC });
-            //camera distance = zoom / factor / divider + add
             cameraHeightFactor = Patch(0x5DDB18, new[] { 0x450BBA });
             cameraHeightDivider = Patch(0x5DD41C, new[] { 0x450BC0 });
             cameraHeightAdd = Patch(0x5DD330, new[] { 0x450BC6 });
-            //zoom is clamped to 10.0 (compares + immediates) and normalised by 10.0 in FUN_0044fa30
             cameraZoomLimit = Patch(0x5DD620, CAMERA_ZOOM_LIMIT_OPERANDS, CAMERA_ZOOM_LIMIT_IMMEDIATES);
         }
 
@@ -177,8 +173,7 @@ namespace SciLors_Mashed_Trainer.Types {
         private static readonly int[] CAMERA_ZOOM_LIMIT_IMMEDIATES = { 0x45082B, 0x450967, 0x45097A, 0x4509B0 };
 
         private void ExecuteExtraFeatures() {
-            if (!IsActive)
-                return;
+            if (!IsActive) return;
 
             DriveOverRevive();
             RandomWeaponEquip();
@@ -192,23 +187,18 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private void DriveOverRevive() {
             DriveOverReviveSettings dos = Settings.DriveOverReviveSettings;
-            if (!dos.IsEnabled)
-                return;
+            if (!dos.IsEnabled) return;
 
             foreach (Player playerAlive in Players.Where(pA => pA.IsAlive)) {
                 foreach (Player playerDead in Players.Where(pD => !pD.IsAlive && pD.IsActive)) {
-                    if (playerDead.IsBot && dos.IsSkipBots)
-                        continue;
+                    if (playerDead.IsBot && dos.IsSkipBots) continue;
 
                     float distance = playerDead.Position.GetDistance(playerAlive.Position);
-                    if (distance > dos.MinimalReviceDistance)
-                        continue;
+                    if (distance > dos.MinimalReviceDistance) continue;
 
                     playerDead.IsAlive = true;
-                    if (playerDead.IsOnRoof)
-                        playerDead.Flip();
-                    if (dos.IsRepair)
-                        playerDead.Repair();
+                    if (playerDead.IsOnRoof) playerDead.Flip();
+                    if (dos.IsRepair) playerDead.Repair();
 
                     int currentPointsChange = playerDead.PointsChange;
                     if (currentPointsChange != Player.CHANGE_POINTS_INITIAL_VALUE) {
@@ -223,30 +213,23 @@ namespace SciLors_Mashed_Trainer.Types {
                         playerDead.Points -= playerDead.PointsChange;
                         playerDead.PointsChange = Player.CHANGE_POINTS_INITIAL_VALUE;
                     }
-
                 }
             }
         }
 
         private void RandomWeaponEquip() {
             RandomWeaponSettings rws = Settings.RandomWeaponSettings;
-            if (!rws.IsEnabled)
-                return;
+            if (!rws.IsEnabled) return;
 
             List<Weapon.WeaponId> weapons = rws.WeaponSelector.GetEnabledWeapons();
-
-            if (weapons.Count == 0)
-                return;
+            if (weapons.Count == 0) return;
 
             if (DateTime.Now.Subtract(rws.NextRandomWeaponTimeStamp).TotalMilliseconds > 0) {
                 Weapon.WeaponId nextWeapon = weapons[StaticRandom.Random.Next(weapons.Count)];
                 foreach (Player player in Players.Where(p => p.IsAlive)) {
-                    if (player.IsBot && rws.IsSkipBots)
-                        continue;
-
-                    if (!rws.IsSameWeaponForAll) 
+                    if (player.IsBot && rws.IsSkipBots) continue;
+                    if (!rws.IsSameWeaponForAll)
                         nextWeapon = weapons[StaticRandom.Random.Next(weapons.Count)];
-
                     if (rws.IsDropPreviousWeapon || player.Weapon.GetActiveWeaponId() == WeaponId.None)
                         player.EquipWeapon(nextWeapon);
                 }
@@ -260,8 +243,7 @@ namespace SciLors_Mashed_Trainer.Types {
 
         private void ChangeWeaponBoxes() {
             WeaponBoxesSettings wbs = Settings.WeaponBoxesSettings;
-            if (!wbs.IsEnabled)
-                return;
+            if (!wbs.IsEnabled) return;
         }
 
         private void FreezePoints(Player player) {
@@ -273,30 +255,22 @@ namespace SciLors_Mashed_Trainer.Types {
         private void FreezePlayer(Player player) {
             FreezePositionSettings fps = player.Settings.FreezePositionSettings;
             if (fps.HasFreeze) {
-                if (fps.IsFreezeX)
-                    player.Position.X = fps.Position.X;
-                if (fps.IsFreezeY)
-                    player.Position.Y = fps.Position.Y;
-                if (fps.IsFreezeZ)
-                    player.Position.Z = fps.Position.Z;
-
-                player.Position = player.Position; //Force Update
+                if (fps.IsFreezeX) player.Position.X = fps.Position.X;
+                if (fps.IsFreezeY) player.Position.Y = fps.Position.Y;
+                if (fps.IsFreezeZ) player.Position.Z = fps.Position.Z;
+                player.Position = player.Position;
             }
         }
-        
 
         public void Update() {
-            if (!IsRunning)
-                return;
+            if (!IsRunning) return;
 
-            playerCount = Process[PLAYER_COUNT].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
+            playerCount = Target.Read<int>(PLAYER_COUNT);
             maximumDistance = maxDistance.Value;
             distanceWarningThreshold = warningDistance.Value;
-            maximumPoints = Process[MAXIMUM_POINTS].Read<int>(); //Memory.Read<int>(PLAYER_COUNT);
-            
+            maximumPoints = Target.Read<int>(MAXIMUM_POINTS);
             maximumDamage = maxDamage.Value;
-
-            isActive = Process[GAME_ACTIVE].Read<bool>();
+            isActive = Target.Read<bool>(GAME_ACTIVE);
 
             cameraTiltMultiplicator = cameraTilt.Value;
             cameraHeightDistanceDivider = cameraHeightDivider.Value;
@@ -311,26 +285,30 @@ namespace SciLors_Mashed_Trainer.Types {
             ExecuteExtraFeatures();
             RaisePropertyChanged();
         }
- 
+
         public void EquipWeapon(PlayerId playerId, WeaponId weaponId) {
             DropWeapon(playerId);
-            funcChangeWeapon.Execute(CallingConventions.Stdcall, (int)playerId, (int)weaponId);
+            if (funcChangeWeapon != IntPtr.Zero) {
+                Target.ExecuteStdcall(funcChangeWeapon, (int)playerId, (int)weaponId);
+            }
         }
+
         public void DropWeapon(PlayerId playerId) {
-            funcDropWeapon.Execute(CallingConventions.Stdcall, (int)playerId);
+            if (funcDropWeapon != IntPtr.Zero) {
+                Target.ExecuteStdcall(funcDropWeapon, (int)playerId);
+            }
         }
 
-    #region IDisposable Support
-        private bool disposed = false; // To detect redundant calls
-
+        private bool disposed;
         protected virtual void DoDispose() {
             if (!disposed) {
                 if (IsRunning) {
-                    //Revert changed pointers/immediates in code
                     foreach (PatchedFloat patch in patches) {
                         patch.Restore();
                     }
-                    Process.Dispose();
+                    if (funcChangeWeapon != IntPtr.Zero) Target.Free(funcChangeWeapon);
+                    if (funcDropWeapon != IntPtr.Zero) Target.Free(funcDropWeapon);
+                    Target.Dispose();
                 }
                 disposed = true;
             }
@@ -340,54 +318,54 @@ namespace SciLors_Mashed_Trainer.Types {
             DoDispose();
             GC.SuppressFinalize(this);
         }
+
         ~Game() {
             DoDispose();
         }
-        #endregion
     }
 
-    //A float in the game's memory that a set of instructions is redirected to (operand addresses) and/or
-    //copies as an immediate (e.g. mov [x], imm32). Addresses are absolute (image base 0x400000).
     public class PatchedFloat {
-        private const int IMAGE_BASE = 0x400000;
-        private readonly MemorySharp process;
-        private readonly RemoteAllocation memory;
+        private readonly IMemoryTarget target;
+        private readonly IntPtr allocatedMemory;
         private readonly int originalAddress;
         private readonly float original;
         private readonly int[] operandSites;
         private readonly int[] immediateSites;
 
-        public PatchedFloat(MemorySharp process, int originalAddress, int[] operandSites, int[] immediateSites) {
-            this.process = process;
+        public PatchedFloat(IMemoryTarget target, int originalAddress, int[] operandSites, int[] immediateSites = null!) {
+            this.target = target;
             this.originalAddress = originalAddress;
             this.operandSites = operandSites;
-            this.immediateSites = immediateSites ?? new int[0];
-            original = process[new IntPtr(originalAddress - IMAGE_BASE)].Read<float>();
-            memory = process.Memory.Allocate(4);
-            memory.Write<float>(original);
-            int target = memory.Information.AllocationBase.ToInt32();
+            this.immediateSites = immediateSites ?? Array.Empty<int>();
+
+            original = target.Read<float>(new IntPtr(originalAddress));
+            allocatedMemory = target.Allocate(4);
+            target.Write<float>(allocatedMemory, original);
+
+            int targetAddr = allocatedMemory.ToInt32();
             foreach (int site in operandSites) {
-                process[new IntPtr(site - IMAGE_BASE)].Write<int>(target);
+                target.Write<int>(new IntPtr(site), targetAddr);
             }
         }
 
         public float Value {
-            get { return memory.Read<float>(); }
+            get => target.Read<float>(allocatedMemory);
             set {
-                memory.Write<float>(value);
+                target.Write<float>(allocatedMemory, value);
                 foreach (int site in immediateSites) {
-                    process[new IntPtr(site - IMAGE_BASE)].Write<float>(value);
+                    target.Write<float>(new IntPtr(site), value);
                 }
             }
         }
 
         public void Restore() {
             foreach (int site in operandSites) {
-                process[new IntPtr(site - IMAGE_BASE)].Write<int>(originalAddress);
+                target.Write<int>(new IntPtr(site), originalAddress);
             }
             foreach (int site in immediateSites) {
-                process[new IntPtr(site - IMAGE_BASE)].Write<float>(original);
+                target.Write<float>(new IntPtr(site), original);
             }
+            target.Free(allocatedMemory);
         }
     }
 }

@@ -1,4 +1,4 @@
-name: Build
+name: Build & Test
 
 on:
   push:
@@ -16,28 +16,64 @@ jobs:
       - name: Fail if committed .bin files are stale
         run: git diff --exit-code -- Asm
 
-  build:
+  test:
     needs: asm
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: microsoft/setup-msbuild@v2
-      # v4.5 targeting pack is not on the runner image; v4.8 runs the same on Windows 10+
-      - run: msbuild "SciLors Mashed Trainer.csproj" /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /restore:false
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          name: MashedTrainer-Release
-          path: bin/Release/
+          dotnet-version: '8.0.x'
 
-      - name: Launch App & Capture Screenshots
-        shell: pwsh
-        run: pwsh -File .github/scripts/screenshot.ps1 -ExePath "bin/Release/SciLorsMashedTrainer.exe" -OutputDir "screenshots"
+      - name: Run Tests & Generate Headless Screenshots
+        run: dotnet test MashedTrainer.sln -c Release --logger "console;verbosity=detailed"
 
-      - name: Upload screenshots artifact
+      - name: Upload Screenshots Artifact
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: MashedTrainer-Screenshots
-          path: screenshots/
+          path: tests/bin/Release/net8.0/screenshots/
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # Variant 1: Tiny (Framework-dependent, ~3-5MB)
+      - name: Publish Tiny (Framework-Dependent)
+        run: >
+          dotnet publish MashedTrainer.csproj
+          -c Release
+          -r win-x86
+          --self-contained false
+          -o dist/tiny
+
+      # Variant 2: Standalone (Self-contained single executable, ~18MB)
+      - name: Publish Standalone (Self-Contained Single-File)
+        run: >
+          dotnet publish MashedTrainer.csproj
+          -c Release
+          -r win-x86
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:EnableCompressionInSingleFile=true
+          -o dist/standalone
+
+      - name: Upload Tiny Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MashedTrainer-Tiny-win-x86
+          path: dist/tiny/
+
+      - name: Upload Standalone Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MashedTrainer-Standalone-win-x86
+          path: dist/standalone/
