@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  asm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: Asm/build.sh
+      - name: Fail if committed .bin files are stale
+        run: git diff --exit-code -- Asm
+
+  build:
+    needs: asm
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: microsoft/setup-msbuild@v2
+      # v4.5 targeting pack is not on the runner image; v4.8 runs the same on Windows 10+
+      - run: msbuild "SciLors Mashed Trainer.csproj" /p:Configuration=Release /p:TargetFrameworkVersion=v4.8 /restore:false
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MashedTrainer-Release
+          path: bin/Release/
+
+      - name: Launch App & Capture Screenshots
+        shell: pwsh
+        run: pwsh -File .github/scripts/screenshot.ps1 -ExePath "bin/Release/SciLors Mashed Trainer.exe" -OutputDir "screenshots"
+
+      - name: Upload screenshots artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: MashedTrainer-Screenshots
+          path: screenshots/
