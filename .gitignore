@@ -2,3 +2,4 @@ bin/**
 obj/**
 Release/**
 tmp/**
+artifacts_downloaded/**
