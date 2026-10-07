@@ -1,5 +1,5 @@
 param(
-    [string]$ExePath = "bin/Release/SciLors Mashed Trainer.exe",
+    [string]$ExePath = "bin/Release/SciLorsMashedTrainer.exe",
     [string]$OutputDir = "screenshots"
 )
 
@@ -65,6 +65,20 @@ function Capture-Window([IntPtr]$hWnd, [string]$outFile) {
     $g.CopyFromScreen($rect.Left, $rect.Top, 0, 0, (New-Object System.Drawing.Size($w, $h)))
     $g.Dispose()
     Save-Bitmap $bmp $outFile
+}
+
+if (-not (Test-Path $ExePath)) {
+    Write-Host "Target '$ExePath' not found directly. Searching in bin/ ..."
+    $found = Get-ChildItem -Path "bin" -Filter "*.exe" -Recurse -ErrorAction SilentlyContinue |
+             Where-Object { $_.Name -notlike "*.vshost.exe" } |
+             Select-Object -First 1
+    if ($found) {
+        $ExePath = $found.FullName
+        Write-Host "Resolved executable to: $ExePath"
+    } else {
+        Write-Error "No executable found in bin/!"
+        exit 1
+    }
 }
 
 Write-Host "Launching $ExePath..."

@@ -33,7 +33,7 @@ jobs:
 
       - name: Launch App & Capture Screenshots
         shell: pwsh
-        run: pwsh -File .github/scripts/screenshot.ps1 -ExePath "bin/Release/SciLors Mashed Trainer.exe" -OutputDir "screenshots"
+        run: pwsh -File .github/scripts/screenshot.ps1 -ExePath "bin/Release/SciLorsMashedTrainer.exe" -OutputDir "screenshots"
 
       - name: Upload screenshots artifact
         uses: actions/upload-artifact@v4
