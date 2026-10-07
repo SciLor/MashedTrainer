@@ -119,7 +119,7 @@ if ($hWnd -ne [IntPtr]::Zero) {
                         Capture-Window $hWnd "$OutputDir/tab_$safeName.png"
                     }
                 } catch {
-                    Write-Host "Failed to select tab $tabName: $_"
+                    Write-Host "Failed to select tab ${tabName}: $_"
                 }
             }
         }
