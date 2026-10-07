@@ -46,6 +46,18 @@ namespace SciLors_Mashed_Trainer.Tests {
             TestContext.WriteLine($"Generated screenshot: {playersPng} ({new FileInfo(playersPng).Length} bytes)");
 
             // 2. Capture Game tab (Index 1)
+            var ucGame = window.FindControl<Controls.UcGameInfo>("ucGameInfo");
+            if (ucGame != null) {
+                var rws = ucGame.FindControl<Controls.UcWeaponSelector>("uwsRandomWeapon");
+                rws?.SetChecked(Types.Weapons.Weapon.WeaponId.Mortar, true);
+                rws?.SetChecked(Types.Weapons.Weapon.WeaponId.Rocket, true);
+                rws?.SetChecked(Types.Weapons.Weapon.WeaponId.Mines, true);
+
+                var bws = ucGame.FindControl<Controls.UcWeaponSelector>("uwsWeaponboxes");
+                bws?.SetChecked(Types.Weapons.Weapon.WeaponId.Machinegun, true);
+                bws?.SetChecked(Types.Weapons.Weapon.WeaponId.Flamethrower, true);
+            }
+
             tabControl.SelectedIndex = 1;
             window.UpdateLayout();
 

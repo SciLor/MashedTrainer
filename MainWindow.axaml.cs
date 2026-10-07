@@ -51,15 +51,23 @@ namespace SciLors_Mashed_Trainer {
             }
         }
 
-        private void Timer_Tick(object? sender, EventArgs e) {
+        private void SetStatus(string message, bool isConnected) {
             var statusText = this.FindControl<TextBlock>("txtStatus");
+            var statusLed = this.FindControl<Avalonia.Controls.Shapes.Ellipse>("elpStatusLed");
+            if (statusText != null) statusText.Text = message;
+            if (statusLed != null) {
+                statusLed.Fill = new Avalonia.Media.SolidColorBrush(Avalonia.Media.Color.Parse(isConnected ? "#00E676" : "#FFA000"));
+            }
+        }
+
+        private void Timer_Tick(object? sender, EventArgs e) {
             var ucGameInfo = this.FindControl<UcGameInfo>("ucGameInfo");
 
             if (forceMockMode) {
                 if (game == null) {
                     var mock = new MockMemoryTarget();
                     AttachToTarget(mock);
-                    if (statusText != null) statusText.Text = "Running with Mock Game Target (Simulator)";
+                    SetStatus("Running with Mock Game Target (Simulator)", true);
                 } else {
                     game.Update();
                 }
@@ -72,17 +80,17 @@ namespace SciLors_Mashed_Trainer {
                     try {
                         var win32Target = new Win32MemoryTarget(proc[0]);
                         AttachToTarget(win32Target);
-                        if (statusText != null) statusText.Text = $"Attached to Mashed PID {proc[0].Id}";
+                        SetStatus($"Attached to Mashed PID {proc[0].Id}", true);
                     } catch (Exception ex) {
-                        if (statusText != null) statusText.Text = $"Failed to attach: {ex.Message}";
+                        SetStatus($"Failed to attach: {ex.Message}", false);
                     }
                 } else {
                     game.Update();
-                    if (statusText != null) statusText.Text = $"Mashed Process PID: {proc[0].Id}";
+                    SetStatus($"Mashed Process PID: {proc[0].Id}", true);
                 }
             } else if (game != null) {
                 CleanUp();
-                if (statusText != null) statusText.Text = "Mashed disconnected. Waiting for MFL.exe...";
+                SetStatus("Mashed disconnected. Waiting for MFL.exe...", false);
             }
         }
 

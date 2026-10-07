@@ -40,31 +40,22 @@ namespace SciLors_Mashed_Trainer.Controls {
 
         private void Player_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
             var uws = this.FindControl<UcWeaponSelector>("uwsWeaponSelector");
-            var grpBase = this.FindControl<Border>("grpBase");
             var imgWarning = this.FindControl<Image>("imgWarning");
 
             if (e.PropertyName == "Weapon" && Player != null && uws != null) {
                 uws.SetCheckedAll(false);
                 uws.SetChecked(Player.Weapon.GetActiveWeaponId(), true);
-            } else if (e.PropertyName == "Distance" && Player != null && grpBase != null && imgWarning != null) {
+            } else if (e.PropertyName == "Distance" && Player != null && imgWarning != null) {
                 float playerDistance = Player.Distance;
                 float warningThreshold = Player.Game.DistanceWarningThreshold;
                 float maxDistance = Player.Game.MaximumDistance;
                 if (Player.Game.IsActive && Player.IsAlive) {
-                    if (playerDistance == 0) {
-                        grpBase.Background = new SolidColorBrush(Color.FromArgb(15, 0, 255, 0));
-                        imgWarning.Opacity = 0.01;
+                    if (playerDistance > warningThreshold && maxDistance > warningThreshold) {
+                        imgWarning.Opacity = Math.Clamp((playerDistance - warningThreshold) / (maxDistance - warningThreshold), 0.01, 1.0);
                     } else {
-                        byte green = (byte)Math.Clamp(255 - ((playerDistance / Math.Max(maxDistance, 0.01f)) * 255), 0, 255);
-                        grpBase.Background = new SolidColorBrush(Color.FromArgb(15, 255, green, 0));
-                        if (playerDistance > warningThreshold && maxDistance > warningThreshold) {
-                            imgWarning.Opacity = Math.Clamp((playerDistance - warningThreshold) / (maxDistance - warningThreshold), 0.01, 1.0);
-                        } else {
-                            imgWarning.Opacity = 0.01;
-                        }
+                        imgWarning.Opacity = 0.01;
                     }
                 } else {
-                    grpBase.Background = null;
                     imgWarning.Opacity = 0.01;
                 }
             }

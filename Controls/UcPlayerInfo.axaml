@@ -3,129 +3,137 @@
              xmlns:controls="clr-namespace:SciLors_Mashed_Trainer.Controls"
              x:Class="SciLors_Mashed_Trainer.Controls.UcPlayerInfo"
              x:Name="PlayerInfo">
-    <Border Name="grpBase" BorderBrush="#555" BorderThickness="1" CornerRadius="4" Margin="3" Padding="6">
+    <Border Name="grpBase" Background="#16181F" BorderBrush="#2D323F" BorderThickness="1.5" CornerRadius="6" Margin="2" Padding="5">
         <Grid RowDefinitions="Auto,*">
-            <TextBlock Name="lblHeader" Grid.Row="0" FontWeight="Bold" FontSize="14" Margin="0,0,0,6"
-                       Text="{Binding Header, ElementName=PlayerInfo, FallbackValue='Player X'}" />
+            <!-- Player Header -->
+            <TextBlock Text="{Binding Header, ElementName=PlayerInfo, FallbackValue='Player X'}"
+                       FontWeight="Bold" FontSize="13" Foreground="#FFFFFF" Margin="2,0,0,6" />
 
-            <Grid Grid.Row="1" ColumnDefinitions="*,*">
-                <!-- Left Column -->
-                <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,3,0">
+            <Grid Grid.Row="1" ColumnDefinitions="1.35*,*">
+                <!-- Left Column (Wider for coordinates and controls) -->
+                <StackPanel Grid.Column="0" Spacing="4" Margin="0,0,3,0">
                     <!-- Basic -->
-                    <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Basic" FontWeight="Bold" FontSize="12" />
+                    <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="6">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="BASIC" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
-                                <TextBlock Text="{Binding Player.Points, ElementName=PlayerInfo, FallbackValue=0}" />
-                                <TextBlock Text="/" />
-                                <TextBlock Text="{Binding Player.Game.MaximumPoints, ElementName=PlayerInfo, FallbackValue=8}" />
+                                <TextBlock Text="{Binding Player.Points, ElementName=PlayerInfo, FallbackValue=0}"
+                                           FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" />
+                                <TextBlock Text="/" FontSize="12" Foreground="#8E99A8" />
+                                <TextBlock Text="{Binding Player.Game.MaximumPoints, ElementName=PlayerInfo, FallbackValue=8}"
+                                           FontSize="12" FontWeight="Bold" Foreground="#FFFFFF" />
                             </StackPanel>
                             <Slider Name="sldPoints" Minimum="0"
                                     Maximum="{Binding Player.Game.MaximumPoints, ElementName=PlayerInfo, FallbackValue=8}"
-                                    Value="{Binding Player.Points, ElementName=PlayerInfo, Mode=TwoWay}" />
-                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                <CheckBox Name="chkPoints" Content="Freeze"
+                                    Value="{Binding Player.Points, ElementName=PlayerInfo, Mode=TwoWay}" Margin="0,-4" />
+                            <Grid ColumnDefinitions="Auto,*" Margin="0,1,0,0">
+                                <CheckBox Name="chkPoints" Content="Freeze" FontSize="11" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.Settings.FreezePointsSettings.IsFreeze, ElementName=PlayerInfo, Mode=TwoWay}"
                                           IsCheckedChanged="chkPoints_IsCheckedChanged" />
-                                <CheckBox Name="chkAlive" Content="Alive"
+                                <CheckBox Name="chkAlive" Grid.Column="1" Content="Alive" FontSize="11" Margin="8,0,0,0" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.IsAlive, ElementName=PlayerInfo, Mode=TwoWay}" />
-                            </StackPanel>
-                            <Grid ColumnDefinitions="Auto,*,Auto">
-                                <TextBlock Text="Distance:" VerticalAlignment="Center" Grid.Column="0" />
-                                <TextBlock Name="lblDistance" VerticalAlignment="Center" Margin="6,0,0,0" Grid.Column="1"
+                            </Grid>
+                            <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,1,0,0">
+                                <TextBlock Text="Dist:" FontSize="10" Foreground="#8E99A8" VerticalAlignment="Center" Grid.Column="0" />
+                                <TextBlock Name="lblDistance" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="4,0,0,0" Grid.Column="1"
                                            Text="{Binding Player.Distance, ElementName=PlayerInfo, FallbackValue=0, StringFormat='{}{0:F1}'}" />
-                                <Image Name="imgWarning" Grid.Column="2" Width="20" Height="20" Source="/Img/Hazard.png" Opacity="0.01" />
+                                <Image Name="imgWarning" Grid.Column="2" Width="18" Height="18" Source="/Img/Hazard.png" Opacity="0.01" />
                             </Grid>
                         </StackPanel>
                     </Border>
 
                     <!-- Position -->
-                    <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Position" FontWeight="Bold" FontSize="12" />
-                            <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" Margin="0,2,0,0">
-                                <TextBlock Text="X" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                <TextBox Name="txtPositionX" Grid.Row="0" Grid.Column="1" Margin="2"
+                    <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="6">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="POSITION" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
+                            <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" Margin="0,1,0,0">
+                                <TextBlock Text="X" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" FontSize="11" Foreground="#8E99A8" />
+                                <TextBox Name="txtPositionX" Grid.Row="0" Grid.Column="1" Margin="1" Padding="4,2" FontSize="11"
                                          Text="{Binding Player.Position.X, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkPositionX" Grid.Row="0" Grid.Column="2" Content="Freeze" Margin="4,0,0,0"
+                                <CheckBox Name="chkPositionX" Grid.Row="0" Grid.Column="2" Content="Freeze" Margin="4,0,0,0" FontSize="11" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.Settings.FreezePositionSettings.IsFreezeX, ElementName=PlayerInfo, Mode=TwoWay}"
                                           IsCheckedChanged="chkPositionX_IsCheckedChanged" />
 
-                                <TextBlock Text="Y" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                <TextBox Name="txtPositionY" Grid.Row="1" Grid.Column="1" Margin="2"
+                                <TextBlock Text="Y" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" FontSize="11" Foreground="#8E99A8" />
+                                <TextBox Name="txtPositionY" Grid.Row="1" Grid.Column="1" Margin="1" Padding="4,2" FontSize="11"
                                          Text="{Binding Player.Position.Y, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkPositionY" Grid.Row="1" Grid.Column="2" Content="Freeze" Margin="4,0,0,0"
+                                <CheckBox Name="chkPositionY" Grid.Row="1" Grid.Column="2" Content="Freeze" Margin="4,0,0,0" FontSize="11" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.Settings.FreezePositionSettings.IsFreezeY, ElementName=PlayerInfo, Mode=TwoWay}"
                                           IsCheckedChanged="chkPositionY_IsCheckedChanged" />
 
-                                <TextBlock Text="Z" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" />
-                                <TextBox Name="txtPositionZ" Grid.Row="2" Grid.Column="1" Margin="2"
+                                <TextBlock Text="Z" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,4,0" FontSize="11" Foreground="#8E99A8" />
+                                <TextBox Name="txtPositionZ" Grid.Row="2" Grid.Column="1" Margin="1" Padding="4,2" FontSize="11"
                                          Text="{Binding Player.Position.Z, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkPositionZ" Grid.Row="2" Grid.Column="2" Content="Freeze" Margin="4,0,0,0"
+                                <CheckBox Name="chkPositionZ" Grid.Row="2" Grid.Column="2" Content="Freeze" Margin="4,0,0,0" FontSize="11" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.Settings.FreezePositionSettings.IsFreezeZ, ElementName=PlayerInfo, Mode=TwoWay}"
                                           IsCheckedChanged="chkPositionZ_IsCheckedChanged" />
 
-                                <CheckBox Name="chkDisableControls" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Content="Disable Controls" Margin="0,4,0,0"
+                                <CheckBox Name="chkDisableControls" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Content="Disable Controls" Margin="0,3,0,0" FontSize="11" Padding="4,0,0,0"
                                           IsChecked="{Binding Player.IsControlsDisabled, ElementName=PlayerInfo, Mode=TwoWay}" />
                             </Grid>
                         </StackPanel>
                     </Border>
 
                     <!-- Weapon -->
-                    <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
-                        <StackPanel Spacing="4">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <TextBlock Name="lblWeapon" Grid.Column="0" FontWeight="Bold" FontSize="12" VerticalAlignment="Center"
+                    <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="6">
+                        <StackPanel Spacing="3">
+                            <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,2">
+                                <TextBlock Name="lblWeapon" Grid.Column="0" FontWeight="Bold" FontSize="11" Foreground="#E2E8F0" VerticalAlignment="Center"
                                            Text="{Binding Player.Weapon, ElementName=PlayerInfo, FallbackValue='None'}" />
-                                <Button Name="btnWeaponDrop" Grid.Column="1" Content="Drop" Click="btnWeaponDrop_Click" Padding="6,2" />
+                                <Button Name="btnWeaponDrop" Grid.Column="1" Content="Drop" Click="btnWeaponDrop_Click" Padding="6,1" FontSize="10" />
                             </Grid>
-                            <controls:UcWeaponSelector x:Name="uwsWeaponSelector" Height="155" WeaponClick="uwsWeaponSelector_WeaponClick" />
+                            <controls:UcWeaponSelector x:Name="uwsWeaponSelector" HorizontalAlignment="Center" WeaponClick="uwsWeaponSelector_WeaponClick" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
 
-                <!-- Right Column -->
-                <StackPanel Grid.Column="1" Spacing="6" Margin="3,0,0,0">
+                <!-- Right Column (Damage & Car) -->
+                <StackPanel Grid.Column="1" Spacing="4" Margin="3,0,0,0">
                     <!-- Damage -->
-                    <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Damage" FontWeight="Bold" FontSize="12" />
-                            <TextBlock Text="Front" FontSize="11" Foreground="#aaa" />
-                            <TextBlock Name="lblDamageFront" Text="0%" HorizontalAlignment="Center" />
-                            <Slider Name="sldDamageFront" Minimum="0" Maximum="100"
+                    <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="6">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="DAMAGE" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
+                            
+                            <Grid ColumnDefinitions="*,*" Margin="0,1,0,-2">
+                                <TextBlock Text="Front" FontSize="10" Foreground="#8E99A8" />
+                                <TextBlock Name="lblDamageFront" Grid.Column="1" Text="0%" TextAlignment="Right" FontSize="10" FontWeight="SemiBold" Foreground="#E0E6ED" />
+                            </Grid>
+                            <Slider Name="sldDamageFront" Minimum="0" Maximum="100" Margin="0,-4"
                                     Value="{Binding Player.DamageFront, ElementName=PlayerInfo, Mode=TwoWay}"
                                     ValueChanged="sldDamageFront_ValueChanged" />
 
-                            <TextBlock Text="Back" FontSize="11" Foreground="#aaa" />
-                            <TextBlock Name="lblDamageBack" Text="0%" HorizontalAlignment="Center" />
-                            <Slider Name="sldDamageBack" Minimum="0" Maximum="100"
+                            <Grid ColumnDefinitions="*,*" Margin="0,1,0,-2">
+                                <TextBlock Text="Back" FontSize="10" Foreground="#8E99A8" />
+                                <TextBlock Name="lblDamageBack" Grid.Column="1" Text="0%" TextAlignment="Right" FontSize="10" FontWeight="SemiBold" Foreground="#E0E6ED" />
+                            </Grid>
+                            <Slider Name="sldDamageBack" Minimum="0" Maximum="100" Margin="0,-4"
                                     Value="{Binding Player.DamageBack, ElementName=PlayerInfo, Mode=TwoWay}"
                                     ValueChanged="sldDamageBack_ValueChanged" />
 
-                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
-                                <CheckBox Name="chkDamageHood" Grid.Row="0" Grid.Column="0" Content="Hood"
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Margin="0,2,0,0">
+                                <CheckBox Name="chkDamageHood" Grid.Row="0" Grid.Column="0" Content="Hood" FontSize="10" Padding="3,0,0,0" Margin="0,1"
                                           IsChecked="{Binding Player.IsDamagedHood, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkDamageTrunk" Grid.Row="0" Grid.Column="1" Content="Trunk"
+                                <CheckBox Name="chkDamageTrunk" Grid.Row="0" Grid.Column="1" Content="Trunk" FontSize="10" Padding="3,0,0,0" Margin="0,1"
                                           IsChecked="{Binding Player.IsDamagedTrunk, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkDamageGlassHood" Grid.Row="1" Grid.Column="0" Content="Glass (H)"
+                                <CheckBox Name="chkDamageGlassHood" Grid.Row="1" Grid.Column="0" Content="Glass" FontSize="10" Padding="3,0,0,0" Margin="0,1"
                                           IsChecked="{Binding Player.IsDamagedGlassHood, ElementName=PlayerInfo, Mode=TwoWay}" />
-                                <CheckBox Name="chkDamageGlassTrunk" Grid.Row="1" Grid.Column="1" Content="Glass (T)"
+                                <CheckBox Name="chkDamageGlassTrunk" Grid.Row="1" Grid.Column="1" Content="Glass" FontSize="10" Padding="3,0,0,0" Margin="0,1"
                                           IsChecked="{Binding Player.IsDamagedGlassTrunk, ElementName=PlayerInfo, Mode=TwoWay}" />
                             </Grid>
 
-                            <Button Name="btnDamageRepair" Content="Full Repair" Click="btnDamageRepair_Click"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,6,0,0" />
+                            <Button Name="btnDamageRepair" Content="Full Repair" Click="btnDamageRepair_Click" FontSize="11" FontWeight="SemiBold"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,4,0,0" Padding="0,3" />
                         </StackPanel>
                     </Border>
 
                     <!-- Car -->
-                    <Border BorderBrush="#444" BorderThickness="1" CornerRadius="4" Padding="6">
-                        <StackPanel Spacing="6">
-                            <TextBlock Text="Car" FontWeight="Bold" FontSize="12" />
-                            <Button Name="btnFlip" Content="Flip" Click="btnFlip_Click"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
-                            <Button Name="btnTurn" Content="Turn 180°" Click="btnTurn_Click"
-                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                    <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="6">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="CAR" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
+                            <Button Name="btnFlip" Content="Flip" Click="btnFlip_Click" FontSize="11"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="0,3" />
+                            <Button Name="btnTurn" Content="Turn 180°" Click="btnTurn_Click" FontSize="11"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="0,3" />
                         </StackPanel>
                     </Border>
                 </StackPanel>

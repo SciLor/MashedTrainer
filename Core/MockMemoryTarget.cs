@@ -82,6 +82,10 @@ namespace SciLors_Mashed_Trainer.Core {
                 Write<float>(new IntPtr(dmgAddr + 0x00), 0.0f);
                 Write<float>(new IntPtr(dmgAddr + 0x04), 0.0f);
             }
+
+            // Mock equipped weapons: Player 1 has Rocket (0x6A5FF0), Player 2 has Flamethrower (0x6A9588)
+            Write<int>(new IntPtr(0x8BEDCC), 0x6A5FF0);
+            Write<int>(new IntPtr(0x8BEDCC + 0xB4), 0x6A9588);
         }
 
         private int GetIndex(IntPtr address) {

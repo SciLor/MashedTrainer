@@ -4,6 +4,76 @@
              RequestedThemeVariant="Dark">
     <Application.Styles>
         <FluentTheme />
+
+        <Style Selector="Window">
+            <Setter Property="Background" Value="#0F1115" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
+            <Setter Property="FontFamily" Value="Segoe UI, Roboto, -apple-system, BlinkMacSystemFont, sans-serif" />
+        </Style>
+
+        <!-- Tactile Game HUD Buttons -->
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#232733" />
+            <Setter Property="BorderBrush" Value="#363C4E" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Foreground" Value="#DDE3EA" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Padding" Value="6,3" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#2E3445" />
+            <Setter Property="BorderBrush" Value="#4C556D" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="Button:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#1A1D26" />
+            <Setter Property="BorderBrush" Value="#252A36" />
+        </Style>
+
+        <!-- Tactical Inset TextBoxes -->
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#12141A" />
+            <Setter Property="BorderBrush" Value="#2E3342" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Padding" Value="5,3" />
+            <Setter Property="MinHeight" Value="24" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#00D2FF" />
+            <Setter Property="Background" Value="#161922" />
+        </Style>
+
+        <!-- CheckBoxes -->
+        <Style Selector="CheckBox">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="#CDD5E0" />
+        </Style>
+
+        <!-- Tabs -->
+        <Style Selector="TabControl">
+            <Setter Property="Margin" Value="4,0,4,4" />
+        </Style>
+        <Style Selector="TabItem">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="Foreground" Value="#8E99A8" />
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Foreground" Value="#00D2FF" />
+        </Style>
+
+        <!-- Menu -->
+        <Style Selector="Menu">
+            <Setter Property="Background" Value="#14161C" />
+            <Setter Property="Foreground" Value="#CDD5E0" />
+        </Style>
     </Application.Styles>
 </Application>
 
