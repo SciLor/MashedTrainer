@@ -90,5 +90,5 @@ The trainer features a built-in memory target simulator (`MockMemoryTarget`) tha
 
 - **Author**: SciLor
 - **Website**: [scilor.com](http://www.scilor.com/)
-- **Companion Tool**: [Mashed and Mashed Fully Loaded Runner](https://github.com/SciLor/MashedRunner)
+- **Companion Tool**: [Mashed and Mashed Fully Loaded Runner](https://github.com/mashed-reverse-engineering/MashedRunner)
 - **Donate**: If you enjoy this trainer, [donations are warmly appreciated](http://www.scilor.com/donate.html)!
