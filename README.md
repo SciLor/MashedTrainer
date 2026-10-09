@@ -27,6 +27,10 @@ The trainer is distributed in two builds on each release:
 
 ## Features
 
+### General
+- **Icon Packs**: Switch weapon icons between the in-game look (default) and the classic set via the *Icons* menu
+- **Status Bar**: Shows connection state and tells you when memory writes fail (run the trainer as administrator in that case); controls stay disabled until Mashed is found
+
 ### Player (Per-Player Controls for P1–P4)
 - **Score**: Change and freeze points
 - **Revive**: Instant respawn and revive toggle
@@ -35,6 +39,8 @@ The trainer is distributed in two builds on each release:
 - **Weapons**: Equip any of the 9 weapons instantly, or drop active weapon
 - **Damage**: Adjust front and back damage sliders, toggle individual damage parts (Hood, Trunk, Glass), and 1-click Full Repair
 - **Car Physics**: 1-click **Flip** (rights an upside-down car) and **Turn 180°**
+- **God Mode**: Per-player option that keeps the car fully repaired while alive
+- **Bot Badge**: Bot-controlled players are marked with a BOT tag
 
 ### Game & Camera
 - **Destroy Distance**: Customize warning threshold and maximum elimination distance
@@ -67,6 +73,15 @@ The trainer features a built-in memory target simulator (`MockMemoryTarget`) tha
 ---
 
 ## ChangeLog
+
+### v0.2.1 (unreleased)
+- **Icon Packs**: New *Icons* menu with in-game (default) and classic weapon icons.
+- **God Mode**: Per-player option that keeps the car repaired.
+- **Bot Badge**: Bot players are marked in the Players tab.
+- **Numeric Inputs**: Game tab values use validated numeric spinners with limits.
+- **Status Feedback**: Controls are disabled until Mashed is attached; failed memory writes and multiple MFL.exe instances are reported in the status bar.
+- **Fixes**: Fixed a PropertyChanged handler leak on reconnect; process detection now polls once per second while detached.
+- **Simulator**: *About > Toggle Mock Game Mode* switches the built-in simulator on and off (on by default outside Windows).
 
 ### v0.2.0 (2026-10-07)
 - **Platform Migration**: Completely modernized from .NET Framework 4.5 / WPF to .NET 8 / Avalonia UI.
