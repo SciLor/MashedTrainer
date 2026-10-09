@@ -251,7 +251,11 @@ namespace SciLors_Mashed_Trainer.Types {
             weaponPointer = new IntPtr(Target.Read<int>(IntPtr.Add(BASE_WEAPON_ADDRESS, playerWeaponOffset)));
             isAlive = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_ALIVE));
             isControlsDisabled = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_CONTROLS_DISABLED));
-            isBot = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_BOT));
+            bool newIsBot = Target.Read<bool>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_BOT));
+            if (newIsBot != isBot) {
+                isBot = newIsBot;
+                OnPropertyChanged(nameof(IsBot));
+            }
 
             matrixIndex = Target.Read<int>(IntPtr.Add(BASE_ADDRESS, playerBaseOffset + PLAYER_MATRIX_INDEX)) & 1;
             isOnRoof = Target.Read<float>(IntPtr.Add(BASE_ADDRESS, MatrixOffset(matrixIndex) + MATRIX_UP + 4)) < 0;

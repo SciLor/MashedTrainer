@@ -6,8 +6,14 @@
     <Border Name="grpBase" Background="#16181F" BorderBrush="#2D323F" BorderThickness="1.5" CornerRadius="6" Margin="2" Padding="5">
         <Grid RowDefinitions="Auto,*">
             <!-- Player Header -->
-            <TextBlock Text="{Binding Header, ElementName=PlayerInfo, FallbackValue='Player X'}"
-                       FontWeight="Bold" FontSize="13" Foreground="#FFFFFF" Margin="2,0,0,6" />
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="2,0,0,6">
+                <TextBlock Text="{Binding Header, ElementName=PlayerInfo, FallbackValue='Player X'}"
+                           FontWeight="Bold" FontSize="13" Foreground="#FFFFFF" />
+                <Border IsVisible="{Binding Player.IsBot, ElementName=PlayerInfo}" Background="#3A2F12" BorderBrush="#FFA000"
+                        BorderThickness="1" CornerRadius="3" Padding="4,0" VerticalAlignment="Center">
+                    <TextBlock Text="BOT" FontSize="9" FontWeight="Bold" Foreground="#FFA000" />
+                </Border>
+            </StackPanel>
 
             <Grid Grid.Row="1" ColumnDefinitions="1.35*,*">
                 <!-- Left Column (Wider for coordinates and controls) -->
