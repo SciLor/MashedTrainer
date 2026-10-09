@@ -8,6 +8,7 @@ namespace SciLors_Mashed_Trainer.Types.Settings.Player {
     public class PlayerSettings {
         public FreezePositionSettings FreezePositionSettings { get; set; }
         public FreezePointsSettings FreezePointsSettings { get; set; }
+        public bool IsGodMode { get; set; }
 
         public PlayerSettings() {
             FreezePositionSettings = new FreezePositionSettings();

@@ -363,6 +363,8 @@ namespace SciLors_Mashed_Trainer.Types {
         }
 
         public void Repair() {
+            if (damageFront == 0 && damageBack == 0 && !isDamagedHood && !isDamagedTrunk
+                && !isDamagedGlassHood && !isDamagedGlassTrunk) return;
             RepairFront();
             RepairBack();
         }

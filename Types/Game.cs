@@ -180,6 +180,7 @@ namespace SciLors_Mashed_Trainer.Types {
             foreach (Player player in Players) {
                 FreezePoints(player);
                 FreezePlayer(player);
+                if (player.Settings.IsGodMode && player.IsAlive) player.Repair();
             }
         }
 

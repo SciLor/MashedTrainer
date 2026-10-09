@@ -91,5 +91,18 @@ namespace SciLors_Mashed_Trainer.Tests {
             Assert.That(p1.IsDamagedHood, Is.False);
             Assert.That(p1.IsDamagedTrunk, Is.False);
         }
+
+        [Test]
+        public void TestGodModeKeepsCarRepaired() {
+            Player p1 = game.Players[0];
+            p1.Settings.IsGodMode = true;
+            p1.DamageFront = 55.0f;
+            p1.IsDamagedHood = true;
+            game.Update();
+            game.Update();
+
+            Assert.That(p1.DamageFront, Is.EqualTo(0.0f).Within(0.01f));
+            Assert.That(p1.IsDamagedHood, Is.False);
+        }
     }
 }
