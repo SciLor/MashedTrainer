@@ -42,6 +42,16 @@ namespace SciLors_Mashed_Trainer.Controls {
             foreach (var pair in toggleButtons) {
                 pair.Value.Tag = pair.Key;
             }
+
+            LoadIcons();
+            AttachedToVisualTree += (_, _) => { IconPack.Changed += LoadIcons; LoadIcons(); };
+            DetachedFromVisualTree += (_, _) => IconPack.Changed -= LoadIcons;
+        }
+
+        private void LoadIcons() {
+            foreach (var pair in toggleButtons) {
+                if (pair.Value.Content is Image img) img.Source = IconPack.Icon(pair.Key);
+            }
         }
 
         public void SetCheckedAll(bool isChecked) {

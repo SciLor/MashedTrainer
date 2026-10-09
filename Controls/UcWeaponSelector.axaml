@@ -34,33 +34,33 @@
     </UserControl.Styles>
     <UniformGrid Columns="3" Rows="3" HorizontalAlignment="Center" VerticalAlignment="Center">
         <ToggleButton Name="btnMortar" Click="btnWeapon_Click">
-            <Image Source="/Img/Mortar.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnMachinegun" Click="btnWeapon_Click">
-            <Image Source="/Img/gattlingun.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnDrum" Click="btnWeapon_Click">
-            <Image Source="/Img/DepthCharge.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
 
         <ToggleButton Name="btnRocket" Click="btnWeapon_Click">
-            <Image Source="/Img/Missile.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnMines" Click="btnWeapon_Click">
-            <Image Source="/Img/mine.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnFlamethrower" Click="btnWeapon_Click">
-            <Image Source="/Img/FlameThrower.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
 
         <ToggleButton Name="btnShotgun" Click="btnWeapon_Click">
-            <Image Source="/Img/Shotgun.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnFlashbang" Click="btnWeapon_Click">
-            <Image Source="/Img/Shine.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
         <ToggleButton Name="btnOil" Click="btnWeapon_Click">
-            <Image Source="/Img/RPG.png" Stretch="Uniform" />
+            <Image Stretch="Uniform" />
         </ToggleButton>
     </UniformGrid>
 </UserControl>
