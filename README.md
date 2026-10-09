@@ -79,7 +79,7 @@ Start the trainer with `--simulate` to run against a built-in fake game (`MockMe
 
 ## ChangeLog
 
-### v0.2.1 (unreleased)
+### v0.2.1 (2026-10-09)
 - Ported from .NET Framework 4.5 / WPF to .NET 8 / Avalonia
 - New dark theme, separate Game tab, Flip / Turn 180° actions, camera height factor and zoom limit
 - Added icon packs (in-game, classic) selectable in the *Icons* menu
