@@ -69,6 +69,9 @@ dotnet build MashedTrainer.sln -c Release
 dotnet test MashedTrainer.sln -c Release
 ```
 
+### Branches & Releases
+Development happens on `develop` (CI builds and tests every push). A release is a pull request from `develop` to `master`. After merging, tag the merge commit on `master` (`git tag v0.2.1 && git push origin v0.2.1`); pushing the tag makes GitHub Actions build the Tiny and Standalone zips and create a draft release. Bump the version in `MainWindow.axaml.cs`, `MainWindow.axaml` and this README before opening the release PR.
+
 ### Simulator
 Start the trainer with `--simulate` to run against a built-in fake game (`MockMemoryTarget`) instead of MFL.exe. This allows developing, testing and rendering the GUI without Windows or the game.
 
@@ -76,7 +79,7 @@ Start the trainer with `--simulate` to run against a built-in fake game (`MockMe
 
 ## ChangeLog
 
-### v0.2.1 (unreleased)
+### v0.2.1 (2026-10-09)
 - Ported from .NET Framework 4.5 / WPF to .NET 8 / Avalonia
 - New dark theme, separate Game tab, Flip / Turn 180° actions, camera height factor and zoom limit
 - Added icon packs (in-game, classic) selectable in the *Icons* menu
