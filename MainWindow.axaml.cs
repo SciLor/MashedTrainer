@@ -15,6 +15,8 @@ namespace SciLors_Mashed_Trainer {
         private readonly Player?[] players = new Player?[4];
         private readonly UcPlayerInfo[] playerInfos = new UcPlayerInfo[4];
         private bool forceMockMode = false;
+        private Win32MemoryTarget? win32Target;
+        private int idleTicks;
 
         public string ProgramVersion => "v0.2.0";
         public string ProgramName => "mashed-trainer";
@@ -25,12 +27,14 @@ namespace SciLors_Mashed_Trainer {
             InitializeComponent();
             Title = ProgramTitle;
             InitializePlayerGrid();
+            UpdateIconMenu();
 
             // On non-Windows platforms (e.g. Linux development/testing), default to Mock mode if no MFL process
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 forceMockMode = true;
             }
 
+            tabMain.IsEnabled = false;
             timer.Interval = TimeSpan.FromMilliseconds(50);
             timer.Tick += Timer_Tick;
             timer.Start();
@@ -74,11 +78,14 @@ namespace SciLors_Mashed_Trainer {
                 return;
             }
 
+            // Detached: look for MFL.exe once per second instead of every tick
+            if (game == null && idleTicks++ % 20 != 0) return;
+
             Process[] proc = Process.GetProcessesByName("MFL");
             if (proc.Length == 1) {
                 if (game == null) {
                     try {
-                        var win32Target = new Win32MemoryTarget(proc[0]);
+                        win32Target = new Win32MemoryTarget(proc[0]);
                         AttachToTarget(win32Target);
                         SetStatus($"Attached to Mashed PID {proc[0].Id}", true);
                     } catch (Exception ex) {
@@ -86,8 +93,12 @@ namespace SciLors_Mashed_Trainer {
                     }
                 } else {
                     game.Update();
-                    SetStatus($"Mashed Process PID: {proc[0].Id}", true);
+                    var err = win32Target?.LastWriteError;
+                    if (err != null) SetStatus(err, false);
+                    else SetStatus($"Mashed Process PID: {proc[0].Id}", true);
                 }
+            } else if (proc.Length > 1) {
+                SetStatus("Multiple MFL.exe processes found - close all but one.", false);
             } else if (game != null) {
                 CleanUp();
                 SetStatus("Mashed disconnected. Waiting for MFL.exe...", false);
@@ -98,6 +109,7 @@ namespace SciLors_Mashed_Trainer {
             var ucGameInfo = this.FindControl<UcGameInfo>("ucGameInfo");
             game = new Game(target);
             game.Update();
+            tabMain.IsEnabled = true;
 
             foreach (Player.PlayerId playerId in Enum.GetValues<Player.PlayerId>()) {
                 int id = (int)playerId;
@@ -125,6 +137,9 @@ namespace SciLors_Mashed_Trainer {
 
                 game.Dispose();
                 game = null;
+                win32Target = null;
+                idleTicks = 0;
+                tabMain.IsEnabled = false;
             }
         }
 
@@ -136,6 +151,16 @@ namespace SciLors_Mashed_Trainer {
 
         private void mniExit_Click(object? sender, RoutedEventArgs e) {
             Close();
+        }
+
+        private void mniIcon_Click(object? sender, RoutedEventArgs e) {
+            if (sender is MenuItem { Tag: string pack }) IconPack.Set(pack);
+            UpdateIconMenu();
+        }
+
+        private void UpdateIconMenu() {
+            foreach (var item in new[] { mniIconIngame, mniIconClassic })
+                item.Icon = (string?)item.Tag == IconPack.Current ? new TextBlock { Text = "✓" } : null;
         }
 
         private void mniWebsite_Click(object? sender, RoutedEventArgs e) {
