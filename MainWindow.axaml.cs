@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -14,11 +13,11 @@ namespace SciLors_Mashed_Trainer {
         private Game? game;
         private readonly Player?[] players = new Player?[4];
         private readonly UcPlayerInfo[] playerInfos = new UcPlayerInfo[4];
-        private bool forceMockMode = false;
+        private readonly bool simulate = Array.IndexOf(Environment.GetCommandLineArgs(), "--simulate") >= 0;
         private Win32MemoryTarget? win32Target;
         private int idleTicks;
 
-        public string ProgramVersion => "v0.2.0";
+        public string ProgramVersion => "v0.2.1";
         public string ProgramName => "mashed-trainer";
         public string ProgramLongName => "SciLor's Mashed Trainer";
         public string ProgramTitle => $"{ProgramLongName} {ProgramVersion}";
@@ -28,11 +27,6 @@ namespace SciLors_Mashed_Trainer {
             Title = ProgramTitle;
             InitializePlayerGrid();
             UpdateIconMenu();
-
-            // On non-Windows platforms (e.g. Linux development/testing), default to Mock mode if no MFL process
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                forceMockMode = true;
-            }
 
             tabMain.IsEnabled = false;
             timer.Interval = TimeSpan.FromMilliseconds(50);
@@ -76,7 +70,7 @@ namespace SciLors_Mashed_Trainer {
         private void TickCore() {
             var ucGameInfo = this.FindControl<UcGameInfo>("ucGameInfo");
 
-            if (forceMockMode) {
+            if (simulate) {
                 if (game == null) {
                     var mock = new MockMemoryTarget();
                     AttachToTarget(mock);
@@ -178,13 +172,6 @@ namespace SciLors_Mashed_Trainer {
 
         private void mniDonate_Click(object? sender, RoutedEventArgs e) {
             OpenUrl("http://www.scilor.com/donate.html");
-        }
-
-        private void mniMockToggle_Click(object? sender, RoutedEventArgs e) {
-            forceMockMode = !forceMockMode;
-            CleanUp();
-            var statusText = this.FindControl<TextBlock>("txtStatus");
-            if (statusText != null) statusText.Text = forceMockMode ? "Mock mode enabled" : "Waiting for MFL.exe...";
         }
 
         private static void OpenUrl(string url) {

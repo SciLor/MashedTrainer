@@ -1,4 +1,4 @@
-# SciLor's Mashed Trainer v0.2.0
+# SciLor's Mashed Trainer v0.2.1
 
 A trainer for the PC game **Mashed: Fully Loaded**. Change scores, weapons, damage and positions for every player, tweak the camera, and add fun modifiers like random weapons and drive-over revive.
 
@@ -69,35 +69,27 @@ dotnet build MashedTrainer.sln -c Release
 dotnet test MashedTrainer.sln -c Release
 ```
 
-### Developing on Linux
-The trainer features a built-in memory target simulator (`MockMemoryTarget`) that automatically activates when running outside Windows without the game process. You can fully develop, test, and render the GUI headlessly on Linux without needing Windows or the actual game executable.
+### Simulator
+Start the trainer with `--simulate` to run against a built-in fake game (`MockMemoryTarget`) instead of MFL.exe. This allows developing, testing and rendering the GUI without Windows or the game.
 
 ---
 
 ## ChangeLog
 
 ### v0.2.1 (unreleased)
-- **Icon Packs**: New *Icons* menu with in-game (default) and classic weapon icons.
-- **God Mode**: Option in the Damage block that keeps the car fully repaired while alive
-- **Bot Badge**: Bot players are marked in the Players tab.
-- **Layout**: Basic block spans the full player card; round state, player count and points to win moved into the status bar; larger weapon grids.
-- **Numeric Inputs**: Game tab values use validated numeric spinners with limits.
-- **Status Feedback**: Controls are disabled until Mashed is attached; failed memory writes and multiple MFL.exe instances are reported in the status bar.
-- **Fixes**: Fixed a PropertyChanged handler leak on reconnect; process detection now polls once per second while detached.
-- **Simulator**: *About > Toggle Mock Game Mode* switches the built-in simulator on and off (on by default outside Windows).
-
-### v0.2.0 (2026-10-07)
-- **Platform Migration**: Completely modernized from .NET Framework 4.5 / WPF to .NET 8 / Avalonia UI.
-- **Cross-Platform Development**: Native Linux building and testing support with headless screenshot generation.
-- **Dual Distribution**: Available as both a lightweight framework-dependent build and a zero-dependency standalone single-file binary.
-- **UI Redesign**: Dark tactical combat HUD theme matching the style of *Mashed: Drive to Survive*, featuring 1:1 square weapon loadout grids and high-visibility combat selection rings.
-- **Dedicated Game Tab**: Separated global game, camera, and modifier controls into their own dedicated tab.
-- **New Controls**: Added "Flip" and "Turn 180°" vehicle righting actions, camera "Height factor" and "Zoom limit" controls.
-- **Bug Fixes**:
-  - Fixed vehicle coordinate setting by synchronizing both game matrix buffers.
-  - Patching logic now targets specific instructions rather than shared global constants, eliminating AI/physics side-effects.
-  - Fixed typo in `ChangeWeapon.asm` target address (`0x467E6` -> `0x467E60`).
-- **CI/CD**: Added GitHub Actions workflows for continuous build, test, and automated tag-based releases.
+- Ported from .NET Framework 4.5 / WPF to .NET 8 / Avalonia
+- New dark theme, separate Game tab, Flip / Turn 180° actions, camera height factor and zoom limit
+- Added icon packs (in-game, classic) selectable in the *Icons* menu
+- Added per-player god mode and a BOT badge for bot players
+- Game info (round state, players, points to win) is shown in the status bar
+- Game tab uses numeric spinners with limits
+- Controls stay disabled until Mashed is attached; failed memory writes are reported in the status bar
+- Simulator for development is started with `--simulate`
+- Fixed position setting (both matrix buffers are written now)
+- Patches target the specific instructions instead of shared constants (no more AI/physics side effects)
+- Fixed wrong target address in `ChangeWeapon.asm` (`0x467E6` -> `0x467E60`)
+- Fixed handler leak on reconnect; MFL.exe is polled once per second while detached
+- Added GitHub Actions build, test and release workflows
 
 ### v0.1.0 (2017-11-20)
 - Initial Release
