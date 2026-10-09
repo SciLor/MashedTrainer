@@ -12,6 +12,10 @@
             <MenuItem Header="_File">
                 <MenuItem Name="mniExit" Header="E_xit" Click="mniExit_Click" />
             </MenuItem>
+            <MenuItem Header="_Icons">
+                <MenuItem Name="mniIconIngame" Header="_In-game (default)" Click="mniIcon_Click" Tag="ingame" />
+                <MenuItem Name="mniIconClassic" Header="_Classic (legacy)" Click="mniIcon_Click" Tag="classic" />
+            </MenuItem>
             <MenuItem Header="_About">
                 <MenuItem Name="mniWebsite" Header="_Website" Click="mniWebsite_Click" />
                 <MenuItem Name="mniDonate" Header="_Donate" Click="mniDonate_Click" />
