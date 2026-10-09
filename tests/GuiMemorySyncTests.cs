@@ -118,8 +118,8 @@ namespace SciLors_Mashed_Trainer.Tests {
             Assert.That(gameInfo, Is.Not.Null);
 
             // 1. Destroy Distance elements
-            var txtMaxDist = gameInfo.FindControl<TextBox>("txtMaxDistance")!;
-            var txtWarnDist = gameInfo.FindControl<TextBox>("txtWarnDistance")!;
+            var txtMaxDist = gameInfo.FindControl<NumericUpDown>("txtMaxDistance")!;
+            var txtWarnDist = gameInfo.FindControl<NumericUpDown>("txtWarnDistance")!;
             var btnResetDist = gameInfo.FindControl<Button>("btnResetDistance")!;
             Assert.That(txtMaxDist, Is.Not.Null);
             Assert.That(txtWarnDist, Is.Not.Null);
@@ -132,11 +132,11 @@ namespace SciLors_Mashed_Trainer.Tests {
             Assert.That(lblMaxDmg, Is.Not.Null);
 
             // 3. Camera elements
-            var txtCameraTilt = gameInfo.FindControl<TextBox>("txtCameraTiltMulti")!;
-            var txtCameraHeightDiv = gameInfo.FindControl<TextBox>("txtCameraHeightDistanceDiv")!;
-            var txtCameraHeightAdd = gameInfo.FindControl<TextBox>("txtCameraHeightDistanceAdd")!;
-            var txtCameraHeightFactor = gameInfo.FindControl<TextBox>("txtCameraHeightDistanceFactor")!;
-            var txtCameraZoom = gameInfo.FindControl<TextBox>("txtCameraZoomLimit")!;
+            var txtCameraTilt = gameInfo.FindControl<NumericUpDown>("txtCameraTiltMulti")!;
+            var txtCameraHeightDiv = gameInfo.FindControl<NumericUpDown>("txtCameraHeightDistanceDiv")!;
+            var txtCameraHeightAdd = gameInfo.FindControl<NumericUpDown>("txtCameraHeightDistanceAdd")!;
+            var txtCameraHeightFactor = gameInfo.FindControl<NumericUpDown>("txtCameraHeightDistanceFactor")!;
+            var txtCameraZoom = gameInfo.FindControl<NumericUpDown>("txtCameraZoomLimit")!;
             var btnResetCam = gameInfo.FindControl<Button>("btnResetCamera")!;
             Assert.That(txtCameraTilt, Is.Not.Null);
             Assert.That(txtCameraHeightDiv, Is.Not.Null);
@@ -147,8 +147,8 @@ namespace SciLors_Mashed_Trainer.Tests {
 
             // 4. Random Weapon Equip elements
             var chkRandEnabled = gameInfo.FindControl<CheckBox>("chkWeaponDropEnabled")!;
-            var txtRandMin = gameInfo.FindControl<TextBox>("txtWeaponEquipMin")!;
-            var txtRandMax = gameInfo.FindControl<TextBox>("txtWeaponEquipMax")!;
+            var txtRandMin = gameInfo.FindControl<NumericUpDown>("txtWeaponEquipMin")!;
+            var txtRandMax = gameInfo.FindControl<NumericUpDown>("txtWeaponEquipMax")!;
             var uwsRand = gameInfo.FindControl<UcWeaponSelector>("uwsRandomWeapon")!;
             var chkRandSame = gameInfo.FindControl<CheckBox>("chkWeaponDropSame")!;
             var chkRandDrop = gameInfo.FindControl<CheckBox>("chkWeaponDropDrop")!;
@@ -163,7 +163,7 @@ namespace SciLors_Mashed_Trainer.Tests {
 
             // 5. Drive Over Revive elements
             var chkReviveEnabled = gameInfo.FindControl<CheckBox>("chkReviveEnabled")!;
-            var txtRespawnDist = gameInfo.FindControl<TextBox>("txtRespawnDistance")!;
+            var txtRespawnDist = gameInfo.FindControl<NumericUpDown>("txtRespawnDistance")!;
             var chkReviveRepair = gameInfo.FindControl<CheckBox>("chkReviveRepair")!;
             var chkReviveSkip = gameInfo.FindControl<CheckBox>("chkReviveSkipBots")!;
             Assert.That(chkReviveEnabled, Is.Not.Null);

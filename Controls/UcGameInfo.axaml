@@ -13,12 +13,12 @@
                         <TextBlock Text="DESTROY DISTANCE" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" Margin="0,2,0,0">
                             <TextBlock Text="Max. Distance" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtMaxDistance" Grid.Row="0" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.MaximumDistance, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtMaxDistance" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Increment="0.5" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.MaximumDistance, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Warn. Distance" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtWarnDistance" Grid.Row="1" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.DistanceWarningThreshold, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtWarnDistance" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Increment="0.5" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.DistanceWarningThreshold, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <Button Name="btnResetDistance" Grid.Row="2" Grid.Column="1" Content="Reset"
                                     Click="btnResetDistance_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2,4,2,0" />
@@ -45,24 +45,24 @@
                         <TextBlock Text="CAMERA" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" />
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" Margin="0,2,0,0">
                             <TextBlock Text="Tilt mult." Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtCameraTiltMulti" Grid.Row="0" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.CameraTiltMultiplicator, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtCameraTiltMulti" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Increment="1" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.CameraTiltMultiplicator, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Height div." Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtCameraHeightDistanceDiv" Grid.Row="1" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.CameraHeightDistanceDivider, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtCameraHeightDistanceDiv" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Increment="0.5" Minimum="0.1" Maximum="1000" FormatString="0.##" Value="{Binding Game.CameraHeightDistanceDivider, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Height add" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtCameraHeightDistanceAdd" Grid.Row="2" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.CameraHeightDistanceAdd, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtCameraHeightDistanceAdd" Grid.Row="2" Grid.Column="1" Margin="2"
+                                     Increment="0.1" Minimum="-1000" Maximum="1000" FormatString="0.##" Value="{Binding Game.CameraHeightDistanceAdd, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Height factor" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtCameraHeightDistanceFactor" Grid.Row="3" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.CameraHeightDistanceFactor, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtCameraHeightDistanceFactor" Grid.Row="3" Grid.Column="1" Margin="2"
+                                     Increment="0.05" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.CameraHeightDistanceFactor, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Zoom limit" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtCameraZoomLimit" Grid.Row="4" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.CameraZoomLimit, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtCameraZoomLimit" Grid.Row="4" Grid.Column="1" Margin="2"
+                                     Increment="1" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.CameraZoomLimit, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <Button Name="btnResetCamera" Grid.Row="5" Grid.Column="1" Content="Reset"
                                     Click="btnResetCamera_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="2,4,2,0" />
@@ -80,12 +80,12 @@
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
                             <TextBlock Text="Min. Time (s)" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtWeaponEquipMin" Grid.Row="0" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.Settings.RandomWeaponSettings.MinimalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtWeaponEquipMin" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Increment="1" Minimum="0" Maximum="3600" FormatString="0" Value="{Binding Game.Settings.RandomWeaponSettings.MinimalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
 
                             <TextBlock Text="Max. Time (s)" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtWeaponEquipMax" Grid.Row="1" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.Settings.RandomWeaponSettings.MaximalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtWeaponEquipMax" Grid.Row="1" Grid.Column="1" Margin="2"
+                                     Increment="1" Minimum="0" Maximum="3600" FormatString="0" Value="{Binding Game.Settings.RandomWeaponSettings.MaximalTimeInS, ElementName=GameInfo, Mode=TwoWay}" />
                         </Grid>
 
                         <TextBlock Text="WEAPONS" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" Margin="0,6,0,2" />
@@ -111,8 +111,8 @@
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" Margin="0,4,0,0">
                             <TextBlock Text="Min. Distance" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
-                            <TextBox Name="txtRespawnDistance" Grid.Row="0" Grid.Column="1" Margin="2"
-                                     Text="{Binding Game.Settings.DriveOverReviveSettings.MinimalReviceDistance, ElementName=GameInfo, Mode=TwoWay}" />
+                            <NumericUpDown Height="26" MinHeight="26" FontSize="11" Padding="4,0" VerticalContentAlignment="Center" BorderBrush="#2B303D" Name="txtRespawnDistance" Grid.Row="0" Grid.Column="1" Margin="2"
+                                     Increment="0.5" Minimum="0" Maximum="1000" FormatString="0.##" Value="{Binding Game.Settings.DriveOverReviveSettings.MinimalReviceDistance, ElementName=GameInfo, Mode=TwoWay}" />
                         </Grid>
 
                         <CheckBox Name="chkReviveRepair" Content="Repair Car"
