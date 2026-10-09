@@ -41,6 +41,9 @@ namespace SciLors_Mashed_Trainer.Core {
         private readonly IntPtr _hProcess;
         private bool _disposed;
 
+        /// <summary>Set when a WriteProcessMemory call failed (typically: game runs elevated, trainer does not).</summary>
+        public string? LastWriteError { get; private set; }
+
         public bool IsRunning => !_process.HasExited;
         public int ProcessId => _process.Id;
         public IntPtr ProcessBase => _process.MainModule?.BaseAddress ?? new IntPtr(0x400000);
@@ -70,7 +73,11 @@ namespace SciLors_Mashed_Trainer.Core {
             fixed (byte* p = buffer) {
                 *(T*)p = value;
             }
-            WriteProcessMemory(_hProcess, address, buffer, size, out _);
+            CheckWrite(WriteProcessMemory(_hProcess, address, buffer, size, out _));
+        }
+
+        private void CheckWrite(bool ok) {
+            if (!ok) LastWriteError = $"Memory write failed (error {Marshal.GetLastWin32Error()}). Try running the trainer as administrator.";
         }
 
         public byte[] ReadBytes(IntPtr address, int count) {
@@ -81,7 +88,7 @@ namespace SciLors_Mashed_Trainer.Core {
 
         public void WriteBytes(IntPtr address, byte[] buffer) {
             if (buffer == null || buffer.Length == 0) return;
-            WriteProcessMemory(_hProcess, address, buffer, buffer.Length, out _);
+            CheckWrite(WriteProcessMemory(_hProcess, address, buffer, buffer.Length, out _));
         }
 
         public IntPtr Allocate(int size) {
