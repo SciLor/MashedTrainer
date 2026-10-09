@@ -37,7 +37,7 @@
                                 <TextBlock Text="Dist:" FontSize="10" Foreground="#8E99A8" VerticalAlignment="Center" Grid.Column="0" />
                                 <TextBlock Name="lblDistance" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="4,0,0,0" Grid.Column="1"
                                            Text="{Binding Player.Distance, ElementName=PlayerInfo, FallbackValue=0, StringFormat='{}{0:F1}'}" />
-                                <Image Name="imgWarning" Grid.Column="2" Width="18" Height="18" Source="/Img/Hazard.png" Opacity="0.01" />
+                                <Image Name="imgWarning" Grid.Column="2" Width="18" Height="18" Opacity="0.01" />
                             </Grid>
                         </StackPanel>
                     </Border>

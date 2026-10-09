@@ -23,6 +23,8 @@ namespace SciLors_Mashed_Trainer.Controls {
         public Player? Player {
             get => GetValue(PlayerProperty);
             set {
+                var old = GetValue(PlayerProperty);
+                if (old != null) old.PropertyChanged -= Player_PropertyChanged;
                 SetValue(PlayerProperty, value);
                 if (value != null) {
                     value.PropertyChanged += Player_PropertyChanged;
@@ -36,6 +38,11 @@ namespace SciLors_Mashed_Trainer.Controls {
 
         public UcPlayerInfo() {
             InitializeComponent();
+            var warning = this.FindControl<Image>("imgWarning")!;
+            warning.Source = IconPack.Hazard();
+            AttachedToVisualTree += (_, _) => { IconPack.Changed += SetWarningIcon; SetWarningIcon(); };
+            DetachedFromVisualTree += (_, _) => IconPack.Changed -= SetWarningIcon;
+            void SetWarningIcon() => warning.Source = IconPack.Hazard();
         }
 
         private void Player_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
