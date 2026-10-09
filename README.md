@@ -39,7 +39,7 @@ The trainer is distributed in two builds on each release:
 - **Weapons**: Equip any of the 9 weapons instantly, or drop active weapon
 - **Damage**: Adjust front and back damage sliders, toggle individual damage parts (Hood, Trunk, Glass), and 1-click Full Repair
 - **Car Physics**: 1-click **Flip** (rights an upside-down car) and **Turn 180°**
-- **God Mode**: Per-player option that keeps the car fully repaired while alive
+- **God Mode**: Option in the Damage block that keeps the car fully repaired while alive
 - **Bot Badge**: Bot-controlled players are marked with a BOT tag
 
 ### Game & Camera
@@ -76,8 +76,9 @@ The trainer features a built-in memory target simulator (`MockMemoryTarget`) tha
 
 ### v0.2.1 (unreleased)
 - **Icon Packs**: New *Icons* menu with in-game (default) and classic weapon icons.
-- **God Mode**: Per-player option that keeps the car repaired.
+- **God Mode**: Option in the Damage block that keeps the car fully repaired while alive
 - **Bot Badge**: Bot players are marked in the Players tab.
+- **Layout**: Basic block spans the full player card; round state, player count and points to win moved into the status bar; larger weapon grids.
 - **Numeric Inputs**: Game tab values use validated numeric spinners with limits.
 - **Status Feedback**: Controls are disabled until Mashed is attached; failed memory writes and multiple MFL.exe instances are reported in the status bar.
 - **Fixes**: Fixed a PropertyChanged handler leak on reconnect; process detection now polls once per second while detached.
