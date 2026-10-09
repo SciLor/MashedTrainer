@@ -69,6 +69,9 @@ dotnet build MashedTrainer.sln -c Release
 dotnet test MashedTrainer.sln -c Release
 ```
 
+### Branches & Releases
+Development happens on `develop` (CI builds and tests every push). A release is a pull request from `develop` to `master`. After merging, tag the merge commit on `master` (`git tag v0.2.1 && git push origin v0.2.1`); pushing the tag makes GitHub Actions build the Tiny and Standalone zips and create a draft release. Bump the version in `MainWindow.axaml.cs`, `MainWindow.axaml` and this README before opening the release PR.
+
 ### Simulator
 Start the trainer with `--simulate` to run against a built-in fake game (`MockMemoryTarget`) instead of MFL.exe. This allows developing, testing and rendering the GUI without Windows or the game.
 
