@@ -17,6 +17,14 @@ namespace SciLors_Mashed_Trainer.Controls {
             set => SetValue(GameProperty, value);
         }
 
+        public static readonly StyledProperty<double> ButtonSizeProperty =
+            AvaloniaProperty.Register<UcWeaponSelector, double>(nameof(ButtonSize), 42);
+
+        public double ButtonSize {
+            get => GetValue(ButtonSizeProperty);
+            set => SetValue(ButtonSizeProperty, value);
+        }
+
         public delegate void WeaponClickEventHandler(Weapon.WeaponId weaponId);
         public event WeaponClickEventHandler? WeaponClick;
 
@@ -43,9 +51,17 @@ namespace SciLors_Mashed_Trainer.Controls {
                 pair.Value.Tag = pair.Key;
             }
 
+            ButtonSizeProperty.Changed.AddClassHandler<UcWeaponSelector>((s, _) => s.ApplyButtonSize());
             LoadIcons();
             AttachedToVisualTree += (_, _) => { IconPack.Changed += LoadIcons; LoadIcons(); };
             DetachedFromVisualTree += (_, _) => IconPack.Changed -= LoadIcons;
+        }
+
+        private void ApplyButtonSize() {
+            foreach (var button in toggleButtons.Values) {
+                button.Width = ButtonSize;
+                button.Height = ButtonSize;
+            }
         }
 
         private void LoadIcons() {
