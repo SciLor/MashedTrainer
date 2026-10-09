@@ -8,3 +8,4 @@ tests/bin/**
 tests/obj/**
 tools/mfl_dummy/mfl_dummy
 tools/mfl_dummy/mfl_dummy.exe
+Img/reference/**

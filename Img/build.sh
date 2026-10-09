@@ -1,7 +1,12 @@
 #!/bin/sh
-# Renders svg/*.svg to the fallback PNGs used by the trainer (needs rsvg-convert; rendered at 2x for crisp scaling in the GUI).
+# Renders packs/<pack>/svg/*.svg to packs/<pack>/*.png (needs rsvg-convert).
+# The PNGs are what the trainer embeds; the SVGs are the source (no game textures are shipped).
+# Usage: ./build.sh [pack ...]   (default: all packs; packs: ingame = default, classic = legacy)
 set -e
-cd "$(dirname "$0")"
-for f in svg/*.svg; do
-  rsvg-convert -z 2 "$f" -o "$(basename "${f%.svg}").png"
+cd "$(dirname "$0")/packs"
+for p in ${@:-*}; do
+  for f in "$p"/svg/*.svg; do
+    rsvg-convert -w 64 -h 64 "$f" -o "$p/$(basename "${f%.svg}").png"
+  done
+  echo "Rendered pack: $p"
 done
