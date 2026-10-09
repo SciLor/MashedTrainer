@@ -1,6 +1,6 @@
 # SciLor's Mashed Trainer v0.2.0
 
-Modern, cross-platform trainer for the PC game **Mashed: Fully Loaded**. Re-engineered on .NET 8 and Avalonia UI with automated headless GUI testing, simulation support, and dual distribution profiles.
+A trainer for the PC game **Mashed: Fully Loaded**. Change scores, weapons, damage and positions for every player, tweak the camera, and add fun modifiers like random weapons and drive-over revive.
 
 ---
 
@@ -54,6 +54,8 @@ The trainer is distributed in two builds on each release:
 ---
 
 ## Building & Testing
+
+The trainer is written in C# on .NET 8 with Avalonia UI. It comes with automated headless GUI tests and a built-in game simulator, so it can be developed and tested without the game.
 
 ### Requirements
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
