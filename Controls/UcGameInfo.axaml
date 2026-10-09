@@ -4,7 +4,7 @@
              x:Class="SciLors_Mashed_Trainer.Controls.UcGameInfo"
              x:Name="GameInfo">
     <Border Background="#16181F" BorderBrush="#2D323F" BorderThickness="1.5" CornerRadius="6" Margin="2" Padding="6">
-        <Grid ColumnDefinitions="*,*,*">
+        <Grid ColumnDefinitions="*,*,*,*">
             <!-- Column 0: Distance, Damage, Camera -->
             <StackPanel Grid.Column="0" Spacing="6" Margin="0,0,3,0">
                 <!-- Destroy Distance -->
@@ -75,8 +75,11 @@
             <StackPanel Grid.Column="1" Spacing="6" Margin="3,0,3,0">
                 <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="7">
                     <StackPanel Spacing="4">
-                        <CheckBox Name="chkWeaponDropEnabled" Content="Random Weapon Equip" FontWeight="Bold"
-                                  IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,-10">
+                            <TextBlock Text="RANDOM WEAPON EQUIP" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" VerticalAlignment="Center" />
+                            <CheckBox Name="chkWeaponDropEnabled" Grid.Column="1" Content="Enabled" FontSize="10" Padding="4,0,0,0"
+                                      IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        </Grid>
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
                             <TextBlock Text="Min. Time (s)" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
@@ -89,7 +92,7 @@
                         </Grid>
 
                         <TextBlock Text="WEAPONS" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" Margin="0,6,0,2" />
-                        <local:UcWeaponSelector x:Name="uwsRandomWeapon" HorizontalAlignment="Center" Margin="0,4" />
+                        <local:UcWeaponSelector x:Name="uwsRandomWeapon" ButtonSize="58" HorizontalAlignment="Center" Margin="0,4" />
 
                         <CheckBox Name="chkWeaponDropSame" Content="Same for all"
                                   IsChecked="{Binding Game.Settings.RandomWeaponSettings.IsSameWeaponForAll, ElementName=GameInfo, Mode=TwoWay}" />
@@ -101,13 +104,16 @@
                 </Border>
             </StackPanel>
 
-            <!-- Column 2: Drive Over Revive, Weapon Boxes -->
-            <StackPanel Grid.Column="2" Spacing="6" Margin="3,0,0,0">
+            <!-- Column 2: Drive Over Revive -->
+            <StackPanel Grid.Column="2" Spacing="6" Margin="3,0,3,0">
                 <!-- Drive over revive -->
                 <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="7">
                     <StackPanel Spacing="4">
-                        <CheckBox Name="chkReviveEnabled" Content="Drive Over Revive" FontWeight="Bold"
-                                  IsChecked="{Binding Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,-10">
+                            <TextBlock Text="DRIVE OVER REVIVE" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" VerticalAlignment="Center" />
+                            <CheckBox Name="chkReviveEnabled" Grid.Column="1" Content="Enabled" FontSize="10" Padding="4,0,0,0"
+                                      IsChecked="{Binding Game.Settings.DriveOverReviveSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        </Grid>
 
                         <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" Margin="0,4,0,0">
                             <TextBlock Text="Min. Distance" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,6,0" FontSize="11" Foreground="#8E99A8" />
@@ -122,14 +128,21 @@
                     </StackPanel>
                 </Border>
 
+            </StackPanel>
+
+            <!-- Column 3: Weapon Boxes -->
+            <StackPanel Grid.Column="3" Spacing="6" Margin="3,0,0,0">
                 <!-- Weapon Boxes -->
                 <Border Background="#1D2028" BorderBrush="#2B303D" BorderThickness="1" CornerRadius="4" Padding="7">
                     <StackPanel Spacing="4">
-                        <CheckBox Name="chkWeaponBoxEnabled" Content="Change Weapon Boxes" FontWeight="Bold" IsEnabled="False"
-                                  IsChecked="{Binding Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        <Grid ColumnDefinitions="*,Auto" Margin="0,-10">
+                            <TextBlock Text="CHANGE WEAPON BOXES" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" VerticalAlignment="Center" />
+                            <CheckBox Name="chkWeaponBoxEnabled" Grid.Column="1" Content="Enabled" FontSize="10" Padding="4,0,0,0" IsEnabled="False"
+                                      IsChecked="{Binding Game.Settings.WeaponBoxesSettings.IsEnabled, ElementName=GameInfo, Mode=TwoWay}" />
+                        </Grid>
 
                         <TextBlock Text="WEAPONS" FontWeight="Bold" FontSize="10" Foreground="#8E99A8" Margin="0,6,0,2" />
-                        <local:UcWeaponSelector x:Name="uwsWeaponboxes" HorizontalAlignment="Center" Margin="0,4" />
+                        <local:UcWeaponSelector x:Name="uwsWeaponboxes" ButtonSize="58" HorizontalAlignment="Center" Margin="0,4" />
 
                         <CheckBox Name="chkWeaponBoxSkipBots" Content="Skip Bots"
                                   IsChecked="{Binding Game.Settings.WeaponBoxesSettings.IsSkipBots, ElementName=GameInfo, Mode=TwoWay}" />
