@@ -64,7 +64,16 @@ namespace SciLors_Mashed_Trainer {
             }
         }
 
+        private void UpdateGameInfo() {
+            txtGameInfo.Text = game == null ? "" :
+                $"{(game.IsActive ? "Round running" : "Not in a round")}  ·  {game.PlayerCount} players  ·  {game.MaximumPoints} points to win";
+        }
+
         private void Timer_Tick(object? sender, EventArgs e) {
+            try { TickCore(); } finally { UpdateGameInfo(); }
+        }
+
+        private void TickCore() {
             var ucGameInfo = this.FindControl<UcGameInfo>("ucGameInfo");
 
             if (forceMockMode) {
